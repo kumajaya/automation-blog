@@ -100,11 +100,17 @@ function isInternalMedia(url) {
 async function syncContent(type, layout, outputFolder) {
   try {
     // 1. Fetch konten dari Ghost API (posts atau pages)
-    const endpoint = `${GHOST_API_URL.replace('/posts/', `/${type}/`)}?key=${GHOST_API_KEY}&include=authors,tags`;
+    const endpoint = `${GHOST_API_URL}${type}/?key=${GHOST_API_KEY}&include=authors,tags`;
     const res = await fetch(endpoint);
-    if (!res.ok) throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+
+    if (res.status === 404) {
+      console.warn(`No ${type} endpoint found or empty. Skipping...`);
+      return 0;
+    }
+    if (!res.ok) throw new Error(`Failed to fetch ${type}: ${res.status} ${res.statusText}`);
+
     const data = await res.json();
-    const items = data[type];
+    const items = data[type] || [];
 
     // 2. Pastikan folder output ada
     if (!fs.existsSync(outputFolder)) fs.mkdirSync(outputFolder, { recursive: true });
@@ -188,7 +194,7 @@ async function syncContent(type, layout, outputFolder) {
       for (const [key, value] of Object.entries(fm)) {
         if (Array.isArray(value)) {
           frontMatter += `${key}:\n`;
-          value.forEach(item => frontMatter += `  - "${item}"\n`);
+          value.forEach(v => frontMatter += `  - "${v}"\n`);
         } else if (typeof value === 'string') {
           frontMatter += `${key}: "${value}"\n`;
         } else {
@@ -206,7 +212,10 @@ async function syncContent(type, layout, outputFolder) {
 
   } catch (err) {
     console.error(`Sync failed for ${type}:`, err);
-    process.exit(1);
+    // posts dianggap kritikal → gagal total
+    if (type === 'posts') process.exit(1);
+    // pages gagal → skip
+    return 0;
   }
 }
 

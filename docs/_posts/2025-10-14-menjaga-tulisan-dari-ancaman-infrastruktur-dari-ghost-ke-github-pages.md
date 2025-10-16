@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "448c2273-4869-45b5-b426-e5ea7276bfda"
 title: "Menjaga Tulisan dari Ancaman Infrastruktur: Dari Ghost ke GitHub Pages"
 date: "2025-10-14T18:36:06.000+07:00"
 slug: "menjaga-tulisan-dari-ancaman-infrastruktur-dari-ghost-ke-github-pages"
 layout: "post"
-excerpt: "Dari Ghost ke GitHub, dari tulisan menjadi arsip pengetahuan. Sebuah perjalanan mencari cara agar dokumentasi teknis bertahan melampaui umur server dan penulisnya."
+excerpt: |
+  Dari Ghost ke GitHub, dari tulisan menjadi arsip pengetahuan. Sebuah perjalanan mencari cara agar dokumentasi teknis bertahan melampaui umur server dan penulisnya.
 image: "https://images.unsplash.com/photo-1647696945040-56de84f73f5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fGJvb2tzaGVsZiUyMGtub3dsZWRnZXxlbnwwfHx8fDE3NjA0MjE5Nzd8MA&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@gabigi?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Gabriela</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -14,7 +16,7 @@ tags:
   - "Team Collaboration"
   - "Open Source"
 categories:
-  - "Practical Engineering"
+  - "practical-engineering"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

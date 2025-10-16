@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "7224ade4-654d-4000-b306-e516250aaaf7"
 title: "Arsitektur Edge-to-Server untuk Integrasi Data Industri"
 date: "2025-10-07T12:08:20.000+07:00"
 slug: "arsitektur-edge-to-server-untuk-integrasi-data-industri"
 layout: "post"
-excerpt: "Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan."
+excerpt: |
+  Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan.
 image: "https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@ayadighaith?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Ayadi Ghaith</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -15,7 +17,7 @@ tags:
   - "Field Experience"
   - "Practical Engineering"
 categories:
-  - "Edge Computing"
+  - "edge-computing"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

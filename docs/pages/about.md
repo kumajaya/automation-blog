@@ -1,9 +1,16 @@
 ---
+ghost_uuid: "fd61f7b7-030e-45bb-89eb-a38b4db5c5b2"
 title: "About this site"
 date: "2025-07-29T15:47:45.000+07:00"
 slug: "about"
 layout: "page"
-excerpt: "Technical & Sustainability Digest is an independent publication launched in July 2025 by Ketut Kumajaya. If you subscribe today, you'll get full access to the website as well as email newsletters about new content when it's available. Your subscription makes this site possible, and allows Technical & Sustainability Digest to continue to exist. Thank you!   Access all areas  By signing up, you'll get access to the full archive of everything that's been published before and everything that's still"
+excerpt: |
+  Technical & Sustainability Digest is an independent publication launched in July 2025 by Ketut Kumajaya. If you subscribe today, you'll get full access to the website as well as email newsletters about new content when it's available. Your subscription makes this site possible, and allows Technical & Sustainability Digest to continue to exist. Thank you!
+  
+  
+  Access all areas
+  
+  By signing up, you'll get access to the full archive of everything that's been published before and everything that's still
 image: ""
 image_alt: ""
 image_caption: ""

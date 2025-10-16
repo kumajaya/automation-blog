@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "3bd5943c-8dce-42da-8fff-04cdfa1080a7"
 title: "Kepemimpinan Manusiawi di Era Otomasi"
 date: "2025-10-11T23:54:00.000+07:00"
 slug: "kepemimpinan-manusiawi-di-era-otomasi"
 layout: "post"
-excerpt: "Di era otomasi, kepemimpinan manusiawi menjadi kunci keberhasilan. Memahami, menghargai, dan memberdayakan individu di tim lebih efektif daripada sekadar kontrol. Praktik global dan pengalaman lapangan menunjukkan: organisasi tumbuh ketika setiap orang merasa penting dan didengar."
+excerpt: |
+  Di era otomasi, kepemimpinan manusiawi menjadi kunci keberhasilan. Memahami, menghargai, dan memberdayakan individu di tim lebih efektif daripada sekadar kontrol. Praktik global dan pengalaman lapangan menunjukkan: organisasi tumbuh ketika setiap orang merasa penting dan didengar.
 image: "https://images.unsplash.com/photo-1594477898765-b9ad43ad9cfc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDIwfHxjb2xsYWJvcmF0aXZlfGVufDB8fHx8MTc2MDE5MzU4Nnww&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@jannerboy62?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Nick Fewings</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -15,7 +17,7 @@ tags:
   - "Field Experience"
   - "Practical Engineering"
 categories:
-  - "Team Collaboration"
+  - "team-collaboration"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

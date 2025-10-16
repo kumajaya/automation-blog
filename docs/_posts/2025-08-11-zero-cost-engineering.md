@@ -1,10 +1,12 @@
 ---
+ghost_uuid: "335e8cf5-12ff-4c2e-85c2-953f6aac8a12"
 title: "Zero-Cost Engineering"
 date: "2025-08-11T02:18:03.000+07:00"
 slug: "zero-cost-engineering"
 layout: "post"
-excerpt: "An adaptive workflow, rooted in responsibility, that inspires innovation, embraces an entrepreneurial mindset, and keeps the process fun—delivering professional results without the burden of licensing costs."
-image: "/automation-blog/assets/media/zero_cost_cover.png"
+excerpt: |
+  An adaptive workflow, rooted in responsibility, that inspires innovation, embraces an entrepreneurial mindset, and keeps the process fun—delivering professional results without the burden of licensing costs.
+image: "/automation-blog/assets/media/335e8cf5-12ff-4c2e-85c2-953f6aac8a12-zero_cost_cover.png"
 image_alt: ""
 image_caption: ""
 author:
@@ -15,7 +17,7 @@ tags:
   - "Practical Engineering"
   - "FOSS Workflow"
 categories:
-  - "Cost Optimization"
+  - "cost-optimization"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

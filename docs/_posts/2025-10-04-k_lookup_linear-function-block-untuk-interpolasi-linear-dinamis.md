@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "909b5c69-a239-4ec1-9ddf-19a2d9d06983"
 title: "K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis"
 date: "2025-10-04T13:04:05.000+07:00"
 slug: "k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis"
 layout: "post"
-excerpt: "`K_LOOKUP_LINEAR` adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant."
+excerpt: |
+  `K_LOOKUP_LINEAR` adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant.
 image: "https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@antoine1003?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Antoine Dautry</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -14,7 +16,7 @@ tags:
   - "Practical Engineering"
   - "Field Experience"
 categories:
-  - "Distributed Control System"
+  - "distributed-control-system"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

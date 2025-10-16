@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "88173dfd-1504-4c07-bb99-637f72b68556"
 title: "K_UNBALANCE: Function Block untuk Deteksi Ketidakseimbangan Tegangan/Arus di DCS"
 date: "2025-10-03T16:04:31.000+07:00"
 slug: "k_unbalance-function-block-untuk-deteksi-ketidakseimbangan-tegangan-arus-di-dcs"
 layout: "post"
-excerpt: "Dirancang untuk menghitung ketidakseimbangan tegangan atau arus dari tiga input dalam sistem DCS, khususnya pada power meter yang tidak menyediakan informasi unbalance."
+excerpt: |
+  Dirancang untuk menghitung ketidakseimbangan tegangan atau arus dari tiga input dalam sistem DCS, khususnya pada power meter yang tidak menyediakan informasi unbalance.
 image: "https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxiYWxhbmNlfGVufDB8fHx8MTc1OTQ4MTQ3Nnww&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@coltonsturgeon?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Colton Sturgeon</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -14,7 +16,7 @@ tags:
   - "Practical Engineering"
   - "Field Experience"
 categories:
-  - "Distributed Control System"
+  - "distributed-control-system"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

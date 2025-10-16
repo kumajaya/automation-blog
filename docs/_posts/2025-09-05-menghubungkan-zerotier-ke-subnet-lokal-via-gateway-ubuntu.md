@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "6e84fe93-b386-4c8b-b427-a11c3c4d9022"
 title: "Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu"
 date: "2025-09-05T16:38:25.000+07:00"
 slug: "menghubungkan-zerotier-ke-subnet-lokal-via-gateway-ubuntu"
 layout: "post"
-excerpt: "Integrasi ZeroTier ke subnet lokal industri kini makin modular. Artikel ini menyajikan struktur NAT dan redireksi VNC yang siap-pakai, lengkap dengan flowchart dan validasi runtime."
+excerpt: |
+  Integrasi ZeroTier ke subnet lokal industri kini makin modular. Artikel ini menyajikan struktur NAT dan redireksi VNC yang siap-pakai, lengkap dengan flowchart dan validasi runtime.
 image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDI3fHxuZXR3b3JraW5nfGVufDB8fHx8MTc1NzA1MTE4NHww&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@jouwdan?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Jordan Harrison</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -14,7 +16,7 @@ tags:
   - "Practical Engineering"
   - "Field Experience"
 categories:
-  - "Remote Access"
+  - "remote-access"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

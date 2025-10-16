@@ -1,10 +1,12 @@
 ---
+ghost_uuid: "34cdf281-2df8-499f-a7c3-82ad59790e97"
 title: "Optimizing Centrifugal Compressor Performance"
 date: "2025-08-06T23:01:25.000+07:00"
 slug: "optimizing-centrifugal-compressor-performance-the-role-of-performance-curves-in-operational-diagnostics"
 layout: "post"
-excerpt: "This article presents a diagnostic analysis revealing that a new centrifugal compressor underperforms due to misaligned operation—not equipment fault. Replotting vendor curves highlights excessive flow, inadequate pressure, and motor overload. Targeted corrections improve efficiency and reliability."
-image: "/automation-blog/assets/media/ZH1120-6_Flow_vs_Pressure_half.png"
+excerpt: |
+  This article presents a diagnostic analysis revealing that a new centrifugal compressor underperforms due to misaligned operation—not equipment fault. Replotting vendor curves highlights excessive flow, inadequate pressure, and motor overload. Targeted corrections improve efficiency and reliability.
+image: "/automation-blog/assets/media/34cdf281-2df8-499f-a7c3-82ad59790e97-ZH1120-6_Flow_vs_Pressure_half.png"
 image_alt: ""
 image_caption: ""
 author:
@@ -17,7 +19,7 @@ tags:
   - "Measurement Accuracy"
   - "FOSS Workflow"
 categories:
-  - "Centrifugal Compressor"
+  - "centrifugal-compressor"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"
@@ -84,14 +86,14 @@ comments: false
 </ul>
 <h3 id="flow-vs-discharge-pressure">Flow vs. Discharge Pressure</h3>
 <figure style="text-align: center;">
-  <img src="/automation-blog/assets/media/Flow_vs_Pressure.svg" alt="ZH1120-6_Flow_vs_Pressure">
+  <img src="/automation-blog/assets/media/34cdf281-2df8-499f-a7c3-82ad59790e97-Flow_vs_Pressure.svg" alt="ZH1120-6_Flow_vs_Pressure">
   <figcaption><strong>Figure 1.</strong> Flow vs. Discharge Pressure</figcaption>
 </figure>
 <p><strong>Figure 1</strong>: Line chart showing inlet flow (Nm³/h) vs. discharge pressure (kPa abs) for IGV settings of 20%, 40%, 60%, 80%, and 100%. The actual operating point at 100% IGV (12,958 Nm³/h, 601.3 kPa abs) is marked with a red dot, 80% IGV (12,416 Nm³/h, 640.65 kPa abs) with a blue dot, and the design point (12,767 Nm³/h, 680 kPa abs) with a black dot. Distinct colors represent each IGV setting, with black markers for operating and design points.</p>
 <p>This comparison clarified that the 100% IGV setting produced excessive flow without sufficient pressure—suggesting the system may be overdriving the compressor without realizing pressure gains.</p>
 <h3 id="flow-vs-shaft-power">Flow vs. Shaft Power</h3>
 <figure style="text-align: center;">
-  <img src="/automation-blog/assets/media/Flow_vs_Power.svg" alt="ZH1120-6 Flow vs Shaft Power">
+  <img src="/automation-blog/assets/media/34cdf281-2df8-499f-a7c3-82ad59790e97-Flow_vs_Power.svg" alt="ZH1120-6 Flow vs Shaft Power">
   <figcaption><strong>Figure 2.</strong> Flow vs. Shaft Power</figcaption>
 </figure>
 <p><strong>Figure 2</strong>: Line chart showing inlet flow (Nm³/h) vs. shaft power (kW) for IGV settings of 20%, 40%, 60%, 80%, and 100%. The actual operating point at 100% IGV (12,958 Nm³/h, 1,084.38 kW) is marked with a red dot, 80% IGV (12,416 Nm³/h, 1,035.4 kW) with a blue dot, and the design point (12,767 Nm³/h, 1,090 kW) with a black dot. Distinct colors represent each IGV setting, with black markers for operating and design points.</p>

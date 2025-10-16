@@ -1,9 +1,11 @@
 ---
+ghost_uuid: "bae1d59f-9100-445a-90a7-ca8bfc4a32e3"
 title: "K_ACCDELTA: Function Block untuk Perhitungan Delta Akumulator"
 date: "2025-10-16T20:30:41.000+07:00"
 slug: "k_accdelta-function-block-untuk-perhitungan-delta-akumulator"
 layout: "post"
-excerpt: "Dirancang untuk menghitung delta energi atau akumulator dengan sinkronisasi baseline antar meter, tanpa mengganggu logsheet yang berjalan."
+excerpt: |
+  Dirancang untuk menghitung delta energi atau akumulator dengan sinkronisasi baseline antar meter, tanpa mengganggu logsheet yang berjalan.
 image: "https://images.unsplash.com/photo-1604176857763-71877b24864e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1ldGVyfGVufDB8fHx8MTc2MDYxODMxOXww&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@thejmoore?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Jon Moore</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -14,7 +16,7 @@ tags:
   - "Practical Engineering"
   - "Field Experience"
 categories:
-  - "Distributed Control System"
+  - "distributed-control-system"
 featured: false
 visibility: "public"
 primary_author: "Ketut Kumajaya"

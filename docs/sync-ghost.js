@@ -40,8 +40,19 @@ const INTERNAL_MEDIA_DOMAINS = [
 ];
 
 // Utility: sanitize string agar aman ditulis ke YAML frontmatter
-function sanitizeForYAML(str) {
+function sanitizeForYAML(str, { multiline = false } = {}) {
   if (!str) return '';
+
+  if (multiline) {
+    // Gunakan block scalar untuk YAML
+    return '|\n  ' + str
+      .replace(/\r\n/g, '\n')   // normalisasi newline
+      .split('\n')
+      .map(line => line.replace(/\\/g, '\\\\').replace(/"/g, '\\"'))
+      .join('\n  ');
+  }
+
+  // Default: single line, escape karakter khusus
   return str
     .replace(/\\/g, '\\\\')  // escape backslash
     .replace(/"/g, '\\"')    // escape double quote
@@ -100,7 +111,10 @@ function isInternalMedia(url) {
 async function syncContent(type, layout, outputFolder) {
   try {
     // 1. Fetch konten dari Ghost API (posts atau pages)
-    const endpoint = `${GHOST_API_URL}${type}/?key=${GHOST_API_KEY}&include=authors,tags`;
+    const endpoint = new URL(
+      `${type}/?key=${GHOST_API_KEY}&include=authors,tags`,
+      GHOST_API_URL
+    ).toString();
     const res = await fetch(endpoint);
 
     if (res.status === 404) {
@@ -124,31 +138,32 @@ async function syncContent(type, layout, outputFolder) {
 
       // 3a. Susun frontmatter standar
       const fm = {
+        ghost_uuid: item.uuid || '',
         title: sanitizeForYAML(item.title),
         date: item.published_at || '',
-        slug: item.slug,
+        slug: item.slug || item.uuid,
         layout,
-        excerpt: sanitizeForYAML(item.custom_excerpt || item.excerpt || ''),
+        excerpt: sanitizeForYAML(item.custom_excerpt || item.excerpt || '', { multiline: true }),
         image: '', // akan diisi jika ada feature_image
         image_alt: sanitizeForYAML(item.feature_image_alt || ''),
         image_caption: sanitizeForYAML(item.feature_image_caption || ''),
         author: item.authors ? item.authors.map(a => sanitizeForYAML(a.name)) : [],
         tags: item.tags ? item.tags.map(t => sanitizeForYAML(t.name)) : [],
-        categories: item.primary_tag ? [sanitizeForYAML(item.primary_tag.name)] : []
+        categories: item.primary_tag ? [sanitizeForYAML(item.primary_tag.slug)] : []
       };
 
       // 3b. Tambahkan field metadata Ghost (SEO, sosial, dsb.)
       fm.featured = item.featured || false;
       fm.visibility = item.visibility || '';
       fm.primary_author = item.primary_author ? sanitizeForYAML(item.primary_author.name) : '';
-      fm.codeinjection_head = item.codeinjection_head || '';
-      fm.codeinjection_foot = item.codeinjection_foot || '';
+      fm.codeinjection_head = sanitizeForYAML(item.codeinjection_head, { multiline: true }) || '';
+      fm.codeinjection_foot = sanitizeForYAML(item.codeinjection_foot, { multiline: true }) || '';
       fm.canonical_url = item.canonical_url || '';
       fm.og_title = item.og_title || '';
-      fm.og_description = item.og_description || '';
+      fm.og_description = sanitizeForYAML(item.og_description, { multiline: true }) || '';
       fm.og_image = item.og_image || '';
       fm.twitter_title = item.twitter_title || '';
-      fm.twitter_description = item.twitter_description || '';
+      fm.twitter_description = sanitizeForYAML(item.twitter_description, { multiline: true }) || '';
       fm.twitter_image = item.twitter_image || '';
       fm.url = item.url || '';
       fm.comment_id = item.comment_id || '';
@@ -160,7 +175,7 @@ async function syncContent(type, layout, outputFolder) {
       if (item.feature_image) {
         if (isInternalMedia(item.feature_image)) {
           const urlObj = new URL(item.feature_image);
-          const mediaFileName = path.basename(urlObj.pathname);
+          const mediaFileName = `${item.uuid}-${path.basename(urlObj.pathname)}`;
           const mediaPath = path.join(MEDIA_PATH, mediaFileName);
           await downloadFile(item.feature_image, mediaPath);
           fm.image = `${BASE_URL}/assets/media/${mediaFileName}`;
@@ -177,7 +192,7 @@ async function syncContent(type, layout, outputFolder) {
         if (isInternalMedia(imgUrl)) {
           try {
             const urlObj = new URL(imgUrl);
-            const mediaFileName = path.basename(urlObj.pathname);
+            const mediaFileName = `${item.uuid}-${path.basename(urlObj.pathname)}`;
             const mediaPath = path.join(MEDIA_PATH, mediaFileName);
             await downloadFile(imgUrl, mediaPath);
             contentHtml = contentHtml.replaceAll(imgUrl, `${BASE_URL}/assets/media/${mediaFileName}`);
@@ -196,7 +211,11 @@ async function syncContent(type, layout, outputFolder) {
           frontMatter += `${key}:\n`;
           value.forEach(v => frontMatter += `  - "${v}"\n`);
         } else if (typeof value === 'string') {
-          frontMatter += `${key}: "${value}"\n`;
+          if (value.startsWith('|\n')) {
+            frontMatter += `${key}: ${value}\n`;
+          } else {
+            frontMatter += `${key}: "${value}"\n`;
+          }
         } else {
           frontMatter += `${key}: ${value}\n`;
         }

@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya | 28 September 2025</em></p>
 <h2 id="pengantar">Pengantar</h2>
 <p>Dalam sistem DCS/SCADA, drift data akumulasi adalah masalah klasik. Counter runtime, hour meter, atau energi meter sering mengalami penyimpangan akibat overflow tipe data, jitter komunikasi, atau perbedaan jam antar perangkat. Bias kecil yang dibiarkan akan menumpuk, menghasilkan data historis yang tidak konsisten dan menyimpang.</p>
@@ -180,3 +181,5 @@ $$\text{Offset} = \frac{3737 - 3750}{3750} \times 100% = -0.35%$$</li>
 <p>Dengan Anchor-Based Normalization berbasis anchor point di DCS dan logika tiga zona deviasi, pipeline data menjadi lebih presisi karena drift wajar terkoreksi, lebih aman karena noise kecil diabaikan dan outlier besar dilewatkan, serta lebih transparan karena data mentah tetap utuh sementara catatan koreksi tersimpan jelas.</p>
 <p>Pendekatan ini membuat sistem audit-ready, mudah diajarkan lintas operator, dan scalable untuk berbagai aplikasi industri, khususnya pada akumulator seperti flow totalizer.</p>
 <p>Hasilnya, audit tidak lagi disibukkan membetulkan angka, melainkan dapat langsung fokus pada analisis operasional dan pemeriksaan lanjutan berbasis catatan koreksi.</p>
+
+{% endraw %}

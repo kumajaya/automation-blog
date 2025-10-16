@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 
 <!--kg-card-begin: html-->
 <aside class="gh-sidebar">
@@ -585,3 +586,5 @@ plt.show()
   </button>
 </div>
 <!--kg-card-end: html-->
+
+{% endraw %}

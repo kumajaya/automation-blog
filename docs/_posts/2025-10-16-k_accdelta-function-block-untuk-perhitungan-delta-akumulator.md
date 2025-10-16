@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya — 16 Oktober 2025</em></p>
 <h3 id="latar-belakang">Latar Belakang</h3>
 <p>Dalam sistem distribusi energi, sering kali terdapat perbedaan waktu pemasangan antara power meter pada sisi sumber dan sisi beban. Akibatnya, nilai akumulasi energi pada beban dapat lebih besar dibandingkan sumber, menghasilkan delta negatif yang tidak realistis.</p>
@@ -166,3 +167,5 @@ flowchart TD
 <hr>
 <h3 id="kesimpulan">Kesimpulan</h3>
 <p>Function Block <code>K_ACCDELTA</code> menghitung delta energi dengan proteksi nilai negatif dan mekanisme snapshot reset. Dengan desain yang minimalis dan modular, FB ini dapat digunakan baik untuk <strong>netting dua meter</strong> maupun <strong>single-meter delta</strong>, serta mendukung auditabilitas lintas plant. Reset dilakukan secara logis di DCS, memungkinkan pembaruan baseline kapan pun tanpa memengaruhi nilai akumulasi pada power meter.</p>
+
+{% endraw %}

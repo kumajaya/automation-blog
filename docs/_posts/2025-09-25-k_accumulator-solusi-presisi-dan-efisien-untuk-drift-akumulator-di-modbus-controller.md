@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya | 25 September 2025</em></p>
 <h2 id="latar-belakang">Latar Belakang</h2>
 <p>Dalam sistem industri berbasis DCS/SCADA, akumulasi data flow adalah fondasi penting untuk perhitungan energi, OEE, hour meter, maupun audit produksi. Supcon menyediakan function block bawaan <code>TOTAL_ACCUM</code> untuk fungsi ini. Namun, ketika block tersebut dijalankan di Modbus controller, muncul masalah serius: <em>drift</em> akumulasi akibat keterbatasan clock internal dan jitter eksekusi.</p>
@@ -662,3 +663,5 @@ END_FUNCTION_BLOCK
 <li><strong>TOTAL_ACCUM</strong>: drift konsisten di sekitar −1.9% sejak awal hingga 6 jam, menegaskan bias bawaan block vendor.</li>
 <li><strong>Makna audit</strong>: tren progresif ini memperkuat klaim bahwa K_ACCUM bukan hanya presisi sesaat, tetapi juga tahan drift dalam runtime panjang.</li>
 </ul>
+
+{% endraw %}

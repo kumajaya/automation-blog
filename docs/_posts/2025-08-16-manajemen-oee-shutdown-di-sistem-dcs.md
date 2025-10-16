@@ -37,6 +37,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <h2 id="pendekatan-modular-dengan-buffer-timer-dan-klasifikasi-setelah-trip">Pendekatan Modular dengan Buffer Timer dan Klasifikasi Setelah Trip</h2>
 <p><em>Ditulis oleh Ketut Kumajaya | 16 Agustus 2025</em></p>
 <h2 id="pendahuluan">Pendahuluan</h2>
@@ -542,3 +543,5 @@ END_FUNCTION_BLOCK
   </button>
 </div>
 <!--kg-card-end: html-->
+
+{% endraw %}

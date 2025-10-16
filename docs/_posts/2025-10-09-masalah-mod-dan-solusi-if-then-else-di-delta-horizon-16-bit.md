@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya | 08 Oktober 2025</em></p>
 <h2 id="pengantar">Pengantar</h2>
 <p>Dalam sistem DCS berbasis counter 16-bit, perhitungan delta sering menghadapi masalah rollover—nilai kembali ke nol setelah mencapai batas 65.535. Jika tidak ditangani dengan benar, kondisi ini menghasilkan loncatan nilai besar (false delta) yang mengganggu akumulasi waktu maupun totalisasi.</p>
@@ -313,3 +314,5 @@ LAST_OUT  := TIMER_IN;
 END_FUNCTION_BLOCK
 </code></pre>
 </details>
+
+{% endraw %}

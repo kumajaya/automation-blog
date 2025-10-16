@@ -37,6 +37,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya | 10 Oktober 2025</em></p>
 <h3 id="pendahuluan-dunia-yang-berubah-cepat">Pendahuluan: Dunia yang Berubah Cepat</h3>
 <p>Di Indonesia, laju adopsi AI di sektor knowledge work melonjak luar biasa—92% pekerja berbasis pengetahuan sudah menggunakan generative AI di tempat kerja (<a href="https://news.microsoft.com/source/asia/2025/03/12/creating-the-enablers-for-indonesias-ai-future/?ref=automation.samatorgroup.com" target="_blank">Microsoft, 2025</a>). Namun, sekitar 45% dari seluruh responden khawatir pekerjaan mereka lenyap akibat otomasi (<a href="https://www.microsoft.com/en-us/worklab/work-trend-index/ai-at-work-is-here-now-comes-the-hard-part?ref=automation.samatorgroup.com" target="_blank">Microsoft Work Trend Index, 2025</a>), termasuk di sektor manufaktur. Mesin pintar memang bekerja 24/7, tapi justru di sinilah peran manusia menjadi krusial—sebagai pemimpin perubahan, penjaga etika, dan arsitek sistem yang transparan. Perubahan besar dalam dunia industri tidak hanya terjadi pada teknologi, tetapi juga pada cara manusia memimpin dan membangun kepercayaan.</p>
@@ -142,3 +143,5 @@ Teknologi dan sistem otomatisasi hanyalah alat; yang menentukan keberhasilan org
 <p>Kepemimpinan yang efektif di era modern bukan sekadar otoritas atau kontrol, tetapi tentang menciptakan ekosistem di mana setiap individu merasa penting, memiliki ruang untuk berkontribusi, dan bertanggung jawab terhadap hasil.<br>
 Ini sejalan dengan praktik terbaik global, di mana perusahaan besar menekankan <em>psychological safety</em>, pemberdayaan tim, dan kolaborasi sebagai inti pertumbuhan berkelanjutan.</p>
 <p>Mulailah hari ini: Evaluasi satu hubungan di tim Anda—bagaimana bisa lebih manusiawi di tengah arus otomasi?</p>
+
+{% endraw %}

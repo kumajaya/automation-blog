@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut P. Kumajaya | 4 Oktober 2025</em></p>
 <h3 id="latar-belakang">Latar Belakang</h3>
 <p>Interpolasi linear adalah metode sederhana namun krusial dalam otomasi proses. Banyak kurva performa peralatan—seperti garis surge centrifugal compressor, karakteristik valve, atau profil efisiensi pompa—tidak tersedia dalam bentuk persamaan matematis, melainkan tabel titik data.</p>
@@ -371,3 +372,5 @@ END_IF;
 END_FUNCTION_BLOCK
 </code></pre>
 </details>
+
+{% endraw %}

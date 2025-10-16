@@ -37,6 +37,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <h3 id="strategi-bertahap-untuk-pendekatan-remote-monitoring-mulai-dari-read-only-testing-hingga-operasional-paralel-dan-full-control">Strategi bertahap untuk pendekatan remote monitoring, mulai dari read-only, testing, hingga operasional paralel dan full control</h3>
 <p><em>Ditulis oleh Ketut Kumajaya | 7 September 2025</em></p>
 <h2 id="pendahuluan">Pendahuluan</h2>
@@ -369,3 +370,5 @@ flowchart TD
   </button>
 </div>
 <!--kg-card-end: html-->
+
+{% endraw %}

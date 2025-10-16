@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><strong>Oleh: Ketut P. Kumajaya — 3 Oktober 2025</strong></p>
 <h3 id="latar-belakang">Latar Belakang</h3>
 <p>Dalam sistem distribusi daya, ketidakseimbangan antar fase tegangan atau arus dapat menyebabkan panas berlebih, penurunan efisiensi, dan gangguan pada peralatan. Sayangnya, banyak power meter tidak menyediakan informasi unbalance secara langsung. Untuk menutup celah ini, Function Block <code>K_UNBALANCE</code> dirancang menggunakan Structured Text (ST) di Supcon DCS sebagai artefak modular yang siap diaudit dan teachable lintas operator.</p>
@@ -148,3 +149,5 @@ END_FUNCTION_BLOCK
 <hr>
 <h3 id="kesimpulan">Kesimpulan</h3>
 <p>Function Block <code>K_UNBALANCE</code> adalah artefak modular yang memperkuat transparansi dan efisiensi dalam sistem DCS. Dengan pairing array, proteksi multi-lapis, dan output yang informatif, FB ini bisa dijadikan template untuk pengembangan Function Block lain yang audit-grade dan teachable lintas plant.</p>
+
+{% endraw %}

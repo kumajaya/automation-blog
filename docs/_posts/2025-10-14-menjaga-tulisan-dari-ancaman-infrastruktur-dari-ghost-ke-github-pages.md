@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya | 14 Oktober 2025</em></p>
 <h3 id="pendahuluan">Pendahuluan</h3>
 <p>Menulis blog itu sederhana. Tapi di balik kesederhanaannya, selalu ada satu kekhawatiran: bagaimana kalau <em>backbone</em> infrastruktur yang kita pakai tidak cukup kuat—dan suatu hari semua tulisan itu hilang begitu saja?</p>
@@ -98,3 +99,5 @@ comments: false
 <p>Kode saya terbuka, bisa digunakan siapa saja, tanpa batasan. Namun, tentu saja tidak semua hal bisa dibuka—misalnya <em>API_KEY</em> blog pribadi, yang hanya saya miliki. Ghost tidak akan memberikan izin akses tanpa otorisasi, dan memang seharusnya begitu.</p>
 <p>Karena pada akhirnya, sebagian pengetahuan memang harus dibuka agar bisa diwariskan, sementara sebagian yang lain tetap dijaga sebagai bentuk tanggung jawab.</p>
 <p>Penasaran? Silakan kunjungi repo mirroring saya di <a href="https://github.com/kumajaya/automation-blog/tree/main?ref=automation.samatorgroup.com" target="_blank">GitHub</a>—mungkin Anda bisa fork, tambah kontribusi, atau adaptasi untuk proyek sendiri. Mari jaga warisan ini bersama!</p>
+
+{% endraw %}

@@ -39,6 +39,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 
 <!--kg-card-begin: html-->
 <aside class="gh-sidebar">
@@ -151,3 +152,5 @@ comments: false
   </button>
 </div>
 <!--kg-card-end: html-->
+
+{% endraw %}

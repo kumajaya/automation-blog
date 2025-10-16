@@ -36,6 +36,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <h3 id="struktur-nat-modular-redireksi-vnc-dan-internet-gateway">Struktur NAT Modular, Redireksi VNC, dan Internet Gateway</h3>
 <p><em>Ditulis oleh Ketut Kumajaya | 5 September 2025</em></p>
 <h3 id="konteks-operasional">Konteks Operasional</h3>
@@ -319,3 +320,5 @@ curl https://example.com
   </button>
 </div>
 <!--kg-card-end: html-->
+
+{% endraw %}

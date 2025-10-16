@@ -37,6 +37,7 @@ access: true
 comments: false
 ---
 
+{% raw %}
 <p><em>Ditulis oleh Ketut Kumajaya | 6 Oktober 2025</em></p>
 <h3 id="latar-belakang">Latar Belakang</h3>
 <p>Dalam dunia otomasi industri, data proses bukan sekadar angka di layar; ia adalah dasar pengambilan keputusan bisnis.<br>
@@ -215,3 +216,5 @@ Vendor DCS dapat menawarkan solusi, dengan tantangan menghadirkan integrasi yang
 <p>Arsitektur ini lahir dari pengalaman lapangan sebagai system integrator yang ditempa oleh praktik nyata, bukan teori kelas. Setiap komponen — Rapid SCADA, Node-RED, ZeroTier, proxy layer — disatukan agar stabil, aman, dan saling memahami.</p>
 <p>Sistem cukup sederhana untuk dipahami, tangguh, fleksibel, dan profesional.<br>
 Setiap unit produksi mandiri, fleksibel dari sisi perangkat keras dan OS, tetap menjadi bagian dari ekosistem data aman yang efisien.</p>
+
+{% endraw %}

@@ -38,7 +38,7 @@ comments: false
 
 {% raw %}
 <p><strong>Dari register mentah ke nilai proses — menjembatani protokol klasik dengan kebutuhan data modern.</strong></p>
-<p><em>Ditulis oleh Ketut Kumajaya | 17 Oktober 2025</em></p>
+<p><em>Ditulis oleh Ketut Kumajaya — 17 Oktober 2025</em></p>
 <h2 id="latar-belakang">Latar Belakang</h2>
 <p>Modbus adalah protokol komunikasi klasik yang diperkenalkan sejak akhir 1970‑an dan hingga kini tetap menjadi standar de facto di berbagai sistem industri. Kesederhanaan dan keterbukaannya membuat Modbus terus digunakan secara luas, baik pada perangkat lama maupun perangkat modern, mulai dari PLC hingga flowmeter.</p>
 <p>Namun, karena Modbus hanya mendefinisikan pertukaran data dalam bentuk register 16‑bit, interpretasi data bernilai 32‑bit atau 64‑bit memerlukan mekanisme konversi tambahan. Tantangan umum yang muncul meliputi perbedaan <strong>endianness</strong>, perbedaan <strong>addressing</strong>, serta variasi <strong>hardware layer</strong> dan <strong>varian protokol</strong>.</p>

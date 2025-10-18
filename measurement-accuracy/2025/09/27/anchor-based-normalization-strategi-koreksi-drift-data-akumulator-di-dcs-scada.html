@@ -9,6 +9,8 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem." />
 <meta property="og:description" content="Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem." />
+<link rel="canonical" href="https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html" />
+<meta property="og:url" content="https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html" />
 <meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
 <meta property="og:image" content="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" />
 <meta property="og:type" content="article" />
@@ -17,9 +19,9 @@
 <meta property="twitter:image" content="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" />
 <meta property="twitter:title" content="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-27T20:13:03+00:00","datePublished":"2025-09-27T20:13:03+00:00","description":"Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem.","headline":"Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA","image":"https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"},"url":"/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-27T20:13:03+00:00","datePublished":"2025-09-27T20:13:03+00:00","description":"Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem.","headline":"Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA","image":"https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"},"url":"https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"}</script>
 <!-- End Jekyll SEO tag -->
-<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<link id="main-stylesheet" rel="stylesheet" href="/automation-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://kumajaya.github.io/automation-blog/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
 <script>
   if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.classList.add('dark-mode');
@@ -39,9 +41,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <!-- Dukungan favicon -->
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
-<link rel="shortcut icon" href="/assets/media/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/automation-blog/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/automation-blog/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/automation-blog/assets/media/favicon.ico">
 
 <style>
 /* Reduce site title line-height and bottom margin */
@@ -177,7 +179,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 <body><header class="site-header">
 
   <div class="wrapper">
-    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+    <a class="site-title" rel="author" href="/automation-blog/">Technical &amp; Sustainability Digest</a>
       <nav class="site-nav">
         <input type="checkbox" id="nav-trigger" />
         <label for="nav-trigger">
@@ -185,7 +187,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
         </label>
 
         <div class="nav-items">
-  <a class="nav-item" href="/about/">About</a>
+  <a class="nav-item" href="/automation-blog/about/">About</a>
 </div>
 
       </nav>
@@ -201,7 +203,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 
     
     <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
-      <a href="/categories/measurement-accuracy/" itemprop="articleSection">
+      <a href="/automation-blog/categories-measurement-accuracy" itemprop="articleSection">
         Measurement Accuracy
       </a>
     </div>
@@ -214,7 +216,9 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
       </time>
       <div class="force-inline post-authors">
           <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span>
+          </span>
+        
       </div>
       
       <div class="force-inline post-authors">
@@ -233,7 +237,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 
   
   <figure class="post-feature-image" style="margin-top:1rem;">
-    <img src="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" itemprop="image">
+    <img src="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" itemprop="image" loading="lazy">
     
     <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
       <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@jamie452?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Jamie Street</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
@@ -402,14 +406,15 @@ $$\text{Offset} = \frac{3737 - 3750}{3750} \times 100% = -0.35%$$</li>
 
   </div>
 
-  <a class="u-url" href="/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html" hidden></a>
+  <a class="u-url" href="/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html" hidden></a>
+  <meta itemprop="mainEntityOfPage" content="https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html">
 </article>
 
       </div>
     </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
 
 <footer class="site-footer h-card">
-  <data class="u-url" value="/"></data>
+  <data class="u-url" value="/automation-blog/"></data>
 
   <div class="wrapper">
 
@@ -436,7 +441,7 @@ $$\text{Offset} = \frac{3737 - 3750}{3750} \times 100% = -0.35%$$</li>
     </a>
   </li>
   <li>
-    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+    <a href="https://kumajaya.github.io/automation-blog/feed.xml" target="_blank" title="Subscribe to syndication feed">
       <svg class="svg-icon grey" viewbox="0 0 16 16">
         <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
           11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0

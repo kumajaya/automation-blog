@@ -4,11 +4,21 @@ layout: base
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
+    {% assign cat = nil %}
     {% if page.tags and page.tags.size > 0 %}
-        <div class="post-tag" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
-        {{ page.tags[0] }}
-        </div>
+      {% assign cat = page.tags[0] %}
+    {% elsif page.categories and page.categories.size > 0 %}
+      {% assign cat = page.categories[0] %}
     {% endif %}
+
+    {% if cat %}
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="{{ site.baseurl }}/categories/{{ cat | slugify }}/" itemprop="articleSection">
+        {{ cat }}
+      </a>
+    </div>
+    {% endif %}
+
     <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
     <div class="post-meta">
       {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
@@ -43,14 +53,14 @@ layout: base
   </header>
 
   {% if page.excerpt %}
-  <p class="post-excerpt" style="color:#4b5563; font-size:1rem; margin-top:0.25rem;">
+  <p class="post-excerpt" itemprop="description">
     {{ page.excerpt }}
   </p>
   {% endif %}
 
   {% if page.image %}
   <figure class="post-feature-image" style="margin-top:1rem;">
-    <img src="{{ page.image }}" alt="{{ page.title }}" style="width:100%; height:auto; border-radius:6px;">
+    <img src="{{ page.image }}" alt="{{ page.image_alt | default: page.title }}" itemprop="image">
     {% if page.image_caption %}
     <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
       {{ page.image_caption | markdownify }}

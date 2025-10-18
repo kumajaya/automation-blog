@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem." />
+<meta property="og:description" content="Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-27T20:13:03+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-27T20:13:03+00:00","datePublished":"2025-09-27T20:13:03+00:00","description":"Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem.","headline":"Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA","image":"https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"},"url":"/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/measurement-accuracy/" itemprop="articleSection">
+        Measurement Accuracy
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-27T20:13:03+00:00" itemprop="datePublished">
+        September 27, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">3 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@jamie452?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Jamie Street</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p><em>Ditulis oleh Ketut Kumajaya | 28 September 2025</em></p>
+<h2 id="pengantar">Pengantar</h2>
+<p>Dalam sistem DCS/SCADA, drift data akumulasi adalah masalah klasik. Counter runtime, hour meter, atau energi meter sering mengalami penyimpangan akibat overflow tipe data, jitter komunikasi, atau perbedaan jam antar perangkat. Bias kecil yang dibiarkan akan menumpuk, menghasilkan data historis yang tidak konsisten dan menyimpang.</p>
+<p>Contoh sederhana: akumulasi flowmeter menyimpang hingga 2% dari nilai seharusnya, tanpa ada yang menyadari.</p>
+<p>Untuk mengatasi hal ini, artikel ini memperkenalkan pendekatan <strong>Anchor-Based Normalization</strong>: strategi koreksi berbasis satu titik referensi (anchor point) yang ditanam di DCS, dengan Rapid SCADA sebagai time authority dan Node-RED sebagai relay REST API yang melakukan koreksi on-demand.</p>
+<p>Lebih dari sekadar normalisasi, pendekatan ini mewujudkan <strong>self-healing measurement pipeline</strong>, di mana sistem secara otomatis mendeteksi deviasi, menerapkan koreksi hanya saat diperlukan, dan menyimpan catatan audit secara transparan.</p>
+<hr />
+
+<h2 id="konsep-anchor-based-normalization">Konsep Anchor-Based Normalization</h2>
+<ul>
+<li><strong>Anchor Point</strong> → nilai referensi tunggal yang diketahui benar (misalnya input statis <code>flowrate = 3750</code>).</li>
+<li><strong>Window Historis</strong> → data 4–24 jam terakhir dari Rapid SCADA digunakan untuk menghitung selisih (offset).</li>
+<li><strong>Offset Correction</strong> → selisih antara anchor dan histori diterapkan ke semua accumulator.</li>
+<li><strong>Normalization</strong> → setiap data yang diminta ERP atau sistem bisnis lain sudah terkoreksi, sementara data mentah tetap tersimpan di Rapid SCADA.</li>
+</ul>
+<p>Dengan cara ini, cukup satu anchor point untuk meluruskan seluruh accumulator.</p>
+<hr />
+
+<h2 id="zona-deviasi">Zona Deviasi</h2>
+<p>Untuk menjaga keseimbangan antara presisi dan keandalan, digunakan logika tiga zona:</p>
+<table>
+<thead>
+<tr>
+<th>Zona</th>
+<th>Kriteria Deviasi Relatif</th>
+<th>Status Koreksi</th>
+<th>Catatan Audit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hijau</td>
+<td>≤ stddev</td>
+<td>Tidak diterapkan (<code>applied: false</code>)</td>
+<td>Deviasi dianggap noise, data dilewatkan apa adanya</td>
+</tr>
+<tr>
+<td>Kuning</td>
+<td>&gt; stddev dan ≤ max</td>
+<td>Diterapkan (<code>applied: true</code>)</td>
+<td>Koreksi normal, offset dicatat di header</td>
+</tr>
+<tr>
+<td>Merah</td>
+<td>&gt; max</td>
+<td>Tidak diterapkan (<code>applied: false</code>)</td>
+<td>Data dianggap outlier, dilewatkan <em>as-is</em> dengan flag audit</td>
+</tr>
+</tbody>
+</table>
+<p>Contoh kasus: deviasi 0.1% masuk zona hijau sehingga tidak dikoreksi, deviasi 0.35% masuk zona kuning sehingga koreksi diterapkan, sedangkan deviasi 12.5% masuk zona merah sehingga data dilewatkan apa adanya dengan catatan audit.</p>
+<hr />
+
+<h2 id="contoh-numerik-anchor-based-normalization">Contoh Numerik Anchor-Based Normalization</h2>
+<ul>
+<li><strong>Anchor Point (DCS)</strong>: <code>flowrate = 3750</code></li>
+<li><strong>Window Historis (SCADA 4 jam terakhir)</strong>: rata-rata akumulator terbaca <code>3737</code></li>
+<li><strong>Offset</strong>:<br />
+$$\text{Offset} = \frac{3737 - 3750}{3750} \times 100% = -0.35%$$</li>
+</ul>
+<p>Offset negatif di sini artinya histori terbaca <strong>lebih rendah</strong> dibanding anchor.</p>
+<hr />
+
+<h3 id="evaluasi-zona-deviasi">Evaluasi Zona Deviasi</h3>
+<ul>
+<li><strong>Threshold stddev</strong>: 0.20%</li>
+<li><strong>Threshold max</strong>: 5.0%</li>
+</ul>
+<p>Maka:</p>
+<ul>
+<li>Deviasi relatif = <strong>0.35%</strong></li>
+<li>Karena <code>0.20% &lt; 0.35% ≤ 5.0%</code>, maka masuk <strong>Zona Kuning</strong>.</li>
+<li>Status: <strong>applied = true</strong> → koreksi offset diterapkan.</li>
+</ul>
+<hr />
+
+<h3 id="payload-hasil-koreksi">Payload Hasil Koreksi</h3>
+<pre><code class="language-json">"correction": {
+  "applied": true,
+  "relative_deviation": 0.35,
+  "std_dev_threshold": 0.20,
+  "max_threshold": 5.0
+}
+</code></pre>
+<p>ERP atau sistem bisnis cukup membaca bagian <code>data[]</code> dengan tenang, karena hasil sudah terjamin sesuai header <code>correction</code>.</p>
+<hr />
+
+<h3 id="perbandingan-kasus-lain">Perbandingan Kasus Lain</h3>
+<ul>
+<li><strong>Deviasi 0.1%</strong> → ≤ 0.20% → <strong>Zona Hijau</strong> → tidak dikoreksi (<code>applied: false</code>).</li>
+<li><strong>Deviasi 0.35%</strong> → antara 0.20% dan 5.0% → <strong>Zona Kuning</strong> → dikoreksi (<code>applied: true</code>).</li>
+<li><strong>Deviasi 12.5%</strong> → &gt; 5.0% → <strong>Zona Merah</strong> → tidak dikoreksi, dilewatkan <em>as-is</em> dengan catatan audit.</li>
+</ul>
+<hr />
+
+<h2 id="implementasi-payload">Implementasi Payload</h2>
+<p>Informasi koreksi cukup ditaruh sekali di header. Data di bawah tetap bersih, hanya menampilkan nilai akumulator.</p>
+<pre><code class="language-json">{
+  "site": "SIG025",
+  "description": "SIG Bekasi",
+  "correction": {
+    "applied": true,
+    "relative_deviation": 0.35,
+    "std_dev_threshold": 0.20,
+    "max_threshold": 5.0
+  },
+  "data": [
+    {
+      "index": 0,
+      "code": "FTLOX-01",
+      "description": "[1294] LOX Flow Totalizer",
+      "source": "[1294] LOX Flow Totalizer",
+      "data": [
+        {
+          "value": 829908.5625,
+          "timestamp": "2025-09-28T01:00:00+07:00"
+        },
+        {
+          "value": 826878.5,
+          "timestamp": "2025-09-28T00:00:00+07:00"
+        },
+        {
+          "value": 823849.1875,
+          "timestamp": "2025-09-27T23:00:00+07:00"
+        }
+        ...
+</code></pre>
+<hr />
+
+<h2 id="visualisasi-alur-data">Visualisasi Alur Data</h2>
+<figure>
+    <div class="mermaid">
+    flowchart TD
+        A["DCS: Akumulator (Flow Totalizer)"] --&gt; B["Rapid SCADA: Simpan raw historis"]
+        B --&gt; C["Node-RED: Ambil raw saat ERP request"]
+        C --&gt; D["Bandingkan dengan Anchor"]
+        D --&gt; E{"Zona deviasi?"}
+        E --&gt;|"Hijau (&lt;= stddev)"| F["Applied: false"]
+        E --&gt;|"Kuning (antara stddev dan max)"| G["Applied: true"]
+        E --&gt;|"Merah (&gt; max)"| H["Applied: false"]
+        F --&gt; I["Header correction"]
+        G --&gt; I
+        H --&gt; I
+        I --&gt; J["ERP: Konsumsi payload"]
+    </div>
+<figcaption>Alur Anchor-Based Normalization: SCADA tetap menyimpan data mentah, Node-RED memutuskan zona deviasi, dan ERP selalu menerima data yang sudah diputuskan sesuai header koreksi.</figcaption>
+</figure>
+<hr />
+
+<h2 id="kesimpulan">Kesimpulan</h2>
+<p>Dengan Anchor-Based Normalization berbasis anchor point di DCS dan logika tiga zona deviasi, pipeline data menjadi lebih presisi karena drift wajar terkoreksi, lebih aman karena noise kecil diabaikan dan outlier besar dilewatkan, serta lebih transparan karena data mentah tetap utuh sementara catatan koreksi tersimpan jelas.</p>
+<p>Pendekatan ini membuat sistem audit-ready, mudah diajarkan lintas operator, dan scalable untuk berbagai aplikasi industri, khususnya pada akumulator seperti flow totalizer.</p>
+<p>Hasilnya, audit tidak lagi disibukkan membetulkan angka, melainkan dapat langsung fokus pada analisis operasional dan pemeriksaan lanjutan berbasis catatan koreksi.</p>
+
+
+  </div>
+
+  <a class="u-url" href="/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

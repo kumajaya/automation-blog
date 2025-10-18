@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="K_ACCUM adalah function block custom untuk mengatasi drift akumulasi dan keterbatasan alamat komunikasi antar controller. Dengan akumulasi tipe data LONG dengan nilai desimal dalam SFLOAT, solusi ini lebih presisi, hemat alamat, dan mudah ditangani." />
+<meta property="og:description" content="K_ACCUM adalah function block custom untuk mengatasi drift akumulasi dan keterbatasan alamat komunikasi antar controller. Dengan akumulasi tipe data LONG dengan nilai desimal dalam SFLOAT, solusi ini lebih presisi, hemat alamat, dan mudah ditangani." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1633265486501-0cf524a07213?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fHRpbWVyfGVufDB8fHx8MTc1ODc4NTc5NXww&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-25T07:08:24+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1633265486501-0cf524a07213?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fHRpbWVyfGVufDB8fHx8MTc1ODc4NTc5NXww&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-25T07:08:24+00:00","datePublished":"2025-09-25T07:08:24+00:00","description":"K_ACCUM adalah function block custom untuk mengatasi drift akumulasi dan keterbatasan alamat komunikasi antar controller. Dengan akumulasi tipe data LONG dengan nilai desimal dalam SFLOAT, solusi ini lebih presisi, hemat alamat, dan mudah ditangani.","headline":"K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller","image":"https://images.unsplash.com/photo-1633265486501-0cf524a07213?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fHRpbWVyfGVufDB8fHx8MTc1ODc4NTc5NXww&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/distributed-control-system/2025/09/25/k_accumulator-solusi-presisi-dan-efisien-untuk-drift-akumulator-di-modbus-controller.html"},"url":"/distributed-control-system/2025/09/25/k_accumulator-solusi-presisi-dan-efisien-untuk-drift-akumulator-di-modbus-controller.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/distributed-control-system/" itemprop="articleSection">
+        Distributed Control System
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-25T07:08:24+00:00" itemprop="datePublished">
+        September 25, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">10 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    K_ACCUM adalah function block custom untuk mengatasi drift akumulasi dan keterbatasan alamat komunikasi antar controller. Dengan akumulasi tipe data LONG dengan nilai desimal dalam SFLOAT, solusi ini lebih presisi, hemat alamat, dan mudah ditangani.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1633265486501-0cf524a07213?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fHRpbWVyfGVufDB8fHx8MTc1ODc4NTc5NXww&ixlib=rb-4.1.0&q=80&w=2000" alt="K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@towfiqu999999?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Towfiqu barbhuiya</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p><em>Ditulis oleh Ketut Kumajaya | 25 September 2025</em></p>
+<h2 id="latar-belakang">Latar Belakang</h2>
+<p>Dalam sistem industri berbasis DCS/SCADA, akumulasi data flow adalah fondasi penting untuk perhitungan energi, OEE, hour meter, maupun audit produksi. Supcon menyediakan function block bawaan <code>TOTAL_ACCUM</code> untuk fungsi ini. Namun, ketika block tersebut dijalankan di Modbus controller, muncul masalah serius: <em>drift</em> akumulasi akibat keterbatasan clock internal dan jitter eksekusi.</p>
+<p>Selain itu, terdapat keterbatasan komunikasi: hanya tersedia 128 alamat 32‑bit untuk transfer data dari main controller ke Modbus controller. Sinyal analog SFLOAT 12‑bit hanya menempati 16‑bit, sehingga satu alamat 32‑bit dapat menampung dua sinyal. Sebaliknya, satu akumulator penuh menempati seluruh 32‑bit, sehingga konsumsi alamat menjadi dua kali lebih besar. Jika seluruh akumulasi dipusatkan di main controller, alokasi alamat akan cepat habis. Oleh karena itu, diperlukan solusi yang tidak hanya hemat alamat, tetapi juga tetap menjaga presisi.</p>
+<hr />
+
+<h2 id="tantangan-teknis">Tantangan Teknis</h2>
+<ul>
+<li><strong>Drift akumulasi</strong>: <code>TOTAL_ACCUM</code> bawaan bergantung pada clock internal Modbus controller yang tidak sinkron dengan main controller.</li>
+<li><strong>Keterbatasan alamat komunikasi</strong>: hanya tersedia 128 alamat 32‑bit untuk transfer data.</li>
+<li><strong>Perbedaan kebutuhan ruang data</strong>: sinyal flow 12‑bit disimpan dalam 16‑bit word, sehingga satu alamat 32‑bit dapat menampung dua sinyal. Sebaliknya, satu akumulator penuh menempati seluruh 32‑bit, membuat konsumsi alamat dua kali lebih besar.</li>
+<li><strong>Kebutuhan auditabilitas</strong>: operator membutuhkan hasil akumulasi yang transparan, dapat ditelusuri, dan mudah dipahami lintas shift.</li>
+</ul>
+<hr />
+
+<h2 id="analisis-akar-masalah">Analisis Akar Masalah</h2>
+<ul>
+<li><strong>Drift akumulasi</strong> terjadi karena clock internal Modbus controller berbasis 16‑bit tidak disiplin dan tidak sinkron dengan main controller, sehingga perhitungan delta waktu rawan melompat atau melambat.</li>
+<li><strong>Alamat cepat habis</strong> disebabkan oleh perbedaan kebutuhan ruang: sinyal analog bisa dipadatkan (2 sinyal per alamat 32‑bit), sedangkan akumulator selalu menghabiskan satu alamat penuh.</li>
+<li><strong>Kurangnya visibilitas audit</strong> muncul karena block bawaan <code>TOTAL_ACCUM</code> tidak mengekspos delta waktu. Operator hanya melihat nilai total, tanpa jejak perhitungan detail.</li>
+</ul>
+<hr />
+
+<h2 id="solusi-kaccum">Solusi: K_ACCUM</h2>
+<p>Saya merancang function block custom bernama <strong>K_ACCUM</strong>, dengan fitur utama:</p>
+<ul>
+<li>Clock referensi dari main controller → bebas drift, sinkron lintas device.</li>
+<li>Integrasi wrap‑aware → rollover 16‑bit ditangani aman.</li>
+<li>Proteksi delta &amp; RATE → delta negatif atau terlalu besar diabaikan, RATE anomali difilter.</li>
+<li>Kompatibilitas penuh → menyediakan output FLOAT yang bisa dikonversi ke structAccum menggunakan function block CONVERT_TO_ACCUM</li>
+<li>Audit‑friendly → komentar inline, reserved field dapat digunakan untuk logging delta atau flag anomali.</li>
+</ul>
+<h3 id="diagram-alur-mermaid">Diagram Alur (Mermaid)</h3>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <div class="mermaid" style="width:100%; max-width:none; font-size:14px;">
+    flowchart LR
+        A["Input"] --&gt; B["Proteksi"]
+        B --&gt; C["Akumulasi"]
+        C --&gt; D["Output"]
+        C --&gt; E["Persistensi"]
+        subgraph Input
+            A1["ENABLE (BOOL)"]
+            A2["RATE (SFLOAT)"]
+            A3["DELTA (UINT)"]
+            A4["ACC_IN (structKAccum)"]
+        end
+        subgraph Proteksi
+            B1["Wrap-aware Timer 16-bit"]
+            B2["Guard DeltaSec &gt; 60 (Clamp/Discard)"]
+            B3["Guard RATE anomali"]
+        end
+        subgraph Akumulasi
+            C1["AccReal := AccReal + (RATE * DeltaSec)"]
+            C2["Preserve remainder (SFLOAT)"]
+            C3["ENABLE = FALSE → Freeze AccReal"]
+        end
+        subgraph Output
+            D1["ACC_OUT (structKAcuum)"]
+            D2["ALT_OUT (FLOAT)"]
+        end
+        subgraph Persistensi
+            E1["ACC_OUT := incremented ACC_IN"]
+        end
+        A1 --&gt; B
+        A2 --&gt; B
+        A3 --&gt; B
+        A4 --&gt; B
+        B --&gt; B1 --&gt; C
+        B --&gt; B2 --&gt; C
+        B --&gt; B3 --&gt; C
+        C --&gt; D
+        C --&gt; E
+    </div>
+</div>
+<hr />
+
+<h2 id="detail-teknis">Detail Teknis</h2>
+<ul>
+<li><strong>Rekonstruksi nilai total</strong>: akumulasi <code>accum</code> dan <code>remainder</code>.</li>
+<li><strong>Perhitungan delta waktu</strong>: wrap‑aware 16‑bit, dengan proteksi &gt;60 detik.</li>
+<li><strong>Integrasi</strong>: <code>AccReal := AccReal + (RATE * DeltaSec)</code> dilakukan dalam FLOAT penuh.</li>
+<li><strong>Fragmentasi kembali</strong>: meskipun struktur data berbeda dengan structAccum, konversi bisa dilakukan menggunakan block bawaan.</li>
+<li><strong>Konversi ke SFLOAT di tahap akhir</strong>: akumulasi dijaga dalam FLOAT untuk presisi maksimum, lalu dipadatkan ke SFLOAT pada bagian akhir.</li>
+</ul>
+<hr />
+
+<h2 id="catatan-teknis-structkaccum-dan-horizon-overflow">Catatan Teknis: structKAccum dan Horizon Overflow</h2>
+<p>Selain presisi integrasi, salah satu aspek penting dari kompatibilitas <strong>K_ACCUM</strong> adalah bisa dikonversi ke <strong>structAccum</strong> bawaan Supcon, sehingga tidak ada masalah jika hasilnya ditampilkan ke HMI. Struktur data terdiri dari 2 field:</p>
+<ul>
+<li><strong>accum</strong> → long (32‑bit)</li>
+<li><strong>remainder</strong> → pecahan (SFLOAT)</li>
+</ul>
+<p>Sedangkan struktur structAccum terdiri dari empat field:</p>
+<ul>
+<li><strong>accum1</strong> → low word (16‑bit)</li>
+<li><strong>accum2</strong> → high word (16‑bit)</li>
+<li><strong>remainder</strong> → pecahan (SFLOAT)</li>
+<li><strong>reserved</strong> → dapat digunakan untuk logging atau flag anomali</li>
+</ul>
+<p>Dengan keduanya adalah kombinasi integer 32‑bit dan pecahan SFLOAT, baik structKAccum maupun structAccum memiliki karakteristik unik:</p>
+<ul>
+<li>
+<p><strong>Horizon overflow ±136 tahun</strong><br />
+Integer 32‑bit mampu menampung hingga 4,29 miliar detik. Overflow baru terjadi setelah lebih dari satu abad operasi kontinu. Praktis, operator tidak perlu melakukan reset manual untuk menghindari overflow.</p>
+</li>
+<li>
+<p><strong>Independen dari skala input</strong><br />
+Berapapun range engineering unit (misalnya 0–10.000 Nm³/h), sinyal tetap dipadatkan ke <strong>SFLOAT 0–1</strong> sebelum diakumulasi, lalu di-<em>back scaling</em> ke unit aslinya.</p>
+</li>
+<li>
+<p><strong>Audit‑friendly</strong><br />
+Nilai total dapat direkonstruksi dengan cara yang sama lintas block, sehingga konsistensi audit tetap terjaga.</p>
+</li>
+</ul>
+<hr />
+
+<h3 id="beralih-dari-kaccumulator-ke-kaccum">Beralih dari K_ACCUMULATOR ke K_ACCUM</h3>
+<p>Salah satu alasan utama transisi dari K_ACCUMULATOR ke K_ACCUM adalah karena struktur <code>structAccum</code> bawaan Supcon menggunakan dua word 16‑bit (<code>accum1</code> dan <code>accum2</code>). Urutan bit/word ini ternyata <strong>tidak selalu konsisten</strong> (tergantung endianness, yaitu cara sistem menyusun byte dalam memori), sehingga hasil akumulasi bisa mendadak jatuh atau menurun. Untuk aplikasi audit jangka panjang, kondisi ini tidak bisa diterima karena membuat hasil akumulasi sulit diprediksi, dan kesalahan akumulasi tidak dapat ditoleransi.</p>
+<p>Sebagai solusi, <code>K_ACCUM</code> dirancang menggunakan <strong><code>LONG</code> 32‑bit tunggal</strong> yang bebas dari ambiguitas bit order. Struktur ini tetap dilengkapi dengan <code>remainder</code> (SFLOAT) untuk menjaga presisi pecahan.</p>
+<p>Dengan desain ini, <code>K_ACCUM</code> lebih stabil, tetap presisi, dan audit‑friendly.<br />
+Konversi ke <code>structAccum</code> masih dimungkinkan jika diperlukan untuk kompatibilitas HMI, tetapi logika inti tetap aman di <code>structKAccum</code>.</p>
+<hr />
+
+<h3 id="dependensi-dan-ekstensi-modular-kaccum">Dependensi dan Ekstensi Modular K_ACCUM</h3>
+<ul>
+<li>
+<p><strong>K_DELTA (Dependensi Waktu)</strong><br />
+Menyediakan delta waktu wrap‑aware dari timer utama 16‑bit.<br />
+→ Digunakan oleh K_ACCUM dan seluruh block turunan agar konsisten, presisi, dan audit‑friendly.</p>
+</li>
+<li>
+<p><strong>K_ADD_ACCUM (Aggregator)</strong><br />
+Menjumlahkan dua accumulator <code>structKAccum</code> menjadi satu total konsolidasi.<br />
+Cocok untuk agregasi OEE lintas line, penggabungan energi dari beberapa sumber, atau chaining modular (shift → harian → bulanan).</p>
+</li>
+<li>
+<p><strong>K_SUB_ACCUM (Differentiator)</strong><br />
+Mengurangkan dua accumulator <code>structKAccum</code> untuk menyingkap selisih.<br />
+Cocok untuk audit energi (supply–demand), neraca massa (inlet–outlet), atau analisis delta OEE. Jika dua accumulator yang sama dikurangkan, block ini berfungsi sebagai reset.</p>
+</li>
+</ul>
+<h4 id="karakteristik-bersama">Karakteristik Bersama</h4>
+<ul>
+<li>Presisi terjaga dengan kombinasi <strong>LONG + SFLOAT</strong>.</li>
+<li>Output utama tetap <code>structKAccum</code>, dengan <strong>ALT_OUT (FLOAT)</strong> sebagai alternatif cepat.</li>
+<li>Audit‑friendly: hasil dapat direkonstruksi dengan cara yang sama seperti K_ACCUM.</li>
+<li>Modular: operator cukup drag‑and‑drop block tanpa scripting manual.</li>
+</ul>
+<blockquote>
+<p>Dengan K_DELTA sebagai <em>time backbone</em> dan K_ADD_ACCUM/K_SUB_ACCUM sebagai ekstensi, keluarga K_ACCUM membentuk arsitektur akumulasi modular yang presisi, efisien, dan siap audit lintas plant.</p>
+</blockquote>
+<hr />
+
+<h3 id="implikasi-operasional">Implikasi Operasional</h3>
+<ul>
+<li><strong>Tidak perlu reset</strong> → operator terbebas dari prosedur reset akumulator yang berisiko menghapus histori.</li>
+<li><strong>Data kontinu</strong> → histori akumulasi dapat berjalan tanpa interupsi, memudahkan analisis jangka panjang.</li>
+<li><strong>Sederhana untuk transfer knowledge</strong> → operator baru cukup memahami bahwa akumulator akan terus bertambah, tanpa perlu menghafal SOP reset.</li>
+</ul>
+<blockquote>
+<p>Dengan horizon overflow ±136 tahun, structKAccum praktis tidak memerlukan reset manual. Hal ini menghilangkan risiko kehilangan data akibat reset, sekaligus menyederhanakan SOP operator. Akumulator dapat berjalan kontinu, audit tetap konsisten, dan transfer knowledge lintas shift menjadi lebih mudah.</p>
+</blockquote>
+<hr />
+
+<h2 id="potensi-ekstensi-fungsi">Potensi Ekstensi Fungsi</h2>
+<table>
+<thead>
+<tr>
+<th>Aplikasi</th>
+<th>Konfigurasi RATE</th>
+<th>Hasil</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hour Meter</td>
+<td>RATE = 1.0 saat equipment ON</td>
+<td>Akumulasi detik operasi → jam</td>
+</tr>
+<tr>
+<td>Runtime Counter</td>
+<td>RATE = 1 saat ON, 0 saat OFF</td>
+<td>Total waktu ON untuk PM</td>
+</tr>
+<tr>
+<td>Event Duration Logger</td>
+<td>RATE = 1 saat kondisi tertentu</td>
+<td>Total durasi kondisi aktif</td>
+</tr>
+<tr>
+<td>Audit Energi</td>
+<td>RATE = konsumsi energi per detik</td>
+<td>Total energi (kWh)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+<h2 id="validasi-independen-dengan-rapid-scada">Validasi Independen dengan Rapid SCADA</h2>
+<p>Untuk memastikan hasil tidak bias, pengujian dilakukan menggunakan Rapid SCADA sebagai sistem eksternal yang independen dari DCS.</p>
+<ul>
+<li><strong>Metode</strong>: flow statis 2500 diberikan secara identik ke K_ACCUM dan TOTAL_ACCUM dari variabel yang sama, lalu hasil ditrend di Rapid SCADA.</li>
+<li><strong>Hasil</strong>:
+<ul>
+<li>K_ACCUM: 2499,3 (deviasi −0,03%)</li>
+<li>TOTAL_ACCUM: 2450 (deviasi −2%)</li>
+</ul>
+</li>
+<li><strong>Makna</strong>: bahkan dengan pengujian eksternal, in‑house FB terbukti lebih presisi dibanding block bawaan vendor.</li>
+</ul>
+<hr />
+
+<h2 id="dampak-dan-nilai-tambah">Dampak dan Nilai Tambah</h2>
+<ul>
+<li>Efisiensi komunikasi → alamat 128 tidak cepat habis.</li>
+<li>Presisi akumulasi → hasil konsisten, bebas drift jangka panjang.</li>
+<li>Auditabilitas → operator dapat menelusuri delta waktu.</li>
+<li>Fleksibilitas → block dapat digunakan sebagai accumulator, hour meter, runtime counter, maupun logger.</li>
+<li>Kredibilitas eksternal → hasil diverifikasi oleh sistem independen (Rapid SCADA).</li>
+</ul>
+<hr />
+
+<h2 id="kesimpulan">Kesimpulan</h2>
+<p>K_ACCUM berhasil menurunkan deviasi dibanding block bawaan Supcon. Hasilnya memang tidak harus sempurna—karena faktor eksternal seperti jitter komunikasi dan keterbatasan representasi data tetap ada—tetapi penurunan deviasi dari 2% menjadi 0,03% adalah pencapaian nyata.</p>
+<p>Solusi ini bukan sekadar “membuat block baru”, melainkan membangun arsitektur yang efisien, presisi, audit‑friendly, dan terbukti lebih baik bahkan saat diuji dengan sistem independen. Pencapaian ini menjadi basis kuat untuk benchmark jangka panjang, di mana performa K_ACCUM dapat diuji lebih lama (jam, hari, hingga minggu) untuk membuktikan stabilitasnya dalam kondisi operasi nyata.</p>
+<hr />
+
+<p><strong>Catatan kontributor:</strong> Artikel ini disusun oleh <strong>Ketut Kumajaya</strong> dengan dukungan editorial dari Copilot (Microsoft AI) dalam penyusunan narasi, struktur, dan dokumentasi teknis.</p>
+<hr />
+
+<h3 id="appendix-a-%E2%80%94-listing-kode-lengkap">Appendix A — Listing Kode Lengkap</h3>
+<details>
+<summary>Klik untuk membuka kode Function Block K_ACCUM</summary>
+<pre><code class="language-pascal">
+(*==============================================================================
+FB Name     : K_ACCUM
+Purpose     : Akumulator modular berbasis LONG + SFLOAT, menerima DELTA dari K_DELTA
+Author      : Ketut Kumajaya
+Contributor : Copilot (Microsoft AI)
+Version     : 1.1 (tanpa RESET, dependensi ke K_DELTA)
+Date        : 01/10/2025
+Input       : ENABLE (BOOL)   - aktivasi akumulasi
+              RATE   (SFLOAT) - laju akumulasi per detik
+              DELTA  (UINT)   - selisih waktu antar siklus dari K_DELTA
+              ACC_IN (structKAccum) - nilai akumulasi sebelumnya
+Output      : ACC_OUT (structKAccum) - hasil akumulasi modular
+              ALT_OUT (FLOAT)        - total nilai akumulasi sebagai alternatif
+Notes       : - Input waktu TIMER telah digantikan oleh DELTA dari FB K_DELTA
+              - K_ACCUM tidak menyimpan LAST_IN/OUT, sehingga lebih ringan
+              - RATE dijaga dalam domain ±16 untuk stabilitas dan audit modular
+              - Cocok untuk runtime, hour meter, OEE timer, dan akumulasi energi
+              - Pairing waktu dan nilai dilakukan di artefak audit terpisah
+Use-case    : Digunakan bersama K_DELTA untuk runtime modular lintas FB dan plant
+==============================================================================*)
+
+FUNCTION_BLOCK K_ACCUM
+VAR_INPUT
+    ENABLE : BOOL;
+    RATE   : SFLOAT;
+    DELTA  : UINT;
+    ACC_IN : structKAccum;
+END_VAR
+VAR_OUTPUT
+    ACC_OUT : structKAccum;
+    ALT_OUT : FLOAT;
+END_VAR
+VAR
+    AccReal : FLOAT;
+    RateF   : FLOAT;
+END_VAR
+
+(* STEP 1: Rekonstruksi total dari input *)
+AccReal := LONG_TO_FLOAT(ACC_IN.accum) + SFLOAT_TO_FLOAT(ACC_IN.remainder);
+
+(* STEP 2: Integrasi normal *)
+RateF := SFLOAT_TO_FLOAT(RATE);
+IF ENABLE THEN
+    IF (RateF &gt; -16.0) AND (RateF &lt; 16.0) THEN
+        IF DELTA &gt; 0 THEN
+            AccReal := AccReal + (RateF * UINT_TO_FLOAT(DELTA));
+        END_IF;
+    END_IF;
+END_IF;
+
+(* STEP 3: Pisahkan kembali ke integer + pecahan *)
+ACC_OUT.accum     := FLOAT_TO_LONG(AccReal);
+ACC_OUT.remainder := FLOAT_TO_SFLOAT(AccReal - LONG_TO_FLOAT(ACC_OUT.accum));
+
+(* STEP 4: Output alternatif total *)
+ALT_OUT := AccReal;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>Klik untuk membuka kode Function Block K_DELTA</summary>
+<pre><code class="language-pascal">(*==============================================================================
+FB Name     : K_DELTA
+Purpose     : Menghitung delta waktu wrap-aware dari timer utama (UINT 16-bit)
+Author      : Ketut Kumajaya
+Version     : 1.2 (IF-THEN-ELSE, no MOD)
+Date        : 07/10/2025
+Input       : TIMER_IN (UINT), LAST_IN (UINT)
+Output      : DELTA_OUT (UINT), LAST_OUT (UINT), ALARM_OUT (BOOL)
+Notes       : - IF-THEN-ELSE untuk hindari loncatan MOD
+              - Cutoff 60 detik; LONG untuk Supcon-safe
+              - Persisten global LAST_IN/OUT
+==============================================================================*)
+
+FUNCTION_BLOCK K_DELTA
+VAR_INPUT
+    TIMER_IN : UINT;
+    LAST_IN  : UINT;
+END_VAR
+VAR_OUTPUT
+    DELTA_OUT : UINT;
+    LAST_OUT  : UINT;
+    ALARM_OUT : BOOL;
+END_VAR
+VAR
+    Delta       : LONG;
+    StartupFlag : BOOL;
+END_VAR
+
+StartupFlag := g_bColdStartup OR g_bHotStartup OR g_bDownUsrPrgFlag OR g_bDownCfgFlag;
+
+IF StartupFlag THEN
+    Delta := 0;
+    ALARM_OUT := FALSE;
+    g_bColdStartup := FALSE;
+    g_bHotStartup := FALSE;
+    g_bDownUsrPrgFlag := FALSE;
+    g_bDownCfgFlag := FALSE;
+ELSE
+    IF TIMER_IN &gt;= LAST_IN THEN
+        Delta := ULONG_TO_LONG(UINT_TO_ULONG(TIMER_IN)) - ULONG_TO_LONG(UINT_TO_ULONG(LAST_IN));
+    ELSE
+        Delta := ULONG_TO_LONG(UINT_TO_ULONG(65535 - LAST_IN)) + ULONG_TO_LONG(UINT_TO_ULONG(TIMER_IN)) + 1;
+    END_IF;
+
+    IF Delta &gt; 60 THEN
+        Delta := 0;
+        ALARM_OUT := TRUE;
+    ELSE
+        ALARM_OUT := FALSE;
+    END_IF;
+END_IF;
+
+DELTA_OUT := ULONG_TO_UINT(LONG_TO_ULONG(Delta));
+LAST_OUT  := TIMER_IN;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>Klik untuk membuka kode Function Block K_ADD_ACCUM</summary>
+<pre><code class="language-pascal">(*==============================================================================
+ FB Name     : K_ADD_ACCUM
+ Purpose     : Menjumlahkan dua accumulator (structKAccum) secara modular
+ Author      : Ketut Kumajaya
+ Contributor : Copilot (Microsoft AI)
+ Version     : 1.0 (initial release)
+ Date        : 28/09/2025
+ Input       : ACC1 (structKAccum), ACC2 (structKAccum)
+ Output      : ACC_OUT (structKAccum), ALT_OUT (FLOAT total)
+ Notes       : - Presisi dijaga dengan LONG + SFLOAT
+               - ALT_OUT = total float alternatif
+               - Cocok untuk merge runtime, energy, atau counter modular
+ Use-case    : Penjumlahan antar accumulator, agregasi OEE, chaining modular
+==============================================================================*)
+
+FUNCTION_BLOCK K_ADD_ACCUM
+VAR_INPUT
+    ACC1 : structKAccum;
+    ACC2 : structKAccum;
+END_VAR
+VAR_OUTPUT
+    ACC_OUT : structKAccum;
+    ALT_OUT : FLOAT;
+END_VAR
+VAR
+    SumReal : FLOAT;
+END_VAR
+
+(* STEP 1: Rekonstruksi total dari masing-masing input *)
+SumReal := LONG_TO_FLOAT(ACC1.accum) + SFLOAT_TO_FLOAT(ACC1.remainder)
+         + LONG_TO_FLOAT(ACC2.accum) + SFLOAT_TO_FLOAT(ACC2.remainder);
+
+(* STEP 2: Pisahkan kembali ke integer + pecahan *)
+ACC_OUT.accum     := FLOAT_TO_LONG(SumReal);
+ACC_OUT.remainder := FLOAT_TO_SFLOAT(SumReal - LONG_TO_FLOAT(ACC_OUT.accum));
+
+(* STEP 3: Output alternatif total *)
+ALT_OUT := SumReal;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+
+<details>
+<summary>Klik untuk membuka kode Function Block K_SUB_ACCUM</summary>
+<pre><code class="language-pascal">(*==============================================================================
+ FB Name     : K_SUB_ACCUM
+ Purpose     : Mengurangkan dua accumulator (structKAccum) secara modular
+ Author      : Ketut Kumajaya
+ Contributor : Copilot (Microsoft AI)
+ Version     : 1.0 (initial release)
+ Date        : 28/09/2025
+ Input       : ACC1 (structKAccum), ACC2 (structKAccum)
+ Output      : ACC_OUT (structKAccum), ALT_OUT (FLOAT total)
+ Notes       : - Presisi dijaga dengan LONG + SFLOAT
+               - ALT_OUT = total float alternatif
+               - Cocok untuk selisih runtime, energy, atau counter modular
+ Use-case    : Pengurangan antar accumulator, analisis delta OEE, chaining modular
+==============================================================================*)
+
+FUNCTION_BLOCK K_SUB_ACCUM
+VAR_INPUT
+    ACC1 : structKAccum;
+    ACC2 : structKAccum;
+END_VAR
+VAR_OUTPUT
+    ACC_OUT : structKAccum;
+    ALT_OUT : FLOAT;
+END_VAR
+VAR
+    DiffReal : FLOAT;
+END_VAR
+
+(* STEP 1: Rekonstruksi total dari masing-masing input *)
+DiffReal := (LONG_TO_FLOAT(ACC1.accum) + SFLOAT_TO_FLOAT(ACC1.remainder))
+          - (LONG_TO_FLOAT(ACC2.accum) + SFLOAT_TO_FLOAT(ACC2.remainder));
+
+(* STEP 2: Pisahkan kembali ke integer + pecahan *)
+ACC_OUT.accum     := FLOAT_TO_LONG(DiffReal);
+ACC_OUT.remainder := FLOAT_TO_SFLOAT(DiffReal - LONG_TO_FLOAT(ACC_OUT.accum));
+
+(* STEP 3: Output alternatif total *)
+ALT_OUT := DiffReal;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>Klik untuk membuka kode Function Block legacy K_ACCUMULATOR</summary>
+<pre><code class="language-pascal">
+(*
+==============================================================================
+ Function Block : K_ACCUMULATOR
+ Deskripsi      : Integrator berbasis laju per detik (SFLOAT) dan free-running
+                  timer 16-bit, kompatibel Supcon structAccum
+ Penulis        : Ketut Kumajaya
+ Kontributor    : Copilot (Microsoft AI)
+ Versi          : 1.1
+ Tanggal        : 25/09/2025
+==============================================================================
+
+Fungsi:
+- Mengakumulasi nilai = RATE * DeltaSec setiap scan.
+- Menggunakan external clock T_IN (0..65535 detik, wrap-aware).
+- Reset penuh ditangani oleh built-in FB Supcon melalui structAccum.
+- Proteksi delta waktu: delta negatif atau terlalu besar (&gt;60 detik) diabaikan.
+- Guard RATE: nilai anomali (-16 &gt; RATE &gt; 16) diabaikan.
+- Struktur kompatibel dengan accumulator built-in Supcon.
+
+Versi 1.1 (26/09/2025)
+- AccInt diganti ke tipe LONG → konversi lebih sederhana dan mendukung nilai negatif
+- Validasi remainder selalu dinormalisasi ke [0,1)
+- Patch encoding low word → dipaksa unsigned (0..65535) agar kompatibel penuh dengan structAccum
+- Eliminasi bug “accum1 = –32768” yang menyebabkan akumulasi tampak menurun
+==============================================================================
+*)
+
+FUNCTION_BLOCK K_ACCUMULATOR
+VAR_INPUT
+    RATE     : SFLOAT;       (* Laju per detik (unit/s) *)
+    T_IN     : UINT;         (* Free-running timer (0..65535 detik) *)
+    ACC_IN   : structAccum;  (* Akumulator persisten input *)
+    LAST_IN  : UINT;         (* Snapshot timer sebelumnya *)
+END_VAR
+VAR_OUTPUT
+    ACC_OUT  : structAccum;  (* Akumulator hasil update *)
+    LAST_OUT : UINT;         (* Snapshot timer berikutnya *)
+END_VAR
+VAR
+    AccReal   : FLOAT;       (* Rekonstruksi total accumulator *)
+    AccInt    : LONG;        (* Bagian integer dari AccReal *)
+    AccFrac   : FLOAT;       (* Bagian pecahan dari AccReal *)
+    DeltaSec  : UINT;        (* Selisih detik antar scan *)
+    RateF     : FLOAT;       (* RATE dalam FLOAT *)
+    LowWord   : WORD;
+    HighWord  : INT;
+END_VAR
+
+(* NOTE: accum1 = low word, accum2 = high word, remainder = fractional part *)
+(* EVENT: Rekonstruksi nilai total dari ACC_IN *)
+AccInt := INT_TO_LONG(WORD_TO_INT(INT_TO_WORD(ACC_IN.accum1)))
+        + DWORD_TO_LONG(
+            SHL_DWORD(LONG_TO_DWORD(INT_TO_LONG(ACC_IN.accum2)),
+                16));                         (* shift high word 16 bit *)
+AccFrac := SFLOAT_TO_FLOAT(ACC_IN.remainder); (* fractional part *)
+AccReal := LONG_TO_FLOAT(AccInt) + AccFrac;   (* total accumulator *)
+
+(* PROTEKSI: hitung delta dengan wrap 16-bit (modular, no-branch) *)
+DeltaSec := (T_IN + 65536 - LAST_IN) MOD 65536;
+
+(* PROTEKSI: guard delta anomali *)
+IF DeltaSec &gt; 60 THEN
+    DeltaSec := 0;
+END_IF;
+
+(* PROTEKSI: guard RATE anomali sesuai domain SFLOAT 12-bit: -16..+16 *)
+RateF := SFLOAT_TO_FLOAT(RATE);
+IF (RateF &lt; 16) AND (RateF &gt; -16) THEN
+    IF DeltaSec &gt; 0 THEN
+        AccReal := AccReal + (RateF * UINT_TO_FLOAT(DeltaSec));
+    END_IF;
+END_IF;
+
+(* EVENT: Pisahkan kembali ke structAccum *)
+AccInt  := FLOAT_TO_LONG(AccReal);
+AccFrac := AccReal - LONG_TO_FLOAT(AccInt);
+
+(* Normalisasi remainder ke [0,1) *)
+IF AccFrac &lt; 0.0 THEN
+    AccInt  := AccInt - 1;
+    AccFrac := AccFrac + 1.0;
+ELSE
+    IF AccFrac &gt;= 1.0 THEN
+        AccInt  := AccInt + 1;
+        AccFrac := AccFrac - 1.0;
+    END_IF;
+END_IF;
+
+(* NOTE: LowWord dipaksa unsigned (0..65535) agar kompatibel dengan structAccum.
+   HighWord tetap signed. Total AccInt = HighWord*65536 + LowWord. *)
+LowWord  := INT_TO_WORD(LONG_TO_INT(AccInt MOD 65536)); (* selalu 0..65535 *)
+HighWord := LONG_TO_INT(AccInt / 65536);                (* high word bisa signed *)
+
+ACC_OUT.accum1    := WORD_TO_INT(LowWord); (* low word aman, tidak pernah -32768 *)
+ACC_OUT.accum2    := HighWord;             (* high word signed *)
+ACC_OUT.remainder := FLOAT_TO_SFLOAT(AccFrac);
+ACC_OUT.reserved  := 0.0;
+
+(* Persist snapshot untuk scan berikutnya *)
+LAST_OUT := T_IN;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<h3 id="appendix-b-%E2%80%94-extended-validation-runtime-1%E2%80%936-jam">Appendix B — Extended Validation Runtime (1–6 Jam)</h3>
+<p>Pengujian runtime lebih panjang dilakukan dengan flow statis 2500 untuk melihat pola drift akumulasi secara progresif.</p>
+<h4 id="hasil-pengujian-runtime">Hasil Pengujian Runtime</h4>
+<table>
+<thead>
+<tr>
+<th>Runtime</th>
+<th>Ideal</th>
+<th>K_ACCUM</th>
+<th>Deviasi Absolut</th>
+<th>Deviasi Relatif</th>
+<th>TOTAL_ACCUM</th>
+<th>Deviasi Absolut</th>
+<th>Deviasi Relatif</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 jam</td>
+<td>2500</td>
+<td>2499.31</td>
+<td>−0.694</td>
+<td>−0.028%</td>
+<td>2450.69</td>
+<td>−49.306</td>
+<td>−1.972%</td>
+</tr>
+<tr>
+<td>2 jam</td>
+<td>5000</td>
+<td>5002.08</td>
+<td>+2.083</td>
+<td>+0.042%</td>
+<td>4905.56</td>
+<td>−94.444</td>
+<td>−1.898%</td>
+</tr>
+<tr>
+<td>3 jam</td>
+<td>7500</td>
+<td>7500.69</td>
+<td>+0.694</td>
+<td>+0.009%</td>
+<td>7355.56</td>
+<td>−144.445</td>
+<td>−1.926%</td>
+</tr>
+<tr>
+<td>4 jam</td>
+<td>10000</td>
+<td>10000.69</td>
+<td>+0.694</td>
+<td>+0.007%</td>
+<td>9806.94</td>
+<td>−193.056</td>
+<td>−1.931%</td>
+</tr>
+<tr>
+<td>5 jam</td>
+<td>12500</td>
+<td>12500.00</td>
+<td>+0.000</td>
+<td>+0.000%</td>
+<td>12258.33</td>
+<td>−241.667</td>
+<td>−1.933%</td>
+</tr>
+<tr>
+<td>6 jam</td>
+<td>15000</td>
+<td>14998.61</td>
+<td>−1.389</td>
+<td>−0.009%</td>
+<td>14708.33</td>
+<td>−291.666</td>
+<td>−1.944%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="interpretasi">Interpretasi</h4>
+<ul>
+<li><strong>K_ACCUM</strong>: deviasi relatif tetap &lt;0.05% bahkan hingga 6 jam, menunjukkan presisi tinggi dan stabilitas jangka panjang.</li>
+<li><strong>TOTAL_ACCUM</strong>: drift konsisten di sekitar −1.9% sejak awal hingga 6 jam, menegaskan bias bawaan block vendor.</li>
+<li><strong>Makna audit</strong>: tren progresif ini memperkuat klaim bahwa K_ACCUM bukan hanya presisi sesaat, tetapi juga tahan drift dalam runtime panjang.</li>
+</ul>
+
+
+  </div>
+
+  <a class="u-url" href="/distributed-control-system/2025/09/25/k_accumulator-solusi-presisi-dan-efisien-untuk-drift-akumulator-di-modbus-controller.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

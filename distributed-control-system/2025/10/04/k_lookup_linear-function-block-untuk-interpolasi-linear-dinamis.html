@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="K_LOOKUP_LINEAR adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant." />
+<meta property="og:description" content="K_LOOKUP_LINEAR adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-10-04T06:04:05+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-10-04T06:04:05+00:00","datePublished":"2025-10-04T06:04:05+00:00","description":"K_LOOKUP_LINEAR adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant.","headline":"K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis","image":"https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html"},"url":"/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/distributed-control-system/" itemprop="articleSection">
+        Distributed Control System
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-10-04T06:04:05+00:00" itemprop="datePublished">
+        October 04, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">5 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    `K_LOOKUP_LINEAR` adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&ixlib=rb-4.1.0&q=80&w=2000" alt="K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@antoine1003?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Antoine Dautry</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p><em>Ditulis oleh Ketut P. Kumajaya | 4 Oktober 2025</em></p>
+<h3 id="latar-belakang">Latar Belakang</h3>
+<p>Interpolasi linear adalah metode sederhana namun krusial dalam otomasi proses. Banyak kurva performa peralatan—seperti garis surge centrifugal compressor, karakteristik valve, atau profil efisiensi pompa—tidak tersedia dalam bentuk persamaan matematis, melainkan tabel titik data.</p>
+<p>Function Block <code>K_LOOKUP_LINEAR</code> dirancang di Supcon DCS menggunakan Structured Text (ST) untuk melakukan interpolasi linear berbasis array dinamis. Berbeda dengan <code>K_LIN_INTERP14</code> yang statis dengan 14 titik, FB ini mendukung hingga 32 titik referensi, dilengkapi proteksi multi‑lapis dan flag audit agar siap digunakan lintas plant.</p>
+<p>Sebagai catatan, <code>K_LIN_INTERP14</code> telah diimplementasikan di salah satu plant untuk lookup kurva <strong>anti-surge</strong> dan terbukti stabil dalam operasi harian. Block ini sendiri merupakan implementasi bebas dari fungsi serupa yang tersedia di <strong>Yokogawa Centum VP</strong>, dan pengalaman lapangan inilah yang menjadi dasar pengembangan <code>K_LOOKUP_LINEAR</code> sebagai versi yang lebih fleksibel dan modular.</p>
+<hr />
+
+<h3 id="listing-function-block">Listing Function Block</h3>
+<pre><code class="language-pascal">(*=============================================================================
+  Function Block Name : K_LOOKUP_LINEAR
+  Author              : Ketut P. Kumajaya
+  Date Created        : 04/10/2025
+  Description         : Interpolasi linear dinamis berbasis array referensi
+                        dengan proteksi multi-lapis dan flag audit.
+  Inputs              : Enable     - Aktivasi interpolasi (BOOL)
+                        X          - Nilai input yang akan diinterpolasi (FLOAT)
+                        N          - Jumlah titik referensi aktif (INT, min 2)
+                        THRESHOLD  - Ambang deviasi audit (FLOAT)
+                        X_REF      - array32FLOAT (koordinat X referensi)
+                        Y_REF      - array32FLOAT (koordinat Y referensi)
+  Outputs             : Y          - Hasil interpolasi linear (FLOAT)
+                        X1_used    - Titik awal X interval aktif (FLOAT)
+                        Y1_used    - Titik awal Y interval aktif (FLOAT)
+                        X2_used    - Titik akhir X interval aktif (FLOAT)
+                        Y2_used    - Titik akhir Y interval aktif (FLOAT)
+                        Valid      - Flag validasi hasil interpolasi (BOOL)
+                        AuditFlag  - Flag audit deviasi/ketidakrapihan data (BOOL)
+                        DensityValid - Flag validasi monotoni X_REF (BOOL)
+  Artefak Pairing     : array32FLOAT - ARRAY [0..31] OF FLOAT
+  Proteksi Audit      : Clamp jika X di luar range; fallback pada interval
+                        degenerat; AuditFlag aktif jika deviasi ekstrem atau
+                        data tidak monoton; N dikunci dalam rentang aman.
+=============================================================================*)
+
+FUNCTION_BLOCK K_LOOKUP_LINEAR
+
+VAR_INPUT
+    Enable    : BOOL;
+    X         : FLOAT;
+    N         : INT;
+    THRESHOLD : FLOAT;
+    X_REF     : array32FLOAT;
+    Y_REF     : array32FLOAT;
+END_VAR
+
+VAR_OUTPUT
+    Y           : FLOAT;
+    X1_used     : FLOAT;
+    Y1_used     : FLOAT;
+    X2_used     : FLOAT;
+    Y2_used     : FLOAT;
+    Valid       : BOOL;
+    AuditFlag   : BOOL;
+    DensityValid: BOOL;
+END_VAR
+
+VAR
+    i       : INT;
+    n_eff   : INT;
+    slope   : FLOAT;
+    found   : BOOL;
+END_VAR
+
+(* --- Inisialisasi status --- *)
+Valid        := FALSE;
+AuditFlag    := FALSE;
+DensityValid := TRUE;
+found        := FALSE;
+
+IF NOT Enable THEN
+    RETURN;
+END_IF;
+
+(* --- Kunci N dalam rentang aman [2..32] --- *)
+n_eff := N;
+IF n_eff &lt; 2 THEN
+    n_eff := 2;
+ELSIF n_eff &gt; 32 THEN
+    n_eff := 32;
+END_IF;
+
+(* --- Validasi monotoni X_REF --- *)
+FOR i := 0 TO n_eff - 2 DO
+    IF X_REF[i] &gt; X_REF[i + 1] THEN
+        DensityValid := FALSE;
+    END_IF;
+END_FOR;
+
+(* --- Cari interval aktif --- *)
+FOR i := 0 TO n_eff - 2 DO
+    IF (X &gt;= X_REF[i]) AND (X &lt;= X_REF[i+1]) THEN
+        X1_used := X_REF[i];     Y1_used := Y_REF[i];
+        X2_used := X_REF[i+1];   Y2_used := Y_REF[i+1];
+        found := TRUE;
+        EXIT;
+    END_IF;
+END_FOR;
+
+(* --- Clamp jika X di luar range --- *)
+IF NOT found THEN
+    IF X &lt; X_REF[0] THEN
+        X1_used := X_REF[0];       Y1_used := Y_REF[0];
+        X2_used := X_REF[1];       Y2_used := Y_REF[1];
+    ELSIF X &gt; X_REF[n_eff - 1] THEN
+        X1_used := X_REF[n_eff - 2]; Y1_used := Y_REF[n_eff - 2];
+        X2_used := X_REF[n_eff - 1]; Y2_used := Y_REF[n_eff - 1];
+    ELSE
+        X1_used := X_REF[0];       Y1_used := Y_REF[0];
+        X2_used := X_REF[1];       Y2_used := Y_REF[1];
+    END_IF;
+END_IF;
+
+(* --- Hitung interpolasi linear --- *)
+IF (X2_used - X1_used) = 0.0 THEN
+    Y := Y1_used;
+    Valid := FALSE;
+ELSE
+    slope := (Y2_used - Y1_used) / (X2_used - X1_used);
+    Y := Y1_used + slope * (X - X1_used);
+    Valid := TRUE;
+END_IF;
+
+(* --- Flag audit --- *)
+IF (ABS(Y2_used - Y1_used) &gt; THRESHOLD) OR (NOT DensityValid) THEN
+    AuditFlag := TRUE;
+ELSE
+    AuditFlag := FALSE;
+END_IF;
+
+END_FUNCTION_BLOCK
+</code></pre>
+<hr />
+
+<h3 id="cara-penggunaan">Cara Penggunaan</h3>
+<ol>
+<li>Tentukan jumlah titik referensi aktual → set <code>N</code>.</li>
+<li>Isi <code>X_REF[0..N-1]</code> dan <code>Y_REF[0..N-1]</code> dengan data kurva.</li>
+<li>Biarkan <code>X_REF[N..31]</code> dan <code>Y_REF[N..31]</code> default (tidak dipakai).</li>
+<li>Set <code>THRESHOLD</code> sesuai toleransi deviasi audit.</li>
+<li>Aktifkan <code>Enable := TRUE</code>.</li>
+</ol>
+<hr />
+
+<h3 id="contoh-tabel-input">Contoh Tabel Input</h3>
+<table>
+<thead>
+<tr>
+<th>Index</th>
+<th>X_REF</th>
+<th>Y_REF</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>10</td>
+<td>5</td>
+</tr>
+<tr>
+<td>2</td>
+<td>20</td>
+<td>15</td>
+</tr>
+<tr>
+<td>3</td>
+<td>30</td>
+<td>25</td>
+</tr>
+<tr>
+<td>4</td>
+<td>40</td>
+<td>35</td>
+</tr>
+<tr>
+<td>5</td>
+<td>50</td>
+<td>50</td>
+</tr>
+</tbody>
+</table>
+<p>Jika <code>N = 6</code> dan <code>X = 22</code>, maka interval aktif <code>[20,30]</code> → hasil interpolasi <code>Y ≈ 17</code>.</p>
+<hr />
+
+<h3 id="flowchart-pairing">Flowchart Pairing</h3>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <div class="mermaid" style="width:100%; max-width:none; font-size:14px;">
+    flowchart TD
+        A(["Start"]) --&gt; B{"Enable?"}
+        B -- "No" --&gt; Z(["Return"])
+        B -- "Yes" --&gt; C["Set n_eff = N (clamp 2..32)"]
+        C --&gt; D["Check monotoni X_REF"]
+        D --&gt; E{"X in interval?"}
+        E -- "Yes" --&gt; F["Set X1_used,Y1_used,X2_used,Y2_used"]
+        E -- "No" --&gt; G{"X &lt; X_REF[0]?"}
+        G -- "Yes" --&gt; H["Clamp ke interval awal"]
+        G -- "No" --&gt; I{"X &gt; X_REF[n_eff-1]?"}
+        I -- "Yes" --&gt; J["Clamp ke interval akhir"]
+        I -- "No" --&gt; K["Fallback konservatif"]
+        F --&gt; L{"Degenerate interval?"}
+        H --&gt; L
+        J --&gt; L
+        K --&gt; L
+        L -- "Yes" --&gt; M["Set Y=Y1_used, Valid=FALSE"]
+        L -- "No" --&gt; N["Hitung slope dan Y, Valid=TRUE"]
+        M --&gt; O{"Audit check"}
+        N --&gt; O{"Audit check"}
+        O -- "Deviasi &gt; THRESHOLD atau monotoni gagal" --&gt; P["AuditFlag=TRUE"]
+        O -- "Normal" --&gt; Q["AuditFlag=FALSE"]
+        P --&gt; Z(["End"])
+        Q --&gt; Z(["End"])
+  </div>
+</div>
+<hr />
+
+<h3 id="kesimpulan">Kesimpulan</h3>
+<p><code>K_LOOKUP_LINEAR</code> adalah artefak modular untuk interpolasi linear dinamis di Supcon DCS.<br />
+Dengan fleksibilitas jumlah titik, proteksi multi-lapis, dan flag audit, FB ini memperkuat transparansi serta efisiensi sistem kontrol.</p>
+<p>Mengapa hal ini penting bagi operasi plant?</p>
+<ul>
+<li><strong>Mengurangi duplikasi</strong>: tidak perlu lagi membuat FB statis dengan jumlah titik berbeda (misalnya 14, 20, dsb).</li>
+<li><strong>Seragam lintas plant</strong>: format array 32 titik menjadi standar implementasi yang mudah diaudit dan diajarkan.</li>
+<li><strong>Mempercepat commissioning</strong>: kurva peralatan baru dapat langsung dimasukkan tanpa modifikasi FB.</li>
+<li><strong>Lebih aman</strong>: proteksi multi-lapis memastikan output stabil meski data referensi tidak sempurna.</li>
+<li><strong>Audit-grade</strong>: adanya flag audit (<code>AuditFlag</code>, <code>DensityValid</code>) memberi transparansi penuh pada kualitas data dan hasil interpolasi.</li>
+</ul>
+<p>Sebagai ilustrasi nyata, lookup kurva <strong>anti-surge kompresor sentrifugal</strong> dengan 8–10 titik dapat langsung diakomodasi, tanpa harus menulis ulang FB baru seperti pada pendekatan statis <code>K_LIN_INTERP14</code>.</p>
+<p><strong>Catatan praktis:</strong> Untuk anti-surge, interpolasi linear adalah pilihan terbaik karena:</p>
+<ul>
+<li>Perhitungan cepat dan ringan, tidak membebani CPU.</li>
+<li>Mudah diverifikasi dan dipahami operator maupun engineer.</li>
+<li>Transisi antar titik berjalan cepat sehingga stabil untuk kontrol real-time.</li>
+<li>Cukup akurat untuk merepresentasikan performa kompresor di antara titik vendor.</li>
+</ul>
+<hr />
+
+<h3 id="appendix-%E2%80%94-referensi-klininterp14">Appendix — Referensi <code>K_LIN_INTERP14</code></h3>
+<ul>
+<li><code>K_LIN_INTERP14</code> adalah <strong>versi statis</strong> dengan 14 titik, cocok untuk kurva performa yang sudah baku.</li>
+<li><code>K_LOOKUP_LINEAR</code> adalah <strong>versi dinamis</strong> dengan jumlah titik fleksibel (2–32).</li>
+<li>Menyertakan keduanya dalam artikel membantu pembaca memahami <strong>evolusi desain FB</strong> dari statis → dinamis, sekaligus memberi referensi audit.</li>
+</ul>
+<details>
+<summary>K_LIN_INTERP14 Function Block (klik untuk membuka)</summary>
+<pre><code class="language-pascal">(*=============================================================================
+  Function Block Name : K_LIN_INTERP14
+  Author              : Ketut P. Kumajaya
+  Date Created        : 04/10/2025
+  Description         : Melakukan interpolasi linear berdasarkan 14 pasang titik
+                        (X0..X13, Y0..Y13). Umumnya digunakan untuk lookup
+                        kurva performa peralatan proses (misalnya garis surge
+                        centrifugal compressor).
+  Inputs              : X        - Nilai input yang akan diinterpolasi (FLOAT)
+                        X0..X13  - Koordinat X referensi (FLOAT)
+                        Y0..Y13  - Koordinat Y referensi (FLOAT)
+  Outputs             : Y        - Hasil interpolasi linear (FLOAT)
+                        X1_used  - Titik awal X interval aktif (FLOAT)
+                        Y1_used  - Titik awal Y interval aktif (FLOAT)
+                        X2_used  - Titik akhir X interval aktif (FLOAT)
+                        Y2_used  - Titik akhir Y interval aktif (FLOAT)
+  Artefak Pairing     : X_ARRAY  - ARRAY [0..13] OF FLOAT
+                        Y_ARRAY  - ARRAY [0..13] OF FLOAT
+  Proteksi Audit      : Jika X di luar range, output dikunci pada ujung tabel.
+                        Pembagian dengan nol dicegah dengan fallback ke nilai
+                        tetap agar algoritma selalu stabil.
+=============================================================================*)
+
+FUNCTION_BLOCK K_LIN_INTERP14
+
+VAR_INPUT
+    X   : FLOAT;
+    X0  : FLOAT;   Y0  : FLOAT;
+    X1  : FLOAT;   Y1  : FLOAT;
+    X2  : FLOAT;   Y2  : FLOAT;
+    X3  : FLOAT;   Y3  : FLOAT;
+    X4  : FLOAT;   Y4  : FLOAT;
+    X5  : FLOAT;   Y5  : FLOAT;
+    X6  : FLOAT;   Y6  : FLOAT;
+    X7  : FLOAT;   Y7  : FLOAT;
+    X8  : FLOAT;   Y8  : FLOAT;
+    X9  : FLOAT;   Y9  : FLOAT;
+    X10 : FLOAT;   Y10 : FLOAT;
+    X11 : FLOAT;   Y11 : FLOAT;
+    X12 : FLOAT;   Y12 : FLOAT;
+    X13 : FLOAT;   Y13 : FLOAT;
+END_VAR
+
+VAR_OUTPUT
+    X1_used : FLOAT;
+    Y1_used : FLOAT;
+    X2_used : FLOAT;
+    Y2_used : FLOAT;
+    Y       : FLOAT;
+END_VAR
+
+VAR
+    X_ARRAY : array14FLOAT; (* user defined data type *)
+    Y_ARRAY : array14FLOAT; (* user defined data type *)
+    i       : INT;
+    slope   : FLOAT;
+END_VAR
+
+(* --- Inisialisasi array --- *)
+X_ARRAY[0] := X0;   Y_ARRAY[0] := Y0;
+X_ARRAY[1] := X1;   Y_ARRAY[1] := Y1;
+...
+X_ARRAY[13] := X13; Y_ARRAY[13] := Y13;
+
+(* --- Cari interval aktif --- *)
+FOR i := 0 TO 12 DO
+    IF (X &gt;= X_ARRAY[i]) AND (X &lt;= X_ARRAY[i+1]) THEN
+        X1_used := X_ARRAY[i];   Y1_used := Y_ARRAY[i];
+        X2_used := X_ARRAY[i+1]; Y2_used := Y_ARRAY[i+1];
+        EXIT;
+    END_IF;
+END_FOR;
+
+(* --- Clamp jika X di luar range --- *)
+IF X &lt; X_ARRAY[0] THEN
+    X1_used := X_ARRAY[0];   Y1_used := Y_ARRAY[0];
+    X2_used := X_ARRAY[1];   Y2_used := Y_ARRAY[1];
+ELSIF X &gt; X_ARRAY[13] THEN
+    X1_used := X_ARRAY[12];  Y1_used := Y_ARRAY[12];
+    X2_used := X_ARRAY[13];  Y2_used := Y_ARRAY[13];
+END_IF;
+
+(* --- Hitung interpolasi linear --- *)
+IF (X2_used - X1_used) = 0 THEN
+    Y := Y1_used; (* fallback jika interval degenerat *)
+ELSE
+    slope := (Y2_used - Y1_used) / (X2_used - X1_used);
+    Y := Y1_used + slope * (X - X1_used);
+END_IF;
+
+END_FUNCTION_BLOCK
+</code></pre>
+</details>
+
+
+  </div>
+
+  <a class="u-url" href="/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

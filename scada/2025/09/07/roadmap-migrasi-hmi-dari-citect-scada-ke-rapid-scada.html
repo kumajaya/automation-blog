@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Roadmap Migrasi HMI dari Citect SCADA ke Rapid SCADA | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Roadmap Migrasi HMI dari Citect SCADA ke Rapid SCADA" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Strategi migrasi HMI yang memungkinkan monitoring remote tanpa mengganggu operasional lokal, dari read-only hingga full control." />
+<meta property="og:description" content="Strategi migrasi HMI yang memungkinkan monitoring remote tanpa mengganggu operasional lokal, dari read-only hingga full control." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1653907696247-cf7ecde77d83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE1fHxyZW1vdGUlMjBhY2Nlc3N8ZW58MHx8fHwxNzU3MjIxNDMwfDA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-07T06:45:50+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1653907696247-cf7ecde77d83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE1fHxyZW1vdGUlMjBhY2Nlc3N8ZW58MHx8fHwxNzU3MjIxNDMwfDA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Roadmap Migrasi HMI dari Citect SCADA ke Rapid SCADA" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-07T06:45:50+00:00","datePublished":"2025-09-07T06:45:50+00:00","description":"Strategi migrasi HMI yang memungkinkan monitoring remote tanpa mengganggu operasional lokal, dari read-only hingga full control.","headline":"Roadmap Migrasi HMI dari Citect SCADA ke Rapid SCADA","image":"https://images.unsplash.com/photo-1653907696247-cf7ecde77d83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE1fHxyZW1vdGUlMjBhY2Nlc3N8ZW58MHx8fHwxNzU3MjIxNDMwfDA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/scada/2025/09/07/roadmap-migrasi-hmi-dari-citect-scada-ke-rapid-scada.html"},"url":"/scada/2025/09/07/roadmap-migrasi-hmi-dari-citect-scada-ke-rapid-scada.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/scada/" itemprop="articleSection">
+        SCADA
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">Roadmap Migrasi HMI dari Citect SCADA ke Rapid SCADA</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-07T06:45:50+00:00" itemprop="datePublished">
+        September 07, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">6 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    Strategi migrasi HMI yang memungkinkan monitoring remote tanpa mengganggu operasional lokal, dari read-only hingga full control.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1653907696247-cf7ecde77d83?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE1fHxyZW1vdGUlMjBhY2Nlc3N8ZW58MHx8fHwxNzU3MjIxNDMwfDA&ixlib=rb-4.1.0&q=80&w=2000" alt="Roadmap Migrasi HMI dari Citect SCADA ke Rapid SCADA" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@matheusdesouzacom?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Matheus de Souza</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<h3 id="strategi-bertahap-untuk-pendekatan-remote-monitoring-mulai-dari-read-only-testing-hingga-operasional-paralel-dan-full-control">Strategi bertahap untuk pendekatan remote monitoring, mulai dari read-only, testing, hingga operasional paralel dan full control</h3>
+<p><em>Ditulis oleh Ketut Kumajaya | 7 September 2025</em></p>
+<h2 id="pendahuluan">Pendahuluan</h2>
+<p>Tujuan migrasi ini adalah memungkinkan <strong>monitoring remote</strong> tanpa mengganggu operasional lokal. Strategi migrasi dilakukan secara bertahap: dimulai dengan read-only untuk meminimalkan risiko sebelum write/control diaktifkan. Pendekatan ini bersifat umum dan dapat diterapkan di berbagai plant.</p>
+<p>Keunggulan:</p>
+<ul>
+<li>Monitoring remote aman.</li>
+<li>Fase read-only meminimalkan risiko terhadap operasional.</li>
+<li>Pengembangan paralel memungkinkan transisi bertahap.</li>
+</ul>
+<h3 id="ringkasan-tahapan-migrasi">Ringkasan Tahapan Migrasi</h3>
+<ol>
+<li><strong>Infrastruktur Jaringan</strong> – menyiapkan LAN, VPN, segmentasi, dan keamanan.</li>
+<li><strong>Ekspor Tag dari Citect Studio</strong> – menghasilkan daftar tag dalam format yang kompatibel (CSV/DBF) dan re-useable.</li>
+<li><strong>Rekonstruksi HMI</strong> – membangun halaman Rapid SCADA berbasis tag read-only.</li>
+<li><strong>Routing &amp; Hak Akses</strong> – menetapkan role pengguna dan kontrol keamanan.</li>
+<li><strong>Testing &amp; Upgrade</strong> – menguji kemampuan write/control di lab sebelum diaktifkan.</li>
+<li><strong>Operasional Paralel</strong> – menjalankan Citect dan Rapid SCADA bersamaan untuk familiarisasi operator.</li>
+<li><strong>Shutdown Citect</strong> – menghentikan sistem lama dan mengalihkan kontrol penuh ke Rapid SCADA.</li>
+</ol>
+<hr />
+
+<h2 id="infrastruktur-jaringan">Infrastruktur Jaringan</h2>
+<p><strong>Tujuan:</strong> Menyediakan jaringan internal dan remote yang stabil, aman, dan independen dari pihak lain.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Bangun LAN internal yang stabil.</li>
+<li>Menyediakan VPN atau VLAN untuk remote monitoring.</li>
+<li>Segmentasi jaringan untuk memisahkan operator lokal dan remote access.</li>
+<li>Verifikasi keamanan, redundansi, dan stabilitas jaringan.</li>
+</ul>
+<p><strong>Output:</strong> Jaringan LAN &amp; VPN stabil, tersegmentasi, dan lolos uji keamanan.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    A1[Perencanaan Jaringan LAN] --&gt; A2[Implementasi LAN &amp; VPN]
+    A2 --&gt; A3[Segmentasi &amp; Hak Akses]
+    A3 --&gt; A4[Uji Keamanan &amp; Redundansi]
+    classDef plan fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px,color:#0D47A1;
+    classDef build fill:#E8F5E9,stroke:#43A047,stroke-width:1px,color:#1B5E20;
+    classDef secure fill:#FFF3E0,stroke:#FB8C00,stroke-width:1px,color:#E65100;
+    classDef test fill:#F3E5F5,stroke:#8E24AA,stroke-width:1px,color:#4A148C;
+    class A1 plan;
+    class A2 build;
+    class A3 secure;
+    class A4 test;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Segmentasi LAN dan VPN untuk memastikan monitoring aman, stabil, dan terisolasi
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="ekspor-tag-dari-citect">Ekspor Tag dari Citect</h2>
+<p><strong>Tujuan:</strong> Menyediakan struktur yang presisi dan daftar tag dari Citect untuk direkonstruksi di Rapid SCADA.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Ekspor daftar tag dari <strong>Citect Studio</strong> ke format yang kompatibel (misalnya CSV/DBF) agar mudah digunakan kembali.</li>
+<li>Klasifikasikan tag berdasarkan jenis: analog, digital, memory.</li>
+<li>Tentukan prioritas tag untuk monitoring.</li>
+<li>Lakukan backup penuh konfigurasi Citect sebelum proses rekonstruksi.</li>
+<li>Gunakan <strong>OPC Server</strong> bawaan Citect hanya sebagai sumber <em>runtime data</em> (read-only) selama fase awal validasi.</li>
+</ul>
+<blockquote>
+<p><strong>Catatan:</strong> Dengan kombinasi ekspor struktural dan validasi runtime, proses migrasi bisa dimulai tanpa mengganggu sistem lama.</p>
+</blockquote>
+<p><strong>Output:</strong> Daftar tag lengkap, terklasifikasi (analog, digital, memory), dan sudah di-backup.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    B1[Identifikasi Tag Citect] --&gt; B2[Ekspor dari Citect Studio]
+    B2 --&gt; B3[Backup Citect] --&gt; B4[Klasifikasi &amp; Prioritas]
+    classDef id fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px,color:#0D47A1;
+    classDef export fill:#E8F5E9,stroke:#43A047,stroke-width:1px,color:#1B5E20;
+    classDef backup fill:#FFF3E0,stroke:#FB8C00,stroke-width:1px,color:#E65100;
+    classDef classify fill:#F3E5F5,stroke:#8E24AA,stroke-width:1px,color:#4A148C;
+    class B1 id;
+    class B2 export;
+    class B3 backup;
+    class B4 classify;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Ekspor tag Citect, klasifikasi awal untuk monitoring
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="rekonstruksi-tag-dan-halaman-di-rapid-scada">Rekonstruksi Tag dan Halaman di Rapid SCADA</h2>
+<p><strong>Tujuan:</strong> Membuat halaman Rapid SCADA menyerupai layout Citect.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Rekonstruksi tag di Rapid SCADA menggunakan OPC DA driver.</li>
+<li>Buat halaman HMI awal <strong>read-only</strong> untuk validasi tampilan dan akurasi data.</li>
+<li>Verifikasi data real-time terhadap Citect.</li>
+</ul>
+<blockquote>
+<p><strong>Catatan:</strong> Fase read-only sangat penting untuk meminimalkan risiko intervensi terhadap operator.</p>
+</blockquote>
+<p><strong>Output:</strong> Halaman HMI awal di Rapid SCADA menampilkan data real-time sesuai dengan Citect.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    C1[Rekonstruksi Tag] --&gt; C2[Buat Halaman HMI Rapid SCADA]
+    C2 --&gt; C3[Uji Validasi Data &amp; Tampilan]
+    classDef tag fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px,color:#0D47A1;
+    classDef hmi fill:#E8F5E9,stroke:#43A047,stroke-width:1px,color:#1B5E20;
+    classDef validate fill:#FFF3E0,stroke:#FB8C00,stroke-width:1px,color:#E65100;
+    class C1 tag;
+    class C2 hmi;
+    class C3 validate;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Replikasi layout Citect di Rapid SCADA, validasi tampilan dan data
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="routing-dan-hak-akses-pengguna">Routing dan Hak Akses Pengguna</h2>
+<p><strong>Tujuan:</strong> Mengatur siapa yang dapat monitoring dan siapa yang dapat write.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Konfigurasi hak akses di Rapid SCADA.</li>
+<li>Buat role-based access: operator lokal, supervisor, remote monitoring.</li>
+<li>Verifikasi hak akses melalui simulasi.</li>
+</ul>
+<blockquote>
+<p><strong>Catatan:</strong> Hak akses yang jelas menghindari kesalahan kontrol dari jarak jauh.</p>
+</blockquote>
+<p><strong>Output:</strong> Role-based access berjalan, operator remote hanya bisa monitoring, kontrol penuh tetap di lokal.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    D1[Identifikasi Role Pengguna] --&gt; D2[Konfigurasi Hak Akses]
+    D2 --&gt; D3[Simulasi &amp; Verifikasi Akses]
+    classDef role fill:#E1F5FE,stroke:#0288D1,stroke-width:1px,color:#01579B;
+    classDef access fill:#F1F8E9,stroke:#558B2F,stroke-width:1px,color:#33691E;
+    classDef verify fill:#FFF8E1,stroke:#F9A825,stroke-width:1px,color:#E65100;
+    class D1 role;
+    class D2 access;
+    class D3 verify;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Role-based access untuk kontrol aman dan terpisah
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="testing-dan-upgrade-rapid-scada">Testing dan Upgrade Rapid SCADA</h2>
+<p><strong>Tujuan:</strong> Mengubah halaman dari read-only menjadi <strong>write/control</strong> secara aman.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Uji semua tag write di lingkungan simulasi atau lab.</li>
+<li>Pastikan sekuriti tetap diterapkan (password, logging).</li>
+<li>Upgrade halaman HMI sesuai kebutuhan operasional.</li>
+</ul>
+<blockquote>
+<p><strong>Catatan:</strong> Jangan aktifkan write/control sebelum semua pengujian selesai.</p>
+</blockquote>
+<p><strong>Output:</strong> Semua perintah write berfungsi di lingkungan simulasi, sudah ada logging &amp; proteksi password.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    E1[Simulasi Lingkungan Lab] --&gt; E2[Uji Tag Write/Control]
+    E2 --&gt; E3[Terapkan Sekuriti &amp; Logging]
+    E3 --&gt; E4[Upgrade Halaman HMI]
+    classDef lab fill:#EDE7F6,stroke:#5E35B1,stroke-width:1px,color:#311B92;
+    classDef test fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#0D47A1;
+    classDef security fill:#FFF3E0,stroke:#FB8C00,stroke-width:1px,color:#E65100;
+    classDef upgrade fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#1B5E20;
+    class E1 lab;
+    class E2 test;
+    class E3 security;
+    class E4 upgrade;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Uji tag write dan upgrade halaman sebelum aktivasi kontrol
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="operasional-paralel">Operasional Paralel</h2>
+<p><strong>Tujuan:</strong> Menjalankan Citect dan Rapid SCADA bersamaan untuk familiarisasi operator.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Jalankan kedua sistem secara bersamaan.</li>
+<li>Monitor performa dan keakuratan data.</li>
+<li>Berikan training singkat untuk operator.</li>
+</ul>
+<blockquote>
+<p><strong>Catatan:</strong> Fase paralel memungkinkan transisi aman sebelum shutdown Citect.</p>
+</blockquote>
+<p><strong>Output:</strong> Operator sudah bisa membaca data dari kedua sistem dan mulai terbiasa dengan Rapid SCADA.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    F1[Operasional Citect] --&gt; F2[Operasional Rapid SCADA Paralel]
+    F2 --&gt; F3[Monitoring &amp; Verifikasi Data]
+    F3 --&gt; F4[Operator Familiarisasi]
+    classDef citect fill:#FFEBEE,stroke:#C62828,stroke-width:1px,color:#B71C1C;
+    classDef parallel fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#0D47A1;
+    classDef monitor fill:#FFF8E1,stroke:#F9A825,stroke-width:1px,color:#E65100;
+    classDef familiar fill:#F1F8E9,stroke:#2E7D32,stroke-width:1px,color:#1B5E20;
+    class F1 citect;
+    class F2 parallel;
+    class F3 monitor;
+    class F4 familiar;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Jalankan dua sistem untuk transisi dan pelatihan operator
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="shutdown-citect">Shutdown Citect</h2>
+<p><strong>Tujuan:</strong> Menjadikan Rapid SCADA sebagai sistem utama.</p>
+<p><strong>Langkah-langkah:</strong></p>
+<ul>
+<li>Pastikan semua halaman, tag, dan driver siap.</li>
+<li>Shutdown Citect HMI.</li>
+<li>Rapid SCADA menjadi sistem utama untuk monitoring dan control.</li>
+<li>Driver langsung ke PLC dapat dikembangkan untuk menghapus ketergantungan pada Citect I/O server.</li>
+</ul>
+<blockquote>
+<p><strong>Catatan:</strong> Pastikan backup terakhir Citect tersedia sebelum shutdown.</p>
+</blockquote>
+<p><strong>Output:</strong> Rapid SCADA menjadi satu-satunya sistem monitoring &amp; control, backup Citect tersedia sebagai cadangan.</p>
+<p><strong>Subflow Aktivitas:</strong></p>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    G1[Verifikasi Semua Halaman &amp; Tag] --&gt; G2[Shutdown Citect HMI]
+    G2 --&gt; G3[Rapid SCADA Full Monitoring &amp; Control]
+    G3 --&gt; G4[Kembangkan Driver PLC Langsung]
+    classDef verify fill:#E3F2FD,stroke:#1565C0,stroke-width:1px,color:#0D47A1;
+    classDef shutdown fill:#FFEBEE,stroke:#C62828,stroke-width:1px,color:#B71C1C;
+    classDef full fill:#E8F5E9,stroke:#2E7D32,stroke-width:1px,color:#1B5E20;
+    classDef driver fill:#F3E5F5,stroke:#8E24AA,stroke-width:1px,color:#4A148C;
+    class G1 verify;
+    class G2 shutdown;
+    class G3 full;
+    class G4 driver;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Alihkan kontrol penuh ke Rapid SCADA, hentikan sistem lama
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="diagram-alur-utama-migrasi">Diagram Alur Utama Migrasi</h2>
+<figure style="display:flex; flex-direction:column; align-items:center;">
+  <pre class="mermaid">---
+config:
+  look: handDrawn
+  theme: neutral
+---
+flowchart TD
+    A[Infrastruktur Jaringan] --&gt; B[Ekspor Tag dari Citect]
+    B --&gt; C[Rapid SCADA Read-Only]
+    C --&gt; D[Rekonstruksi Halaman HMI]
+    D --&gt; E[Routing &amp; Hak Akses]
+    E --&gt; F["Testing &amp; Upgrade Rapid SCADA (Read/Write)"]
+    F --&gt; G[Operasional Paralel]
+    G --&gt; H[Shutdown Citect]
+    H --&gt; I[Rapid SCADA Full Monitoring &amp; Control]
+    %% Definisi gaya untuk tiap fase
+    classDef infra fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1;
+    classDef prepare fill:#f1f8e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
+    classDef build fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,color:#e65100;
+    classDef run fill:#ede7f6,stroke:#4527a0,stroke-width:2px,color:#311b92;
+    classDef final fill:#fce4ec,stroke:#ad1457,stroke-width:2px,color:#880e4f;
+    %% Pemetaan node ke fase
+    class A infra;
+    class B,C prepare;
+    class D,E build;
+    class F,G run;
+    class H,I final;
+  </pre>
+  <figcaption style="font-style: italic; margin-top: 0.5em; color: #555; font-size: 0.8em;">
+    Migrasi bertahap dari read-only ke full control, memastikan transisi aman
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="kesimpulan">Kesimpulan</h2>
+<ul>
+<li>Pendekatan bertahap meminimalkan risiko dan memastikan stabilitas.</li>
+<li>Fase read-only → testing → write/control → operasional paralel → full migration.</li>
+<li>Remote monitoring dapat dilakukan tanpa mengganggu operasional lokal.</li>
+<li>Pendekatan ini dapat diterapkan secara umum, tidak tergantung plant tertentu.</li>
+</ul>
+
+<!--kg-card-begin: html-->
+<!--   Scroll Top   -->
+<div class="scroll-button">
+  <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102">
+      <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="18" y1="11" x2="12" y2="5" />
+      <line x1="6" y1="11" x2="12" y2="5" />
+    </svg>
+  </button>
+</div>
+<!--kg-card-end: html-->
+
+
+  </div>
+
+  <a class="u-url" href="/scada/2025/09/07/roadmap-migrasi-hmi-dari-citect-scada-ke-rapid-scada.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

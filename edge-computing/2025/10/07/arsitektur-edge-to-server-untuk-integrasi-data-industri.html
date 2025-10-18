@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Arsitektur Edge-to-Server untuk Integrasi Data Industri | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Arsitektur Edge-to-Server untuk Integrasi Data Industri" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan." />
+<meta property="og:description" content="Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-10-07T05:08:20+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Arsitektur Edge-to-Server untuk Integrasi Data Industri" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-10-07T05:08:20+00:00","datePublished":"2025-10-07T05:08:20+00:00","description":"Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan.","headline":"Arsitektur Edge-to-Server untuk Integrasi Data Industri","image":"https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/edge-computing/2025/10/07/arsitektur-edge-to-server-untuk-integrasi-data-industri.html"},"url":"/edge-computing/2025/10/07/arsitektur-edge-to-server-untuk-integrasi-data-industri.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/edge-computing/" itemprop="articleSection">
+        Edge Computing
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">Arsitektur Edge-to-Server untuk Integrasi Data Industri</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-10-07T05:08:20+00:00" itemprop="datePublished">
+        October 07, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">4 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="Arsitektur Edge-to-Server untuk Integrasi Data Industri" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@ayadighaith?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Ayadi Ghaith</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p><em>Ditulis oleh Ketut Kumajaya | 6 Oktober 2025</em></p>
+<h3 id="latar-belakang">Latar Belakang</h3>
+<p>Dalam dunia otomasi industri, data proses bukan sekadar angka di layar; ia adalah dasar pengambilan keputusan bisnis.<br />
+Dari pengalaman bertahun-tahun di lantai kontrol, beberapa masalah klasik sering muncul:</p>
+<ul>
+<li>Data DCS sulit diakses di luar jaringan unit produksi, atau hilang saat jaringan terganggu.</li>
+<li>ERP membutuhkan data untuk analisis dan pelaporan, tapi tidak selalu membutuhkan data real-time.</li>
+<li>Banyak sistem modern menerapkan push architecture, namun dalam praktik lapangan sering menghadapi tantangan saat jaringan putus atau SCADA restart.</li>
+</ul>
+<p>Solusi yang lebih tahan banting adalah mencatat data proses secara lokal di lapangan, menyimpannya dengan aman, lalu menariknya ke server hanya ketika diperlukan. Dengan cara ini, risiko kehilangan data berkurang drastis dan sistem tetap resilient.</p>
+<h3 id="filosofi-pull-vs-push">Filosofi Pull vs Push</h3>
+<blockquote>
+<p>Dari pengalaman lapangan, push architecture sering menjadi rumit.<br />
+Saat jaringan putus, data stagnan tanpa disadari. Restart SCADA bisa memutus aliran.<br />
+Pull architecture lebih stabil: data dicatat lokal, server hanya menarik sesuai interval.<br />
+Resilience lebih penting daripada kecepatan dalam operasi nyata. Kecepatan bisa ditunda, integritas tidak bisa ditawar.</p>
+</blockquote>
+<p>Dalam satu kasus nyata, jaringan antar-plant terputus selama 6 jam. Pada sistem push, histori hilang permanen. Pada sistem pull, edge tetap mencatat penuh. Begitu koneksi pulih, server menarik backlog, dan ERP tetap menerima histori lengkap tanpa celah.</p>
+<hr />
+
+<h3 id="arsitektur-sistem">Arsitektur Sistem</h3>
+<p>Sistem ini dibagi menjadi dua lapisan utama: <strong>edge</strong> dan <strong>server</strong>.</p>
+<p><strong>Edge computer</strong> ditempatkan di perbatasan antara dunia proses dan digital, seperti Raspberry Pi 4B dalam casing industrial Advantech UNO220, menjalankan Ubuntu Server headless. Perannya bukan sekadar gateway, melainkan <strong>pencatat data independen, pengolah awal, dan penghubung aman</strong> ke server pusat. Edge menyimpan buffer data beberapa bulan, sehingga meski jaringan terputus, histori tetap utuh.</p>
+<p><strong>Server</strong> berjalan di VM Ubuntu Server yang juga headless. Ia bertindak sebagai <strong>relay dan integrator</strong>, menerima permintaan dari ERP atau Node‑RED, lalu meneruskannya ke edge sesuai lokasi. Server tidak perlu tahu detail teknis tiap edge, cukup berbicara dengan format JSON seragam dari proxy.</p>
+<hr />
+
+<h4 id="diagram-alur-sistem">Diagram Alur Sistem</h4>
+<p>Diagram berikut memperlihatkan alur komunikasi:</p>
+<ul>
+<li><strong>DCS → Modbus RTU → Modbus TCP/RTU Gateway</strong>: data proses mentah keluar dari sistem kontrol.</li>
+<li><strong>Rapid SCADA</strong> di edge mencatat data sebagai historian.</li>
+<li><strong>Node‑RED</strong> di edge mengirim laporan otomatis atau status OS.</li>
+<li><strong>Proxy Layer</strong> menjamin format JSON konsisten, menambahkan autentikasi dan flag audit.</li>
+<li><strong>Server Node‑RED</strong> menerima permintaan dari ERP, lalu meneruskan ke proxy di edge.</li>
+<li><strong>Grafana</strong> mengambil data dari proxy untuk visualisasi.</li>
+<li><strong>Chat Server</strong> menerima laporan mandiri dari edge.</li>
+</ul>
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <div class="mermaid" style="width:100%; max-width:none; font-size:14px;">
+    flowchart LR
+     subgraph DCS_Side["Process"]
+            DCS["DCS"]
+      end
+     subgraph Edge["    Edge Computer"]
+            MB("Modbus RTU")
+            MBD["Modbus TCP ↔ RTU"]
+            RS["Rapid SCADA"]
+            NR["Node-RED"]
+            PL["Proxy Layer"]
+      end
+     subgraph Server["Server"]
+            SNR["Node-RED"]
+            SG["Grafana"]
+            ERP["ERP System"]
+            CHAT["Chat Server"]
+      end
+        MB --&gt; MBD
+        MBD --&gt; RS
+        NR --&gt; PL &amp; CHAT
+        ERP --&gt; SNR
+        SNR --&gt; PL
+        PL --&gt; RS
+        SG --&gt; PL
+        DCS --&gt; MB
+          DCS:::Ash
+          MB:::Peach
+          MBD:::Peach
+          RS:::Peach
+          NR:::Peach
+          PL:::Peach
+          SNR:::Sky
+          SG:::Sky
+          ERP:::Sky
+          CHAT:::Sky
+        classDef Rose stroke-width:2px, stroke-dasharray:none, stroke:#FF5978, fill:#FFDFE5, color:#8E2236
+        classDef Peach stroke-width:2px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+        classDef Sky stroke-width:2px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
+        classDef Pine stroke-width:2px, stroke-dasharray:none, stroke:#254336, fill:#27654A, color:#FFFFFF
+        classDef Ash stroke-width:2px, stroke-dasharray:none, stroke:#999999, fill:#EEEEEE, color:#000000
+        style Server fill:transparent
+        style Edge fill:transparent
+        style DCS_Side fill:transparent
+    </div>
+</div>
+<hr />
+
+<h3 id="edge-layer">Edge Layer</h3>
+<p>Edge computer berfungsi sebagai pencatat data independen, pengolah awal, sekaligus penghubung aman antara DCS dan server pusat. Untuk itu, beberapa layanan utama dijalankan secara paralel:</p>
+<ul>
+<li><strong>Rapid SCADA</strong> → mencatat data dari DCS sebagai historian.</li>
+<li><strong>Node-RED</strong> → membuat auto report, memantau status OS, dan melakukan pengolahan sederhana sebelum data dikirim ke server.</li>
+<li><strong>mbusbd</strong> → adapter yang memungkinkan Modbus RTU diakses bersama Rapid SCADA dan Node-RED tanpa konflik port.</li>
+</ul>
+<blockquote>
+<p><strong>Advantech UNO220</strong> adalah casing standar industri yang dapat melengkapi Raspberry Pi 4B. Casing ini sudah termasuk pendingin pasif (<em>fanless cooling</em>), RTC Epson RX‑8010SJ‑B, TI TCA9554 I/O expander, Infineon OPTIGA™ TPM SLB9670 security chip, port serial RS‑232/RS‑485, dan dukungan Power over Ethernet (PoE).</p>
+<p>Dukungan hardware tersebut sangat memadai, <strong>namun tetap membutuhkan konfigurasi software yang benar</strong> agar sistem berjalan stabil dan aman.<br />
+Seluruh dukungan software tersedia di repositori penulis untuk memastikan integrasi berjalan mulus.</p>
+</blockquote>
+<h4 id="catatan-tentang-modbus-rtu">Catatan tentang Modbus RTU</h4>
+<p>Meski sederhana, Modbus RTU berbasis RS‑485 justru memberi lapisan keamanan tambahan: tidak terekspos ke TCP/IP, stabil dengan pola master‑slave deterministik, dan mudah diaudit. Dengan gateway TCP/RTU di edge, DCS tetap terlindungi di domain serial, sementara server pusat tetap menerima data dalam format modern yang konsisten.</p>
+<hr />
+
+<h3 id="proxy-layer">Proxy Layer</h3>
+<p>Proxy layer open source di edge:</p>
+<ul>
+<li>Menyediakan format JSON konsisten untuk server.</li>
+<li>Menangani autentikasi: Rapid SCADA 5 (Basic Auth) vs Rapid SCADA 6 (session cookie).</li>
+<li>Menambah keamanan: log akses, kontrol autentikasi, monitoring.</li>
+</ul>
+<blockquote>
+<p>Server dan aplikasi lain (Node-RED, Grafana) dapat mengakses data tanpa mengetahui versi SCADA atau detail teknis edge.<br />
+Open source, bebas lisensi, dan dapat disesuaikan sesuai kebutuhan — hasil development mandiri yang bisa terus dievolusi.</p>
+</blockquote>
+<hr />
+
+<h3 id="server">Server</h3>
+<p>Server berperan sebagai <strong>relay data dan integrator</strong>:</p>
+<ul>
+<li>ERP system mengirim REST → server meneruskan ke edge → hasil dikembalikan.</li>
+<li>Node-RED dan Grafana mengambil data dengan cara seragam.</li>
+<li>Chat server internal memungkinkan edge mengirim laporan performa atau status OS secara mandiri.</li>
+</ul>
+<p>ERP tidak butuh data real-time; cukup data 48 jam terakhir. Retry panggilan ERP diatur tim ERP — server tetap ringan dan fokus relay. Dengan pola ini, satu server bisa melayani puluhan edge tanpa bottleneck.</p>
+<hr />
+
+<h3 id="nilai-ekonomis">Nilai Ekonomis</h3>
+<ul>
+<li>Edge murah tapi cukup kuat: Raspberry Pi industrial, PC Windows, atau perangkat lain yang mendukung Modbus RTU.</li>
+<li>Server dapat melayani banyak lokasi.</li>
+<li>Pencatatan lokal mengurangi risiko downtime.</li>
+<li>Open source → tanpa biaya lisensi.</li>
+<li>Skalabilitas sederhana: menambah unit baru cukup edge minimal, atau komputer Windows yang ada + USB RS-485 converter → OS-independent.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Komponen</th>
+<th>Biaya</th>
+<th>Fungsi Utama</th>
+<th>Lisensi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Edge (RPi)</td>
+<td>Rendah</td>
+<td>Pencatat &amp; gateway</td>
+<td>Open source</td>
+</tr>
+<tr>
+<td>Server (VM)</td>
+<td>Sedang</td>
+<td>Relay &amp; integrator</td>
+<td>Open source</td>
+</tr>
+<tr>
+<td>Proxy Layer</td>
+<td>Nol</td>
+<td>Format JSON &amp; keamanan</td>
+<td>Open source</td>
+</tr>
+<tr>
+<td>Rapid SCADA</td>
+<td>Nol</td>
+<td>Historian &amp; visualisasi</td>
+<td>Open source</td>
+</tr>
+<tr>
+<td>Node‑RED</td>
+<td>Nol</td>
+<td>Automasi &amp; REST handler</td>
+<td>Open source</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Meski murah, sistem ini tidak murahan: dibangun dari pengalaman integrasi teruji.<br />
+Vendor DCS dapat menawarkan solusi, dengan tantangan menghadirkan integrasi yang lebih luas, fleksibel, dan berjalan paralel dengan sistem yang sudah ada. Dengan begitu, ekosistem industri dapat tumbuh semakin terbuka, kolaboratif, dan berkelanjutan.</p>
+</blockquote>
+<hr />
+
+<h3 id="penutup">Penutup</h3>
+<p>Arsitektur ini lahir dari pengalaman lapangan sebagai system integrator yang ditempa oleh praktik nyata, bukan teori kelas. Setiap komponen — Rapid SCADA, Node-RED, ZeroTier, proxy layer — disatukan agar stabil, aman, dan saling memahami.</p>
+<p>Sistem cukup sederhana untuk dipahami, tangguh, fleksibel, dan profesional.<br />
+Setiap unit produksi mandiri, fleksibel dari sisi perangkat keras dan OS, tetap menjadi bagian dari ekosistem data aman yang efisien.</p>
+
+
+  </div>
+
+  <a class="u-url" href="/edge-computing/2025/10/07/arsitektur-edge-to-server-untuk-integrasi-data-industri.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

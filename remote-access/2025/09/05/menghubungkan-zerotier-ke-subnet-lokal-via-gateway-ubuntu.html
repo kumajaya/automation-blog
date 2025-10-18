@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Integrasi ZeroTier ke subnet lokal industri kini makin modular. Artikel ini menyajikan struktur NAT dan redireksi VNC yang siap-pakai, lengkap dengan flowchart dan validasi runtime." />
+<meta property="og:description" content="Integrasi ZeroTier ke subnet lokal industri kini makin modular. Artikel ini menyajikan struktur NAT dan redireksi VNC yang siap-pakai, lengkap dengan flowchart dan validasi runtime." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDI3fHxuZXR3b3JraW5nfGVufDB8fHx8MTc1NzA1MTE4NHww&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-09-05T09:38:25+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDI3fHxuZXR3b3JraW5nfGVufDB8fHx8MTc1NzA1MTE4NHww&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-05T09:38:25+00:00","datePublished":"2025-09-05T09:38:25+00:00","description":"Integrasi ZeroTier ke subnet lokal industri kini makin modular. Artikel ini menyajikan struktur NAT dan redireksi VNC yang siap-pakai, lengkap dengan flowchart dan validasi runtime.","headline":"Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu","image":"https://images.unsplash.com/photo-1544197150-b99a580bb7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDI3fHxuZXR3b3JraW5nfGVufDB8fHx8MTc1NzA1MTE4NHww&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/remote-access/2025/09/05/menghubungkan-zerotier-ke-subnet-lokal-via-gateway-ubuntu.html"},"url":"/remote-access/2025/09/05/menghubungkan-zerotier-ke-subnet-lokal-via-gateway-ubuntu.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/remote-access/" itemprop="articleSection">
+        Remote Access
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-09-05T09:38:25+00:00" itemprop="datePublished">
+        September 05, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">5 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    Integrasi ZeroTier ke subnet lokal industri kini makin modular. Artikel ini menyajikan struktur NAT dan redireksi VNC yang siap-pakai, lengkap dengan flowchart dan validasi runtime.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDI3fHxuZXR3b3JraW5nfGVufDB8fHx8MTc1NzA1MTE4NHww&ixlib=rb-4.1.0&q=80&w=2000" alt="Menghubungkan ZeroTier ke Subnet Lokal via Gateway Ubuntu" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@jouwdan?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Jordan Harrison</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<h3 id="struktur-nat-modular-redireksi-vnc-dan-internet-gateway">Struktur NAT Modular, Redireksi VNC, dan Internet Gateway</h3>
+<p><em>Ditulis oleh Ketut Kumajaya | 5 September 2025</em></p>
+<h3 id="konteks-operasional">Konteks Operasional</h3>
+<p>Dalam sistem industri yang mengandalkan remote access yang aman, integrasi jaringan virtual seperti ZeroTier ke subnet lokal fisik menjadi kebutuhan penting. Artikel ini menyajikan struktur konfigurasi gateway Ubuntu yang modular, memungkinkan konektivitas eksplisit serta redireksi layanan seperti VNC melalui NAT serta akses internet saat diperlukan.</p>
+<hr />
+
+<h3 id="topologi-mapping-ip">Topologi &amp; Mapping IP</h3>
+<table>
+<thead>
+<tr>
+<th>Komponen</th>
+<th>IP Address</th>
+<th>Fungsi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZeroTier Gateway</td>
+<td>192.168.194.72</td>
+<td>Interface ZeroTier &amp; NAT</td>
+</tr>
+<tr>
+<td>LAN Gateway</td>
+<td>192.168.71.130</td>
+<td>Interface lokal LAN</td>
+</tr>
+<tr>
+<td>Target LAN</td>
+<td>192.168.71.247</td>
+<td>Tujuan akses dari ZeroTier</td>
+</tr>
+<tr>
+<td>VNC Server</td>
+<td>128.128.1.134</td>
+<td>Tujuan DNAT port 5900</td>
+</tr>
+</tbody>
+</table>
+<div style="width: 100%; text-align: center; margin: 0.5em auto; max-width: 300px;">  
+  <div class="mermaid" style="width: 100%; max-width: 600px;">  
+    ---  
+    config:  
+      theme: neutral  
+    ---  
+    flowchart TD  
+        ZTClient["ZeroTier Client<br />192.168.194.x"]:::client  
+        ZTGateway["Gateway Ubuntu<br />192.168.194.72"]:::gateway  
+        LANTarget["Target LAN<br />192.168.71.247"]:::lan  
+        ZTClient --&gt;|Ping / VNC Request| ZTGateway  
+        ZTGateway --&gt;|FORWARD Rule<br />zt+ → eth0| LANTarget  
+        LANTarget --&gt;|Response| ZTGateway  
+        ZTGateway --&gt;|FORWARD Rule<br />eth0 → zt+| ZTClient  
+        classDef client fill:#d1ecf1,stroke:#0c5460,stroke-width:2px  
+        classDef gateway fill:#fff3cd,stroke:#856404,stroke-width:2px  
+        classDef lan fill:#d4edda,stroke:#155724,stroke-width:2px  
+  </div>  
+</div>
+<p>Topologi ini memungkinkan node ZeroTier mengakses subnet lokal melalui gateway Ubuntu, sekaligus merelay koneksi VNC secara eksplisit.</p>
+<hr />
+
+<h3 id="ip-forwarding-kebijakan-routing">IP Forwarding &amp; Kebijakan Routing</h3>
+<p>Aktifkan IP forwarding dengan mengedit konfigurasi UFW:</p>
+<pre><code class="language-bash">sudo nano /etc/ufw/sysctl.conf
+</code></pre>
+<p>Set:</p>
+<pre><code>net/ipv4/ip_forward = 1
+</code></pre>
+<p>Ubah kebijakan default forwarding:</p>
+<pre><code class="language-bash">sudo nano /etc/default/ufw
+</code></pre>
+<p>Set:</p>
+<pre><code>DEFAULT_FORWARD_POLICY="ACCEPT"
+</code></pre>
+<p>Untuk memastikan interface yang digunakan sesuai, cek dengan:</p>
+<pre><code class="language-bash">ip a | grep inet
+</code></pre>
+<hr />
+
+<h3 id="struktur-nat-rule-ufw">Struktur NAT &amp; Rule UFW</h3>
+<p>Edit <code>/etc/ufw/before.rules</code> sebelum <code>COMMIT</code>:</p>
+<pre><code class="language-bash">*nat
+:POSTROUTING ACCEPT [0:0]
+
+# MASQUERADE: NAT ZeroTier ke internet via eth0
+-A POSTROUTING -s 192.168.194.0/24 -o eth0 -j MASQUERADE
+
+COMMIT
+
+*filter
+:FORWARD ACCEPT [0:0]
+
+# FORWARD: Trafik ZeroTier ke subnet lokal
+-A FORWARD -i zt+ -o eth0 -s 192.168.194.0/24 -d 192.168.71.0/24 -j ACCEPT
+
+# FORWARD: Trafik subnet lokal ke ZeroTier
+-A FORWARD -i eth0 -o zt+ -s 192.168.71.0/24 -d 192.168.194.0/24 -j ACCEPT
+
+COMMIT
+</code></pre>
+<p>Catatan: aturan NAT ditempatkan di <code>before.rules</code> agar diproses lebih awal sebelum aturan filter default UFW.</p>
+<hr />
+
+<h3 id="route-di-zerotier-controller">Route di ZeroTier Controller</h3>
+<p>Tambahkan route:</p>
+<table>
+<thead>
+<tr>
+<th>Destination</th>
+<th>Via</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>192.168.71.0/24</td>
+<td>192.168.194.72</td>
+</tr>
+</tbody>
+</table>
+<p>Route ini mengarahkan trafik subnet lokal melalui gateway ZeroTier. Jika menggunakan ZTNET self-hosted controller, konfigurasi dapat dilakukan melalui dashboard web.</p>
+<hr />
+
+<h3 id="redireksi-vnc-via-dnat">Redireksi VNC via DNAT</h3>
+<p>Lakukan perubahan di blok <code>*nat</code> di <code>/etc/ufw/before.rules</code>:</p>
+<pre><code class="language-bash">*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+# DNAT: Redirect port 5900 (VNC) ke server 128.128.1.134
+-A PREROUTING -p tcp -d 192.168.194.72 --dport 5900 \
+   -j DNAT --to-destination 128.128.1.134:5900
+
+# MASQUERADE: NAT ZeroTier ke internet via eth0
+-A POSTROUTING -s 192.168.194.0/24 -o eth0 -j MASQUERADE
+
+# MASQUERADE: NAT untuk balasan dari VNC Server ke ZeroTier client
+-A POSTROUTING -s 192.168.194.0/24 -d 128.128.1.0/24 -j MASQUERADE
+
+COMMIT
+</code></pre>
+<div style="width: 100%; text-align: center; margin: 0.5em auto; max-width: 280px;">  
+  <div class="mermaid" style="width: 100%; max-width: 600px;">  
+    ---  
+    config:  
+      theme: neutral  
+    ---  
+    flowchart TD  
+        DNATRequest["ZeroTier Client<br />→ port 5900"]:::client  
+        DNATGateway["Gateway Ubuntu<br />DNAT Rule"]:::gateway  
+        VNCServer["VNC Server<br />128.128.1.134"]:::vnc  
+        DNATRequest --&gt; DNATGateway  
+        DNATGateway --&gt;|DNAT port 5900| VNCServer  
+        VNCServer --&gt;|Response| DNATGateway  
+        DNATGateway --&gt;|MASQUERADE<br />balasan ke client| DNATRequest  
+        classDef client fill:#d1ecf1,stroke:#0c5460,stroke-width:2px  
+        classDef gateway fill:#fff3cd,stroke:#856404,stroke-width:2px  
+        classDef vnc fill:#d4edda,stroke:#155724,stroke-width:2px  
+  </div>  
+</div>
+<p>DNAT ini memungkinkan client ZeroTier mengakses VNC server secara langsung. Sebagai tambahan, tetap disarankan menggunakan password kuat atau tunneling (misalnya SSH) karena protokol VNC secara default tidak terenkripsi.</p>
+<hr />
+
+<h3 id="rule-ufw-untuk-port-vnc">Rule UFW untuk Port VNC</h3>
+<pre><code class="language-bash">sudo ufw allow from 192.168.194.0/24 to any port 5900 proto tcp comment "VNC gateway"
+</code></pre>
+<p>Untuk meninjau aturan secara urut dan mudah dihapus bila salah:</p>
+<pre><code class="language-bash">sudo ufw status numbered
+</code></pre>
+<hr />
+
+<h3 id="gateway-ubuntu-sebagai-internet-gateway">Gateway Ubuntu sebagai Internet Gateway</h3>
+<p>Selain berfungsi sebagai relay VNC, gateway Ubuntu juga dapat memberikan akses internet ke subnet lokal <code>128.128.1.0/24</code>, selama memiliki dua interface aktif:</p>
+<ul>
+<li><code>enxf8e43b8c14c6</code> → terhubung ke subnet 128.128.1.0/24</li>
+<li><code>eth0</code> → terhubung ke subnet 192.168.71.0/24 dan memiliki akses internet</li>
+</ul>
+<div style="width: 100%; text-align: center; margin: 0.5em auto; max-width: 400px;">  
+  <div class="mermaid" style="width: 100%; max-width: 600px;">  
+    ---  
+    config:  
+      theme: neutral  
+    ---  
+    flowchart TD  
+        HostSubnet["Host Industri<br />128.128.1.134"]:::client  
+        GatewayUbuntu["Gateway Ubuntu<br />IP: 128.128.1.140"]:::gateway  
+        Internet["Internet<br />(8.8.8.8, example.com)"]:::internet  
+        HostSubnet --&gt;|Default Gateway: 128.128.1.140| GatewayUbuntu  
+        GatewayUbuntu --&gt;|MASQUERADE via eth0| Internet  
+        Internet --&gt;|Response| GatewayUbuntu  
+        GatewayUbuntu --&gt;|Balasan NAT ke host| HostSubnet  
+        classDef client fill:#d1ecf1,stroke:#0c5460,stroke-width:2px  
+        classDef gateway fill:#fff3cd,stroke:#856404,stroke-width:2px  
+        classDef internet fill:#d4edda,stroke:#155724,stroke-width:2px  
+  </div>  
+</div>
+<p>IP forwarding telah diaktifkan sebelumnya, sehingga gateway siap meneruskan trafik antar subnet.</p>
+<p>Tambahkan ke blok <code>*nat</code> di <code>/etc/ufw/before.rules</code>:</p>
+<pre><code class="language-bash"># MASQUERADE: NAT subnet industri (128.128.1.0/24) ke internet via eth0
+-A POSTROUTING -s 128.128.1.0/24 -o eth0 -j MASQUERADE
+</code></pre>
+<p>Tambahkan ke blok <code>*filter</code>:</p>
+<pre><code class="language-bash"># FORWARD: Trafik dari subnet industri ke internet
+-A FORWARD -i enxf8e43b8c14c6 -o eth0 -s 128.128.1.0/24 -j ACCEPT
+
+# FORWARD: Trafik balasan dari internet ke subnet industri
+-A FORWARD -i eth0 -o enxf8e43b8c14c6 -d 128.128.1.0/24 -j ACCEPT
+</code></pre>
+<hr />
+
+<h3 id="reload-verifikasi-konfigurasi">Reload &amp; Verifikasi Konfigurasi</h3>
+<pre><code class="language-bash">sudo ufw reload
+sudo ufw status verbose
+</code></pre>
+<p>Struktur lengkap <code>/etc/ufw/before.rules</code> setelah perubahan:</p>
+<pre><code class="language-bash">*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+# DNAT: Redirect port 5900 (VNC) ke server 128.128.1.134
+-A PREROUTING -p tcp -d 192.168.194.72 --dport 5900 \
+   -j DNAT --to-destination 128.128.1.134:5900
+
+# MASQUERADE: NAT ZeroTier ke internet via eth0
+-A POSTROUTING -s 192.168.194.0/24 -o eth0 -j MASQUERADE
+
+# MASQUERADE: Balasan dari VNC Server ke client ZeroTier
+-A POSTROUTING -s 192.168.194.0/24 -d 128.128.1.0/24 -j MASQUERADE
+
+# MASQUERADE: NAT subnet industri (128.128.1.0/24) ke internet via eth0
+-A POSTROUTING -s 128.128.1.0/24 -o eth0 -j MASQUERADE
+
+COMMIT
+
+*filter
+:FORWARD ACCEPT [0:0]
+
+# FORWARD: Trafik ZeroTier ke subnet lokal
+-A FORWARD -i zt+ -o eth0 -s 192.168.194.0/24 -d 192.168.71.0/24 -j ACCEPT
+
+# FORWARD: Trafik subnet lokal ke ZeroTier
+-A FORWARD -i eth0 -o zt+ -s 192.168.71.0/24 -d 192.168.194.0/24 -j ACCEPT
+
+# FORWARD: Trafik dari subnet industri ke internet
+-A FORWARD -i enxf8e43b8c14c6 -o eth0 -s 128.128.1.0/24 -j ACCEPT
+
+# FORWARD: Trafik balasan dari internet ke subnet industri
+-A FORWARD -i eth0 -o enxf8e43b8c14c6 -d 128.128.1.0/24 -j ACCEPT
+
+COMMIT
+</code></pre>
+<hr />
+
+<h3 id="validasi-runtime">Validasi Runtime</h3>
+<p><strong>Akses Subnet Lokal dari Node ZeroTier:</strong></p>
+<pre><code class="language-bash">ping 192.168.71.247
+</code></pre>
+<p><strong>Verifikasi Trafik di Gateway:</strong></p>
+<pre><code class="language-bash">sudo tcpdump -i eth0 host 192.168.71.247
+</code></pre>
+<p><strong>Uji Koneksi VNC via Telnet:</strong></p>
+<pre><code class="language-bash">telnet 192.168.194.72 5900
+</code></pre>
+<p>Jika berhasil:</p>
+<pre><code>RFB 003.008
+</code></pre>
+<p>Respons RFB menandakan bahwa protokol VNC aktif dan DNAT berfungsi. Jika gagal, gunakan:</p>
+<pre><code class="language-bash">sudo tcpdump -i &lt;interface&gt; port 5900
+</code></pre>
+<p><strong>Uji Koneksi Internet dari Subnet 128.128.1.0/24:</strong><br />
+Dari host <code>128.128.1.134</code>, arahkan default gateway ke <code>128.128.1.140</code>, lalu uji koneksi:</p>
+<pre><code class="language-bash">ping 8.8.8.8
+curl https://example.com
+</code></pre>
+<hr />
+
+<h3 id="penutup">Penutup</h3>
+<p>Dengan konfigurasi ini, gateway Ubuntu berfungsi sebagai penghubung antara jaringan ZeroTier dan subnet lokal, serta sebagai relay layanan seperti VNC. Struktur NAT dan UFW yang modular mendukung konektivitas eksplisit dan dokumentasi yang siap diadopsi lintas proyek industri.</p>
+
+<!--kg-card-begin: html-->
+<!--   Scroll Top   -->
+<div class="scroll-button">
+  <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102">
+      <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="18" y1="11" x2="12" y2="5" />
+      <line x1="6" y1="11" x2="12" y2="5" />
+    </svg>
+  </button>
+</div>
+<!--kg-card-end: html-->
+
+
+  </div>
+
+  <a class="u-url" href="/remote-access/2025/09/05/menghubungkan-zerotier-ke-subnet-lokal-via-gateway-ubuntu.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

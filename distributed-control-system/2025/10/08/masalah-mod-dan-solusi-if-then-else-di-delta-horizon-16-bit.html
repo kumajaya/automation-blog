@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Pendekatan MOD sering dipakai untuk menghitung delta berbasis counter 16-bit di sistem DCS. Namun, metode ini rawan menghasilkan loncatan nilai saat terjadi anomali pembacaan." />
+<meta property="og:description" content="Pendekatan MOD sering dipakai untuk menghitung delta berbasis counter 16-bit di sistem DCS. Namun, metode ini rawan menghasilkan loncatan nilai saat terjadi anomali pembacaan." />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1601397922721-4326ae07bbc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1hdGh8ZW58MHx8fHwxNzU5OTQzNjQ3fDA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-10-08T18:12:48+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1601397922721-4326ae07bbc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1hdGh8ZW58MHx8fHwxNzU5OTQzNjQ3fDA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-10-08T18:12:48+00:00","datePublished":"2025-10-08T18:12:48+00:00","description":"Pendekatan MOD sering dipakai untuk menghitung delta berbasis counter 16-bit di sistem DCS. Namun, metode ini rawan menghasilkan loncatan nilai saat terjadi anomali pembacaan.","headline":"Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit","image":"https://images.unsplash.com/photo-1601397922721-4326ae07bbc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1hdGh8ZW58MHx8fHwxNzU5OTQzNjQ3fDA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"/distributed-control-system/2025/10/08/masalah-mod-dan-solusi-if-then-else-di-delta-horizon-16-bit.html"},"url":"/distributed-control-system/2025/10/08/masalah-mod-dan-solusi-if-then-else-di-delta-horizon-16-bit.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/about/">About</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
+      <a href="/categories/distributed-control-system/" itemprop="articleSection">
+        Distributed Control System
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-10-08T18:12:48+00:00" itemprop="datePublished">
+        October 08, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span></span>
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">4 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    Pendekatan MOD sering dipakai untuk menghitung delta berbasis counter 16-bit di sistem DCS. Namun, metode ini rawan menghasilkan loncatan nilai saat terjadi anomali pembacaan.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image" style="margin-top:1rem;">
+    <img src="https://images.unsplash.com/photo-1601397922721-4326ae07bbc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1hdGh8ZW58MHx8fHwxNzU5OTQzNjQ3fDA&ixlib=rb-4.1.0&q=80&w=2000" alt="Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit" itemprop="image">
+    
+    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@joshua_hoehne?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Joshua Hoehne</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p><em>Ditulis oleh Ketut Kumajaya | 08 Oktober 2025</em></p>
+<h2 id="pengantar">Pengantar</h2>
+<p>Dalam sistem DCS berbasis counter 16-bit, perhitungan delta sering menghadapi masalah rollover—nilai kembali ke nol setelah mencapai batas 65.535. Jika tidak ditangani dengan benar, kondisi ini menghasilkan loncatan nilai besar (false delta) yang mengganggu akumulasi waktu maupun totalisasi.</p>
+<p>Artikel ini membahas pendekatan <strong>IF-THEN-ELSE wrap-aware</strong> yang diimplementasikan dalam Function Block <strong>K_DELTA</strong>, serta hasil validasinya terhadap anomali delta akibat rollover.</p>
+<hr />
+
+<h2 id="latar-belakang">Latar Belakang</h2>
+<p>Loncatan delta terdeteksi di pengujian lapangan setelah berhari-hari operasi, ketika counter timer atau pulse mengalami <em>wrap</em>, menyebabkan selisih waktu palsu yang mengganggu akumulasi.</p>
+<p>Solusi <em>wrap-aware delta</em> mengatasi ini dengan menangani kondisi <em>wrap</em> secara eksplisit, melengkapi strategi sebelumnya seperti <strong>K_ACCUM</strong> untuk distribusi waktu antar controller.</p>
+<hr />
+
+<h2 id="analisis-akar-masalah">Analisis Akar Masalah</h2>
+<p>Rentang 16-bit membatasi counter pada nilai 0–65.535, di mana <em>rollover</em> menyebabkan <code>CURRENT &lt; PREVIOUS</code>.</p>
+<p>Pendekatan naif menggunakan MOD — <code>(CURRENT + 65536 - PREVIOUS) MOD 65536</code> — gagal di kondisi anomali <em>non-monotonic</em> (misalnya glitch hardware), menghasilkan delta besar seperti <strong>65.486</strong>, interpretasi <em>wrap palsu</em> yang mempropagasi loncatan ke akumulator.</p>
+<p>Pada DCS tanpa <em>auto-promotion</em>, perhitungan MOD juga rentan <em>overflow pre-mod</em>, memperbesar risiko delta negatif atau positif palsu setelah 65k pulsa.</p>
+<hr />
+
+<h2 id="perbandingan-pendekatan">Perbandingan Pendekatan</h2>
+<p>MOD efisien karena tanpa percabangan kondisional, tetapi rawan loncatan di anomali akibat ambiguitas modulo pada penurunan nilai (delta &gt; separuh rentang 32.768).</p>
+<p>Sebaliknya, IF-THEN-ELSE lebih eksplisit: langsung mengurangkan jika tidak <em>wrap</em>, atau menghitung sisa rentang + CURRENT + 1 jika <em>wrap</em>.</p>
+<p>Keduanya menghasilkan nilai identik di kondisi normal, namun IF-THEN-ELSE unggul dalam proteksi (cutoff anomali) dan kemudahan <em>debugging</em> di DCS — memastikan akumulasi tetap terprediksi.</p>
+<hr />
+
+<h2 id="catatan-teknis">Catatan Teknis</h2>
+<p><strong>K_DELTA versi 1.2</strong> mengadopsi pendekatan <strong>IF-THEN-ELSE wrap-aware</strong> dengan <em>cutoff</em> 60 detik untuk loncatan ekstrem, menggunakan tipe <strong>LONG</strong> agar aman di Supcon.</p>
+<p>Pendekatan ini menghilangkan loncatan akibat MOD dan menstabilkan delta untuk akumulasi yang dapat diprediksi.</p>
+<p>Perlu dicatat bahwa masalah loncatan nilai sebenarnya bukan spesifik masalah K_DELTA, melainkan digunakan sebagai contoh kasus untuk menjelaskan perbedaan perilaku antara operator <code>MOD</code> dan logika <code>IF-THEN-ELSE</code>.</p>
+<p>Dalam sistem sebenarnya, K_DELTA berfungsi sebagai <em>time backbone</em> — modul pusat yang menyediakan nilai <em>delta waktu</em> secara global bagi berbagai Function Block lain seperti <code>K_ACCUM</code>. Dengan cara ini, setiap <code>K_ACCUM</code> tidak perlu lagi menghitung delta waktunya masing-masing, sehingga struktur kode menjadi lebih sederhana, efisien, dan mudah diaudit.</p>
+<hr />
+
+<h3 id="diagram-alur">Diagram Alur</h3>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <div class="mermaid" style="width:60%; max-width:none; font-size:14px;">
+    %%{init: {'themeVariables': { 'primaryColor': '#e8f0fe', 'lineColor': '#333', 'fontSize': '14px', 'edgeLabelBackground':'#ffffff'}}}%%
+    graph TD
+        A["Input: TIMER_IN, LAST_IN"] --&gt; B{"TIMER_IN &gt;= LAST_IN?"}
+        B --&gt;|<span style="color:green">Ya</span>| C["Δ := TIMER_IN - LAST_IN (LONG)"]
+        B --&gt;|<span style="color:orange">Tidak</span>| D["Δ := (65535 - LAST_IN) + TIMER_IN + 1 (LONG)"]
+        C --&gt; E{"Δ &gt; 60?"}
+        D --&gt; E
+        E --&gt;|<span style="color:green">Ya</span>| F["Δ := 0; ALARM_OUT := TRUE"]
+        E --&gt;|<span style="color:orange">Tidak</span>| G["ALARM_OUT := FALSE"]
+        F --&gt; H["Output: DELTA_OUT := UINT(Δ)"]
+        G --&gt; H
+        classDef startend fill:#d0e6ff,stroke:#004aad,stroke-width:2px,color:#000;
+        classDef decision fill:#fff5cc,stroke:#ffb300,stroke-width:2px,color:#000;
+        classDef alarm fill:#ffd6d6,stroke:#e60000,stroke-width:2px,color:#000;
+        classDef process fill:#e8f0fe,stroke:#004aad,stroke-width:2px,color:#000;
+        class A,H startend;
+        class B,E decision;
+        class C,D,G process;
+        class F alarm;
+  </div>
+</div>
+<hr />
+
+<h2 id="validasi-independen-dengan-simulasi">Validasi Independen dengan Simulasi</h2>
+<p>Simulasi pada lingkungan mirip PLC menunjukkan loncatan MOD pada <em>non-wrap decrease</em> (<code>delta = 65486 &gt; 32768</code>), sedangkan IF menghasilkan nilai yang sama namun dapat diproteksi dengan cutoff.</p>
+<p>Tes konfirmasi membuktikan eliminasi loncatan dan akumulasi yang tetap stabil.</p>
+<table>
+<thead>
+<tr>
+<th>Deskripsi</th>
+<th>CURRENT</th>
+<th>PREVIOUS</th>
+<th>Delta MOD</th>
+<th>Delta IF</th>
+<th>Match?</th>
+<th>Catatan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal increase</td>
+<td>100</td>
+<td>50</td>
+<td>50</td>
+<td>50</td>
+<td>Ya</td>
+<td>Aman</td>
+</tr>
+<tr>
+<td>Wrap-around</td>
+<td>10</td>
+<td>65530</td>
+<td>16</td>
+<td>16</td>
+<td>Ya</td>
+<td>Rollover benar</td>
+</tr>
+<tr>
+<td>Non-wrap decrease (anomaly)</td>
+<td>50</td>
+<td>100</td>
+<td>65486</td>
+<td>65486</td>
+<td>Ya</td>
+<td><strong>Loncatan besar</strong> (&gt;32.768, wrap palsu)</td>
+</tr>
+<tr>
+<td>Exact wrap</td>
+<td>0</td>
+<td>65535</td>
+<td>1</td>
+<td>1</td>
+<td>Ya</td>
+<td>Aman</td>
+</tr>
+<tr>
+<td>No change</td>
+<td>65535</td>
+<td>65535</td>
+<td>0</td>
+<td>0</td>
+<td>Ya</td>
+<td>Stabil</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+<h2 id="validasi-tambahan">Validasi Tambahan</h2>
+<p>Pengujian lanjutan pada K_DELTA menunjukkan hasil konsisten dengan desain: <strong>tidak ada loncatan delta</strong> meski terjadi <em>wrap</em> atau <em>non-monotonic glitch</em>.</p>
+<p>Simulasi dilakukan pada 1000 siklus penuh dengan <em>timer 16-bit rollover</em>, serta injeksi anomali penurunan acak (10%). Semua kasus menghasilkan delta stabil, cutoff bekerja sesuai ambang 60 detik, dan alarm aktif hanya pada kondisi valid.</p>
+<table>
+<thead>
+<tr>
+<th>Deskripsi</th>
+<th>TIMER_IN</th>
+<th>LAST_IN</th>
+<th>Startup?</th>
+<th>DELTA_OUT</th>
+<th>ALARM_OUT</th>
+<th>Raw Delta</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal increase</td>
+<td>100</td>
+<td>50</td>
+<td>No</td>
+<td>50</td>
+<td>False</td>
+<td>50</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Wrap-around</td>
+<td>10</td>
+<td>65530</td>
+<td>No</td>
+<td>16</td>
+<td>False</td>
+<td>16</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Non-wrap decrease (anomaly)</td>
+<td>50</td>
+<td>100</td>
+<td>No</td>
+<td>0</td>
+<td>True</td>
+<td>65486</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Exact wrap</td>
+<td>0</td>
+<td>65535</td>
+<td>No</td>
+<td>1</td>
+<td>False</td>
+<td>1</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>No change</td>
+<td>65535</td>
+<td>65535</td>
+<td>No</td>
+<td>0</td>
+<td>False</td>
+<td>0</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Startup</td>
+<td>0</td>
+<td>0</td>
+<td>Yes</td>
+<td>0</td>
+<td>False</td>
+<td>0</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Large delta &gt;60</td>
+<td>200</td>
+<td>100</td>
+<td>No</td>
+<td>0</td>
+<td>True</td>
+<td>100</td>
+<td>OK</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Hasil ringkas:</strong> Semua test pass 100%. Tidak ada loncatan, cutoff bekerja, dan akumulasi tetap konsisten hingga 1000 siklus penuh.<br />
+Simulasi lanjutan menunjukkan <em>raw delta</em> besar (misalnya 65.486) dipotong otomatis menjadi nol dengan alarm aktif — <strong>tanpa propagasi loncatan ke akumulator</strong>.</p>
+</blockquote>
+<hr />
+
+<h3 id="interpretasi">Interpretasi</h3>
+<p>Pendekatan MOD cenderung menghasilkan delta besar di kondisi anomali karena ambiguitas hasil modulo.</p>
+<p>Sementara kombinasi IF-THEN-ELSE dengan cutoff mencegah propagasi loncatan dan menjaga integritas akumulasi jangka panjang.</p>
+<hr />
+
+<h2 id="kesimpulan">Kesimpulan</h2>
+<p>Loncatan delta pada counter 16-bit berhasil diatasi oleh <strong>K_DELTA versi 1.2</strong> melalui pendekatan <strong>IF-THEN-ELSE</strong>, yang menggantikan kelemahan MOD tanpa efek loncatan palsu.</p>
+<p>Metode ini penting untuk menjaga keandalan sistem akumulasi dan runtime di lingkungan DCS yang sensitif terhadap rollover counter.</p>
+<p><em>Catatan: Simulasi mengikuti aritmetika standar IEC 61131.</em></p>
+<hr />
+
+<details>
+  <summary><strong>Appendix A — Listing Kode K_DELTA</strong></summary>
+<pre><code class="language-pascal">(*==============================================================================
+FB Name     : K_DELTA
+Purpose     : Menghitung delta waktu wrap-aware dari timer utama (UINT 16-bit)
+Author      : Ketut Kumajaya
+Version     : 1.2 (IF-THEN-ELSE, no MOD)
+Date        : 07/10/2025
+Input       : TIMER_IN (UINT), LAST_IN (UINT)
+Output      : DELTA_OUT (UINT), LAST_OUT (UINT), ALARM_OUT (BOOL)
+Notes       : - IF-THEN-ELSE untuk hindari loncatan MOD
+              - Cutoff 60 detik; LONG untuk Supcon-safe
+              - Persisten global LAST_IN/OUT
+==============================================================================*)
+
+FUNCTION_BLOCK K_DELTA
+VAR_INPUT
+    TIMER_IN : UINT;
+    LAST_IN  : UINT;
+END_VAR
+VAR_OUTPUT
+    DELTA_OUT : UINT;
+    LAST_OUT  : UINT;
+    ALARM_OUT : BOOL;
+END_VAR
+VAR
+    Delta       : LONG;
+    StartupFlag : BOOL;
+END_VAR
+
+StartupFlag := g_bColdStartup OR g_bHotStartup OR g_bDownUsrPrgFlag OR g_bDownCfgFlag;
+
+IF StartupFlag THEN
+    Delta := 0;
+    ALARM_OUT := FALSE;
+    g_bColdStartup := FALSE;
+    g_bHotStartup := FALSE;
+    g_bDownUsrPrgFlag := FALSE;
+    g_bDownCfgFlag := FALSE;
+ELSE
+    IF TIMER_IN &gt;= LAST_IN THEN
+        Delta := ULONG_TO_LONG(UINT_TO_ULONG(TIMER_IN)) - ULONG_TO_LONG(UINT_TO_ULONG(LAST_IN));
+    ELSE
+        Delta := ULONG_TO_LONG(UINT_TO_ULONG(65535 - LAST_IN)) + ULONG_TO_LONG(UINT_TO_ULONG(TIMER_IN)) + 1;
+    END_IF;
+
+    IF Delta &gt; 60 THEN
+        Delta := 0;
+        ALARM_OUT := TRUE;
+    ELSE
+        ALARM_OUT := FALSE;
+    END_IF;
+END_IF;
+
+DELTA_OUT := ULONG_TO_UINT(LONG_TO_ULONG(Delta));
+LAST_OUT  := TIMER_IN;
+
+END_FUNCTION_BLOCK
+</code></pre>
+</details>
+
+
+  </div>
+
+  <a class="u-url" href="/distributed-control-system/2025/10/08/masalah-mod-dan-solusi-if-then-else-di-delta-horizon-16-bit.html" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, memungkinkan backup otomatis, publikasi via static site generator.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+</body>
+
+</html>

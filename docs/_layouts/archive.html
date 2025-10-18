@@ -4,22 +4,24 @@ layout: base
 
 <h1>
   {% if page.type == "category" %}
-    Category: {{ page.title }} ({{ page.posts | size }})
-  {% elsif page.type == "tag" %}
-    Tag: {{ page.title }} ({{ page.posts | size }})
-  {% endif %}
+    {% assign first_post = page.posts | first %}
+    {% if first_post.tags and first_post.tags.size > 0 %}
+      {{ first_post.tags[0] }} ({{ page.posts | size }})
+    {% else %}
+      {{ page.title | replace: "-", " " | capitalize }} ({{ page.posts | size }})
+    {% endif %}
 </h1>
 
 <div class="posts-container">
   {% for post in page.posts %}
     <div class="post-item" style="display:flex; flex-wrap:wrap; margin-bottom:1.5rem; align-items:flex-start;">
       {% if post.image %}
-      <a href="{{ site.baseurl }}{{ post.url }}" style="flex:0 0 200px; margin-right:1rem; margin-bottom:0.5rem;">
-        <img src="{{ post.image }}" alt="{{ post.title }}" style="width:100%; height:auto; object-fit:cover; border-radius:6px;">
+      <a href="{{ post.url | relative_url }}" style="flex:0 0 200px; margin-right:1rem; margin-bottom:0.5rem;">
+        <img src="{{ post.image | relative_url }}" alt="{{ post.title }}" loading="lazy" style="width:100%; height:auto; object-fit:cover; border-radius:6px;">
       </a>
       {% endif %}
       <div class="post-text" style="flex:1 1 0; min-width:0;">
-        <a href="{{ site.baseurl }}{{ post.url }}" style="font-weight:bold; font-size:1.1rem; color:#1e40af; text-decoration:none;">
+        <a href="{{ post.url | relative_url }}" style="font-weight:bold; font-size:1.1rem; color:#1e40af; text-decoration:none;">
           {{ post.title }}
         </a>
         <div style="font-size:0.875rem; color:#4b5563; margin-top:0.25rem;">
@@ -31,7 +33,7 @@ layout: base
         <div style="font-size:0.8rem; color:#6b7280; margin-top:0.25rem;">
           in
           {% for cat in post.categories %}
-            <a href="{{ site.baseurl }}/categories/{{ cat | slugify }}/" style="color:#2563eb; text-decoration:none;">
+            <a href="{{ '/categories/' | append: cat | slugify | relative_url }}" style="color:#2563eb; text-decoration:none;">
               {{ cat }}
             </a>{% unless forloop.last %}, {% endunless %}
           {% endfor %}

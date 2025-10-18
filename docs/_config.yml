@@ -10,6 +10,9 @@ description: >
   berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk
   statis, memungkinkan backup otomatis, publikasi via static site generator.
 
+url: "https://kumajaya.github.io"
+baseurl: "/automation-blog"
+
 # Theme
 remote_theme: "jekyll/minima@b3385fe"
 

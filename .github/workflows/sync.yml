@@ -1,17 +1,21 @@
-name: Sync Ghost CMS
+name: Sync & Build Jekyll from Ghost CMS
 
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 1 * * *' # setiap hari jam 08:00 WIB
 
+permissions:
+  contents: write
+
 jobs:
-  sync_build:
+  sync_and_build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
+      # === Sinkronisasi konten dari Ghost ===
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,10 +28,37 @@ jobs:
           GHOST_API_KEY: ${{ secrets.GHOST_AUTOMATION_API_KEY }}
         run: node sync-ghost.js
 
-      - name: Commit & push changes
+      - name: Commit & push synced posts
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add .
-          git diff --cached --quiet || git commit -m "chore: Sync Ghost CMS"
-          git push
+          git add docs/
+          git diff --cached --quiet || (
+            git commit -m "chore: sync Ghost CMS" &&
+            git push origin HEAD:${{ github.ref_name }}
+          )
+
+      - name: Setup Ruby
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'sync Ghost CMS')
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Build Jekyll site (root in /docs)
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'sync Ghost CMS')
+        run: bundle exec jekyll build --source docs --destination _site
+
+      - name: Show build summary
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'sync Ghost CMS')
+        run: |
+          ls -lah _site | head -20
+          du -sh _site
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'sync Ghost CMS')
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages

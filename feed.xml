@@ -1,5 +1,165 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-10-19T18:46:05+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
-</subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html" rel="alternate" type="text/html" title="Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA" /><published>2025-10-19T16:45:36+00:00</published><updated>2025-10-19T16:45:36+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html"><![CDATA[<p><em>Ditulis oleh Ketut Kumajaya — Oktober 2025</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-10-19T19:46:11+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
+</subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Open DCS Framework: Integration of 4diac FORTE and Rapid SCADA</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integration-of-4diac-forte-and-rapid-scada.html" rel="alternate" type="text/html" title="Open DCS Framework: Integration of 4diac FORTE and Rapid SCADA" /><published>2025-10-19T19:35:05+00:00</published><updated>2025-10-19T19:35:05+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integration-of-4diac-forte-and-rapid-scada</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integration-of-4diac-forte-and-rapid-scada.html"><![CDATA[<p><em>Written by Ketut Kumajaya — October 2025</em></p>
+<h2 id="introduction">Introduction</h2>
+<p>In the process industry, traditional control systems often rely on <strong>closed DCS</strong> that are expensive and lack flexibility. The <em>Open DCS Framework</em> emerges as an <strong>open, modular, and distributed alternative</strong>, leveraging <strong>4diac FORTE</strong> as the logic execution layer and <strong>Rapid SCADA</strong> as the supervisory and visualization layer.</p>
+<hr />
+
+<h2 id="background">Background</h2>
+<p>Conventional DCS systems are indeed reliable, but they have limitations:</p>
+<ul>
+<li>Dependence on specific vendors (<em>vendor lock-in</em>).</li>
+<li>Some vendors impose additional license fees for logic modifications or development.</li>
+<li>Difficult to integrate with modern platforms such as <strong>IIoT</strong> and <strong>data analytics</strong>.</li>
+</ul>
+<p><strong>IEC 61499</strong> introduces a new paradigm: function block–based, event-driven, and distributed control. <strong>4diac FORTE</strong> is an open implementation of this standard, enabling a <strong>lightweight, portable runtime</strong> capable of communicating through protocols such as <strong>OPC UA, OPC DA, MQTT, Modbus TCP/RTU</strong>.</p>
+<p>On the other hand, <strong>Rapid SCADA</strong> provides supervisory capabilities, visualization, data historization, alarm/event management, and scripting, but <strong>lacks deterministic control execution</strong>. Integrating the two enables the creation of a <strong>complete open DCS</strong>.</p>
+<hr />
+
+<h2 id="open-dcs-framework-concept">Open DCS Framework Concept</h2>
+<h3 id="architecture">Architecture</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Open DCS Layer</strong></th>
+<th><strong>Function</strong></th>
+<th><strong>Component</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Supervision / HMI</td>
+<td>Process visualization, historization, alarms/events</td>
+<td><strong>Rapid SCADA</strong></td>
+</tr>
+<tr>
+<td>Control Execution</td>
+<td>Distributed control logic</td>
+<td><strong>4diac FORTE</strong></td>
+</tr>
+<tr>
+<td>Communication</td>
+<td>Data exchange between nodes, system integration</td>
+<td><strong>OPC UA / OPC DA / Modbus TCP/RTU / MQTT</strong></td>
+</tr>
+<tr>
+<td>Input/Output Layer</td>
+<td>Sensors, actuators, RTUs, PLCs</td>
+<td><strong>Moxa ioLogik E2200 / Advantech ADAM-5000 series</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Within this Open DCS framework:</p>
+<ul>
+<li><strong>Rapid SCADA</strong> serves as the operator interface and supervisory hub, including visualization, alarms, and historization.</li>
+<li><strong>4diac FORTE</strong> executes distributed control logic on control nodes.</li>
+<li><strong>OPC UA / OPC DA / Modbus TCP/RTU / MQTT</strong> bridge real-time communication between supervision, control, and field devices.</li>
+<li><strong>Input/Output Layer</strong> consists of sensors, actuators, and industrial I/O devices such as Moxa ioLogik E2200 or Advantech ADAM-5000 series. These I/O devices support Modbus TCP/RTU protocols and digital/analog signal interfaces.</li>
+</ul>
+<h3 id="interaction-mechanism">Interaction Mechanism</h3>
+<ol>
+<li><strong>4diac FORTE</strong> control nodes execute function blocks according to the process.</li>
+<li>Rapid SCADA, as an <strong>OPC UA / OPC DA client</strong>, reads and writes data, sending operator commands.</li>
+<li>Process changes by FORTE are published to Rapid SCADA for visualization and historization.</li>
+<li>Operators monitor performance, alarms, and trends via Rapid SCADA, while FORTE handles <strong>deterministic control logic</strong>.</li>
+</ol>
+<hr />
+
+<h2 id="implementation">Implementation</h2>
+<p>As an initial step, a simple architecture example:</p>
+<ul>
+<li><strong>Control Node</strong>: industrial SBC or Raspberry Pi running 4diac FORTE with PID and sequential logic. <em>Estimated initial cost: IDR 2–5 million for a basic setup, including Raspberry Pi 5.</em></li>
+<li><strong>Supervision Node</strong>: Linux/Windows server running Rapid SCADA with dashboards displaying pressure, flow, and valve positions.</li>
+<li><strong>Field I/O</strong>: <strong>Modbus TCP/RTU</strong> devices such as <strong>Moxa ioLogik E2200 series</strong> or <strong>Advantech ADAM-5000 series</strong> for interfacing 4–20 mA sensors and digital actuators. PLCs can be used for critical control execution in compliance with SIL standards.</li>
+<li><strong>Connection</strong>: communication between FORTE and Rapid SCADA using real-time OPC UA server-client, <em>with native support in Rapid SCADA v6.x for efficient data subscriptions.</em></li>
+</ul>
+<hr />
+
+<h2 id="architecture-diagram">Architecture Diagram</h2>
+<figure style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+  <div class="mermaid" style="max-width:480px;">
+    %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
+    flowchart TB
+        subgraph Supervision ["Supervision Layer"]
+            SCADA[Rapid SCADA]:::scada
+        end
+        subgraph Communication ["Communication Layer"]
+            OPCUA[OPC UA / OPC DA<br />Modbus TCP/RTU<br />MQTT]:::comm
+        end
+        subgraph Control ["Control Execution"]
+            FORTE[4diac FORTE]:::forte
+        end
+        subgraph Field ["Input/Output Layer"]
+            IO["ioLogik E2200<br />ADAM-5000<br />PLCs for SIL"]:::io
+        end
+        SCADA -.-&gt;|Command| OPCUA
+        OPCUA -.-&gt;|Command| FORTE
+        FORTE -.-&gt;|Actuation| IO
+        IO --&gt;|Sensor Feedback| FORTE
+        FORTE --&gt;|Process Status| OPCUA
+        OPCUA --&gt;|Data Historization| SCADA
+        classDef forte fill:#f9f,stroke:#333,stroke-width:2px,color:#000;
+        classDef scada fill:#9cf,stroke:#333,stroke-width:2px,color:#000;
+        classDef comm fill:#fc9,stroke:#333,stroke-width:2px,color:#000;
+        classDef io fill:#cfc,stroke:#333,stroke-width:2px,color:#000;
+        linkStyle 0 stroke:#e33,stroke-width:2px,stroke-dasharray: 5 5
+        linkStyle 1 stroke:#e33,stroke-width:2px,stroke-dasharray: 5 5
+        linkStyle 2 stroke:#e33,stroke-width:2px,stroke-dasharray: 5 5
+        linkStyle 3 stroke:#3a3,stroke-width:2px
+        linkStyle 4 stroke:#3a3,stroke-width:2px
+        linkStyle 5 stroke:#3a3,stroke-width:2px
+  </div>
+  <figcaption style="text-align:center; font-size:13px; color:#555;">
+    Integration of Rapid SCADA, 4diac FORTE, and Field I/O Devices, with PLCs for SIL application
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="benefits-and-challenges">Benefits and Challenges</h2>
+<p><strong>Benefits</strong></p>
+<ul>
+<li>Free from licensing and vendor lock-in.</li>
+<li>High flexibility and modularity.</li>
+<li>Transparent control logic.</li>
+<li>Interoperability with <strong>IIoT</strong> systems and modern data analytics.</li>
+</ul>
+<p><strong>Challenges</strong></p>
+<ul>
+<li>Large-scale implementation standardization is still evolving.</li>
+<li>Cybersecurity requires serious attention.</li>
+<li>A new mindset is needed: from fixed cycles (<em>cyclic</em>) to event-driven.</li>
+<li>Documentation, deployment, and maintenance become the user’s responsibility.</li>
+<li>Community contributions are crucial—for example, <a href="https://github.com/eclipse-4diac/4diac-forte/commits/develop?author=kumajaya&amp;ref=automation.samatorgroup.com" target="_blank">several improvements</a> to ensure portability to edge devices such as Raspberry Pi or Siemens IoT.</li>
+</ul>
+<h3 id="notes-on-critical-control">Notes on Critical Control</h3>
+<p>The Open DCS Framework based on 4diac FORTE and Rapid SCADA is ideal for regular process control, monitoring, and alarm/event handling.</p>
+<p>However, for <strong>critical applications</strong>, such as safety interlocks, emergency shutdowns, or control with very tight cycle times, <strong>industrial PLCs</strong> are still recommended as the primary deterministic execution layer.</p>
+<p>In this scenario:</p>
+<ul>
+<li><strong>FORTE</strong> acts as a supervisory or secondary controller.</li>
+<li><strong>PLC</strong> handles critical logic requiring high determinism.</li>
+<li>System integration can be achieved via <strong>OPC UA or Modbus</strong>, ensuring real-time communication.</li>
+</ul>
+<blockquote>
+<p><em>SIL (Safety Integrity Level) indicates the reliability level of a system in preventing hazards; critical applications such as emergency shutdowns typically require PLCs that comply with a specific SIL.</em></p>
+</blockquote>
+<hr />
+
+<h2 id="reflection-and-development-direction">Reflection and Development Direction</h2>
+<p>The <em>Open DCS Framework</em> is not merely a technological combination but a <strong>paradigm shift</strong>.</p>
+<p>Next steps:</p>
+<ul>
+<li>Develop Rapid SCADA – 4diac FORTE project templates for common control (<em>flow</em>, level, <em>pressure</em>, <em>temperature</em>).</li>
+<li>Build <strong>reusable</strong>, community-driven function block libraries. <em>Leverage recent contributions in Modbus/OPC UA for robustness.</em></li>
+<li>Establish deployment, monitoring, and auto-scaling mechanisms.</li>
+<li>Enhance cybersecurity and integrate real-time technologies such as <strong>TSN</strong>.</li>
+</ul>
+<hr />
+
+<h2 id="conclusion">Conclusion</h2>
+<p>This framework demonstrates that the future of industrial control can be <strong>open, distributed, and collaborative</strong>. With FORTE as the executor and Rapid SCADA as the supervisory layer, a DCS system that is <strong>transparent, flexible, and sustainable</strong> can be realized.</p>
+<blockquote>
+<p><em>“Perhaps the future of industrial automation does not belong to a single vendor — but to those who dare to open it.”</em></p>
+</blockquote>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Practical Engineering" /><category term="Field Experience" /><category term="Cost Optimization" /><category term="FOSS Workflow" /><summary type="html"><![CDATA[Open DCS Framework: Integration of 4diac FORTE as distributed control logic with Rapid SCADA for supervision, visualization, and historization. An open, modular, and vendor lock-in–free alternative for the future of industrial automation.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1652145595413-0a79398e5888?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGNvbnRyb2wlMjByb29tfGVufDB8fHx8MTc2MDg5MTA0OXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1652145595413-0a79398e5888?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGNvbnRyb2wlMjByb29tfGVufDB8fHx8MTc2MDg5MTA0OXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html" rel="alternate" type="text/html" title="Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA" /><published>2025-10-19T16:45:36+00:00</published><updated>2025-10-19T16:45:36+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html"><![CDATA[<p><em>Ditulis oleh Ketut Kumajaya — Oktober 2025</em></p>
 <h2 id="pendahuluan">Pendahuluan</h2>
 <p>Dalam industri proses, sistem kontrol tradisional sering mengandalkan <strong>DCS tertutup</strong> yang mahal dan minim fleksibilitas. <em>Open DCS Framework</em> muncul sebagai <strong>alternatif terbuka, modular, dan terdistribusi</strong>, memanfaatkan <strong>4diac FORTE</strong> sebagai lapisan eksekusi logika dan <strong>Rapid SCADA</strong> sebagai lapisan supervisi dan visualisasi.</p>
 <hr />
@@ -11,7 +171,7 @@
 <li>Beberapa vendor menerapkan biaya lisensi tambahan untuk perubahan atau pengembangan logika.</li>
 <li>Sulit diintegrasikan dengan platform modern seperti <strong>IIoT</strong> dan <strong>data analytics</strong>.</li>
 </ul>
-<p><strong>IEC 61499</strong> membuka paradigma baru: kontrol berbasis <em>function block</em>, event-driven, dan terdistribusi. <strong>4diac FORTE</strong> adalah implementasi terbuka dari standar ini, memungkinkan <strong>runtime ringan, portabel</strong>, dan dapat berkomunikasi melalui protokol seperti <strong>OPC UA, MQTT, Modbus TCP/RTU</strong>.</p>
+<p><strong>IEC 61499</strong> membuka paradigma baru: kontrol berbasis <em>function block</em>, event-driven, dan terdistribusi. <strong>4diac FORTE</strong> adalah implementasi terbuka dari standar ini, memungkinkan <strong>runtime ringan, portabel</strong>, dan dapat berkomunikasi melalui protokol seperti <strong>OPC UA, OPC DA, MQTT, Modbus TCP/RTU</strong>.</p>
 <p>Di sisi lain, <strong>Rapid SCADA</strong> menyediakan kemampuan supervisi, visualisasi, historisasi data, alarm/event management, dan scripting, namun <strong>tidak memiliki eksekusi kontrol deterministik</strong>. Integrasi keduanya memungkinkan terciptanya <strong>DCS terbuka yang lengkap</strong>.</p>
 <hr />
 
@@ -39,7 +199,7 @@
 <tr>
 <td>Komunikasi</td>
 <td>Pertukaran data antar node, integrasi sistem</td>
-<td><strong>OPC UA / Modbus TCP/RTU / MQTT</strong></td>
+<td><strong>OPC UA / OPC DA / Modbus TCP/RTU / MQTT</strong></td>
 </tr>
 <tr>
 <td>Lapisan Input/Output</td>
@@ -52,7 +212,7 @@
 <ul>
 <li><strong>Rapid SCADA</strong> berfungsi sebagai antarmuka operator dan pusat pengawasan, termasuk visualisasi, alarm, dan historisasi.</li>
 <li><strong>4diac FORTE</strong> mengeksekusi logika kontrol secara terdistribusi pada node kontrol.</li>
-<li><strong>OPC UA / Modbus TCP/RTU / MQTT</strong> menjembatani komunikasi real-time antara supervisi, kontrol, dan perangkat lapangan.</li>
+<li><strong>OPC UA / OPC DA / Modbus TCP/RTU / MQTT</strong> menjembatani komunikasi real-time antara supervisi, kontrol, dan perangkat lapangan.</li>
 <li><strong>Lapisan Input/Output</strong> terdiri dari sensor, aktuator, dan perangkat I/O industri seperti Moxa ioLogik E2200 atau Advantech ADAM-5000 series. Perangkat I/O ini mendukung protokol Modbus TCP/RTU dan digital/analog signal interface.</li>
 </ul>
 <h3 id="mekanisme-interaksi">Mekanisme Interaksi</h3>
@@ -64,12 +224,12 @@
 </ol>
 <hr />
 
-<h2 id="implementasi-parsial">Implementasi Parsial</h2>
+<h2 id="implementasi">Implementasi</h2>
 <p>Sebagai langkah awal, contoh arsitektur sederhana:</p>
 <ul>
 <li><strong>Node Kontrol</strong>: industrial SBC atau Raspberry Pi menjalankan 4diac FORTE dengan PID dan logika sekuensial. <em>Estimasi biaya awal: Rp 2-5 juta untuk setup dasar, termasuk Raspberry Pi 5.</em></li>
-<li><strong>Node Supervisi</strong>: server Linux menjalankan Rapid SCADA dengan dashboard menampilkan tekanan, <em>flow</em>, dan posisi <em>valve</em>.</li>
-<li><strong>I/O Field</strong>: perangkat <strong>Modbus TCP/RTU</strong> seperti <strong>Moxa ioLogik E2200 series</strong> atau <strong>Advantech ADAM-5000 series</strong> untuk interfacing sensor 4–20 mA dan aktuator digital.</li>
+<li><strong>Node Supervisi</strong>: server Linux/Windows menjalankan Rapid SCADA dengan dashboard menampilkan tekanan, <em>flow</em>, dan posisi <em>valve</em>.</li>
+<li><strong>I/O Field</strong>: perangkat <strong>Modbus TCP/RTU</strong> seperti <strong>Moxa ioLogik E2200 series</strong> atau <strong>Advantech ADAM-5000 series</strong> untuk interfacing sensor 4–20 mA dan aktuator digital. PLCs dapat digunakan untuk eksekusi kontrol kritis sesuai standar SIL.</li>
 <li><strong>Koneksi</strong>: komunikasi antara FORTE dan Rapid SCADA menggunakan OPC UA server-client real-time, <em>dengan dukungan native di Rapid SCADA v6.x untuk subscription data efisien.</em></li>
 </ul>
 <hr />
@@ -81,16 +241,16 @@
     flowchart TB
         %% Inisialisasi tema (sama seperti asli)
         subgraph Supervisi ["Lapisan Supervisi"]
-            SCADA[Rapid SCADA<br /><i>Supervisi &amp; Historisasi</i>]:::scada
+            SCADA[Rapid SCADA]:::scada
         end
         subgraph Komunikasi ["Lapisan Komunikasi"]
-            OPCUA[OPC UA / Modbus TCP/RTU / MQTT<br /><i>Layer Komunikasi</i>]:::comm
+            OPCUA[OPC UA / OPC DA<br />Modbus TCP/RTU<br />MQTT]:::comm
         end
         subgraph Kontrol ["Eksekusi Kontrol"]
-            FORTE[4diac FORTE<br /><i>Logic Controller</i>]:::forte
+            FORTE[4diac FORTE]:::forte
         end
         subgraph Lapangan ["Lapisan Input/Output"]
-            IO[Perangkat Lapangan<br /><i>Moxa ioLogik E2200 / ADAM-5000</i>]:::io
+            IO[Moxa ioLogik E2200<br />Advantech ADAM-5000<br />PLCs for SIL]:::io
         end
         %% Command Flow (dashed merah)
         SCADA -.-&gt;|Command| OPCUA
@@ -113,7 +273,7 @@
         linkStyle 5 stroke:#3a3,stroke-width:2px
   </div>
   <figcaption style="text-align:center; font-size:13px; color:#555;">
-    Integrasi Rapid SCADA, 4diac FORTE, dan I/O Field (Moxa E2200 / ADAM-5000)
+    Integrasi Rapid SCADA, 4diac FORTE, dan I/O Field Devices, dengan PLCs untuk aplikasi SIL
   </figcaption>
 </figure>
 <hr />
@@ -143,6 +303,9 @@
 <li><strong>PLC</strong> menangani logika kritis yang memerlukan determinisme tinggi.</li>
 <li>Integrasi antar sistem dapat dilakukan melalui <strong>OPC UA atau Modbus</strong>, sehingga komunikasi real-time tetap terjaga.</li>
 </ul>
+<blockquote>
+<p><em>SIL (Safety Integrity Level) menunjukkan tingkat keandalan sistem dalam mencegah bahaya; aplikasi kritis seperti emergency shutdown biasanya memerlukan PLC yang memenuhi SIL tertentu.</em></p>
+</blockquote>
 <hr />
 
 <h2 id="refleksi-dan-arah-pengembangan">Refleksi dan Arah Pengembangan</h2>
@@ -1712,156 +1875,4 @@ END_FUNCTION_BLOCK
 <hr />
 
 <h3 id="kesimpulan">Kesimpulan</h3>
-<p>Function Block <code>K_UNBALANCE</code> adalah artefak modular yang memperkuat transparansi dan efisiensi dalam sistem DCS. Dengan pairing array, proteksi multi-lapis, dan output yang informatif, FB ini bisa dijadikan template untuk pengembangan Function Block lain yang audit-grade dan teachable lintas plant.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Practical Engineering" /><category term="Field Experience" /><summary type="html"><![CDATA[Dirancang untuk menghitung ketidakseimbangan tegangan atau arus dari tiga input dalam sistem DCS, khususnya pada power meter yang tidak menyediakan informasi unbalance.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxiYWxhbmNlfGVufDB8fHx8MTc1OTQ4MTQ3Nnww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxiYWxhbmNlfGVufDB8fHx8MTc1OTQ4MTQ3Nnww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA</title><link href="https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html" rel="alternate" type="text/html" title="Anchor-Based Normalization: Strategi Koreksi Drift Data Akumulator di DCS/SCADA" /><published>2025-09-27T20:13:03+00:00</published><updated>2025-09-27T20:13:03+00:00</updated><id>https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/measurement-accuracy/2025/09/27/anchor-based-normalization-strategi-koreksi-drift-data-akumulator-di-dcs-scada.html"><![CDATA[<p><em>Ditulis oleh Ketut Kumajaya | 28 September 2025</em></p>
-<h2 id="pengantar">Pengantar</h2>
-<p>Dalam sistem DCS/SCADA, drift data akumulasi adalah masalah klasik. Counter runtime, hour meter, atau energi meter sering mengalami penyimpangan akibat overflow tipe data, jitter komunikasi, atau perbedaan jam antar perangkat. Bias kecil yang dibiarkan akan menumpuk, menghasilkan data historis yang tidak konsisten dan menyimpang.</p>
-<p>Contoh sederhana: akumulasi flowmeter menyimpang hingga 2% dari nilai seharusnya, tanpa ada yang menyadari.</p>
-<p>Untuk mengatasi hal ini, artikel ini memperkenalkan pendekatan <strong>Anchor-Based Normalization</strong>: strategi koreksi berbasis satu titik referensi (anchor point) yang ditanam di DCS, dengan Rapid SCADA sebagai time authority dan Node-RED sebagai relay REST API yang melakukan koreksi on-demand.</p>
-<p>Lebih dari sekadar normalisasi, pendekatan ini mewujudkan <strong>self-healing measurement pipeline</strong>, di mana sistem secara otomatis mendeteksi deviasi, menerapkan koreksi hanya saat diperlukan, dan menyimpan catatan audit secara transparan.</p>
-<hr />
-
-<h2 id="konsep-anchor-based-normalization">Konsep Anchor-Based Normalization</h2>
-<ul>
-<li><strong>Anchor Point</strong> → nilai referensi tunggal yang diketahui benar (misalnya input statis <code>flowrate = 3750</code>).</li>
-<li><strong>Window Historis</strong> → data 4–24 jam terakhir dari Rapid SCADA digunakan untuk menghitung selisih (offset).</li>
-<li><strong>Offset Correction</strong> → selisih antara anchor dan histori diterapkan ke semua accumulator.</li>
-<li><strong>Normalization</strong> → setiap data yang diminta ERP atau sistem bisnis lain sudah terkoreksi, sementara data mentah tetap tersimpan di Rapid SCADA.</li>
-</ul>
-<p>Dengan cara ini, cukup satu anchor point untuk meluruskan seluruh accumulator.</p>
-<hr />
-
-<h2 id="zona-deviasi">Zona Deviasi</h2>
-<p>Untuk menjaga keseimbangan antara presisi dan keandalan, digunakan logika tiga zona:</p>
-<table>
-<thead>
-<tr>
-<th>Zona</th>
-<th>Kriteria Deviasi Relatif</th>
-<th>Status Koreksi</th>
-<th>Catatan Audit</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Hijau</td>
-<td>≤ stddev</td>
-<td>Tidak diterapkan (<code>applied: false</code>)</td>
-<td>Deviasi dianggap noise, data dilewatkan apa adanya</td>
-</tr>
-<tr>
-<td>Kuning</td>
-<td>&gt; stddev dan ≤ max</td>
-<td>Diterapkan (<code>applied: true</code>)</td>
-<td>Koreksi normal, offset dicatat di header</td>
-</tr>
-<tr>
-<td>Merah</td>
-<td>&gt; max</td>
-<td>Tidak diterapkan (<code>applied: false</code>)</td>
-<td>Data dianggap outlier, dilewatkan <em>as-is</em> dengan flag audit</td>
-</tr>
-</tbody>
-</table>
-<p>Contoh kasus: deviasi 0.1% masuk zona hijau sehingga tidak dikoreksi, deviasi 0.35% masuk zona kuning sehingga koreksi diterapkan, sedangkan deviasi 12.5% masuk zona merah sehingga data dilewatkan apa adanya dengan catatan audit.</p>
-<hr />
-
-<h2 id="contoh-numerik-anchor-based-normalization">Contoh Numerik Anchor-Based Normalization</h2>
-<ul>
-<li><strong>Anchor Point (DCS)</strong>: <code>flowrate = 3750</code></li>
-<li><strong>Window Historis (SCADA 4 jam terakhir)</strong>: rata-rata akumulator terbaca <code>3737</code></li>
-<li><strong>Offset</strong>:<br />
-$$\text{Offset} = \frac{3737 - 3750}{3750} \times 100% = -0.35%$$</li>
-</ul>
-<p>Offset negatif di sini artinya histori terbaca <strong>lebih rendah</strong> dibanding anchor.</p>
-<hr />
-
-<h3 id="evaluasi-zona-deviasi">Evaluasi Zona Deviasi</h3>
-<ul>
-<li><strong>Threshold stddev</strong>: 0.20%</li>
-<li><strong>Threshold max</strong>: 5.0%</li>
-</ul>
-<p>Maka:</p>
-<ul>
-<li>Deviasi relatif = <strong>0.35%</strong></li>
-<li>Karena <code>0.20% &lt; 0.35% ≤ 5.0%</code>, maka masuk <strong>Zona Kuning</strong>.</li>
-<li>Status: <strong>applied = true</strong> → koreksi offset diterapkan.</li>
-</ul>
-<hr />
-
-<h3 id="payload-hasil-koreksi">Payload Hasil Koreksi</h3>
-<pre><code class="language-json">"correction": {
-  "applied": true,
-  "relative_deviation": 0.35,
-  "std_dev_threshold": 0.20,
-  "max_threshold": 5.0
-}
-</code></pre>
-<p>ERP atau sistem bisnis cukup membaca bagian <code>data[]</code> dengan tenang, karena hasil sudah terjamin sesuai header <code>correction</code>.</p>
-<hr />
-
-<h3 id="perbandingan-kasus-lain">Perbandingan Kasus Lain</h3>
-<ul>
-<li><strong>Deviasi 0.1%</strong> → ≤ 0.20% → <strong>Zona Hijau</strong> → tidak dikoreksi (<code>applied: false</code>).</li>
-<li><strong>Deviasi 0.35%</strong> → antara 0.20% dan 5.0% → <strong>Zona Kuning</strong> → dikoreksi (<code>applied: true</code>).</li>
-<li><strong>Deviasi 12.5%</strong> → &gt; 5.0% → <strong>Zona Merah</strong> → tidak dikoreksi, dilewatkan <em>as-is</em> dengan catatan audit.</li>
-</ul>
-<hr />
-
-<h2 id="implementasi-payload">Implementasi Payload</h2>
-<p>Informasi koreksi cukup ditaruh sekali di header. Data di bawah tetap bersih, hanya menampilkan nilai akumulator.</p>
-<pre><code class="language-json">{
-  "site": "SIG025",
-  "description": "SIG Bekasi",
-  "correction": {
-    "applied": true,
-    "relative_deviation": 0.35,
-    "std_dev_threshold": 0.20,
-    "max_threshold": 5.0
-  },
-  "data": [
-    {
-      "index": 0,
-      "code": "FTLOX-01",
-      "description": "[1294] LOX Flow Totalizer",
-      "source": "[1294] LOX Flow Totalizer",
-      "data": [
-        {
-          "value": 829908.5625,
-          "timestamp": "2025-09-28T01:00:00+07:00"
-        },
-        {
-          "value": 826878.5,
-          "timestamp": "2025-09-28T00:00:00+07:00"
-        },
-        {
-          "value": 823849.1875,
-          "timestamp": "2025-09-27T23:00:00+07:00"
-        }
-        ...
-</code></pre>
-<hr />
-
-<h2 id="visualisasi-alur-data">Visualisasi Alur Data</h2>
-<figure>
-    <div class="mermaid">
-    flowchart TD
-        A["DCS: Akumulator (Flow Totalizer)"] --&gt; B["Rapid SCADA: Simpan raw historis"]
-        B --&gt; C["Node-RED: Ambil raw saat ERP request"]
-        C --&gt; D["Bandingkan dengan Anchor"]
-        D --&gt; E{"Zona deviasi?"}
-        E --&gt;|"Hijau (&lt;= stddev)"| F["Applied: false"]
-        E --&gt;|"Kuning (antara stddev dan max)"| G["Applied: true"]
-        E --&gt;|"Merah (&gt; max)"| H["Applied: false"]
-        F --&gt; I["Header correction"]
-        G --&gt; I
-        H --&gt; I
-        I --&gt; J["ERP: Konsumsi payload"]
-    </div>
-<figcaption>Alur Anchor-Based Normalization: SCADA tetap menyimpan data mentah, Node-RED memutuskan zona deviasi, dan ERP selalu menerima data yang sudah diputuskan sesuai header koreksi.</figcaption>
-</figure>
-<hr />
-
-<h2 id="kesimpulan">Kesimpulan</h2>
-<p>Dengan Anchor-Based Normalization berbasis anchor point di DCS dan logika tiga zona deviasi, pipeline data menjadi lebih presisi karena drift wajar terkoreksi, lebih aman karena noise kecil diabaikan dan outlier besar dilewatkan, serta lebih transparan karena data mentah tetap utuh sementara catatan koreksi tersimpan jelas.</p>
-<p>Pendekatan ini membuat sistem audit-ready, mudah diajarkan lintas operator, dan scalable untuk berbagai aplikasi industri, khususnya pada akumulator seperti flow totalizer.</p>
-<p>Hasilnya, audit tidak lagi disibukkan membetulkan angka, melainkan dapat langsung fokus pada analisis operasional dan pemeriksaan lanjutan berbasis catatan koreksi.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="measurement-accuracy" /><category term="Measurement Accuracy" /><category term="Distributed Control System" /><category term="Field Experience" /><summary type="html"><![CDATA[Dari DCS ke ERP, data akumulasi sering “melenceng” tanpa kita sadari. Anchor‑Based Normalization menghadirkan cara sederhana namun kuat: satu anchor point, tiga zona deviasi, hasilnya data presisi dan transparan lintas sistem.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1505778276668-26b3ff7af103?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDl8fEdQU3xlbnwwfHx8fDE3NTkwMDM3ODd8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>Function Block <code>K_UNBALANCE</code> adalah artefak modular yang memperkuat transparansi dan efisiensi dalam sistem DCS. Dengan pairing array, proteksi multi-lapis, dan output yang informatif, FB ini bisa dijadikan template untuk pengembangan Function Block lain yang audit-grade dan teachable lintas plant.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Practical Engineering" /><category term="Field Experience" /><summary type="html"><![CDATA[Dirancang untuk menghitung ketidakseimbangan tegangan atau arus dari tiga input dalam sistem DCS, khususnya pada power meter yang tidak menyediakan informasi unbalance.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxiYWxhbmNlfGVufDB8fHx8MTc1OTQ4MTQ3Nnww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxiYWxhbmNlfGVufDB8fHx8MTc1OTQ4MTQ3Nnww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

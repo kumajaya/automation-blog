@@ -33,7 +33,7 @@ twitter_description: ""
 twitter_image: ""
 url: "https://automation.samatorgroup.com/blog/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada/"
 comment_id: "68f5051b8a77df069caabe9c"
-reading_time: 3
+reading_time: 4
 access: true
 comments: false
 ---
@@ -116,8 +116,7 @@ comments: false
     %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
     flowchart TB
         %% Inisialisasi tema (sama seperti asli)
-        %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
-         subgraph Supervisi ["Lapisan Supervisi"]
+        subgraph Supervisi ["Lapisan Supervisi"]
             SCADA[Rapid SCADA<br><i>Supervisi &amp; Historisasi</i>]:::scada
         end
         subgraph Komunikasi ["Lapisan Komunikasi"]
@@ -168,6 +167,16 @@ comments: false
 <li>Keamanan siber perlu perhatian serius.</li>
 <li>Perlu mindset baru: dari siklus tetap (<em>cyclic</em>) ke event-driven.</li>
 <li>Dokumentasi, deployment, dan maintenance menjadi tanggung jawab pengguna.</li>
+<li>Kontribusi komunitas sangat penting—misalnya, <a href="https://github.com/eclipse-4diac/4diac-forte/commits/develop?author=kumajaya&ref=automation.samatorgroup.com" target="_blank">beberapa perbaikan</a> untuk memastikan portability ke edge device seperti Raspberry Pi atau Siemens IoT.</li>
+</ul>
+<h3 id="catatan-untuk-kontrol-kritis">Catatan untuk Kontrol Kritis</h3>
+<p>Open DCS Framework berbasis 4diac FORTE dan Rapid SCADA ideal untuk kontrol proses reguler, monitoring, dan alarm/event.</p>
+<p>Namun, untuk <strong>aplikasi kritis</strong>, seperti proteksi keselamatan (<em>safety interlock</em>), emergency shutdown, atau kontrol dengan siklus waktu sangat ketat, <strong>PLC industri</strong> tetap disarankan sebagai lapisan eksekusi deterministik utama.</p>
+<p>Dalam skenario ini:</p>
+<ul>
+<li><strong>FORTE</strong> berperan sebagai <em>supervisory</em> atau <em>secondary controller</em>.</li>
+<li><strong>PLC</strong> menangani logika kritis yang memerlukan determinisme tinggi.</li>
+<li>Integrasi antar sistem dapat dilakukan melalui <strong>OPC UA atau Modbus</strong>, sehingga komunikasi real-time tetap terjaga.</li>
 </ul>
 <hr>
 <h2 id="refleksi-dan-arah-pengembangan">Refleksi dan Arah Pengembangan</h2>

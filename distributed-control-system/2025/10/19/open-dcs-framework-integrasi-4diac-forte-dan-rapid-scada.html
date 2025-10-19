@@ -224,7 +224,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
       </div>
       
       <div class="force-inline post-authors">
-        <span class="reading-time">3 min read</span>
+        <span class="reading-time">4 min read</span>
       </div>
       
     </div>
@@ -332,8 +332,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
     %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
     flowchart TB
         %% Inisialisasi tema (sama seperti asli)
-        %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
-         subgraph Supervisi ["Lapisan Supervisi"]
+        subgraph Supervisi ["Lapisan Supervisi"]
             SCADA[Rapid SCADA<br /><i>Supervisi &amp; Historisasi</i>]:::scada
         end
         subgraph Komunikasi ["Lapisan Komunikasi"]
@@ -385,6 +384,16 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 <li>Keamanan siber perlu perhatian serius.</li>
 <li>Perlu mindset baru: dari siklus tetap (<em>cyclic</em>) ke event-driven.</li>
 <li>Dokumentasi, deployment, dan maintenance menjadi tanggung jawab pengguna.</li>
+<li>Kontribusi komunitas sangat penting—misalnya, <a href="https://github.com/eclipse-4diac/4diac-forte/commits/develop?author=kumajaya&amp;ref=automation.samatorgroup.com" target="_blank">beberapa perbaikan</a> untuk memastikan portability ke edge device seperti Raspberry Pi atau Siemens IoT.</li>
+</ul>
+<h3 id="catatan-untuk-kontrol-kritis">Catatan untuk Kontrol Kritis</h3>
+<p>Open DCS Framework berbasis 4diac FORTE dan Rapid SCADA ideal untuk kontrol proses reguler, monitoring, dan alarm/event.</p>
+<p>Namun, untuk <strong>aplikasi kritis</strong>, seperti proteksi keselamatan (<em>safety interlock</em>), emergency shutdown, atau kontrol dengan siklus waktu sangat ketat, <strong>PLC industri</strong> tetap disarankan sebagai lapisan eksekusi deterministik utama.</p>
+<p>Dalam skenario ini:</p>
+<ul>
+<li><strong>FORTE</strong> berperan sebagai <em>supervisory</em> atau <em>secondary controller</em>.</li>
+<li><strong>PLC</strong> menangani logika kritis yang memerlukan determinisme tinggi.</li>
+<li>Integrasi antar sistem dapat dilakukan melalui <strong>OPC UA atau Modbus</strong>, sehingga komunikasi real-time tetap terjaga.</li>
 </ul>
 <hr />
 

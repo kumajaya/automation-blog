@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-10-19T16:46:20+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-10-19T18:46:05+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
 </subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html" rel="alternate" type="text/html" title="Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA" /><published>2025-10-19T16:45:36+00:00</published><updated>2025-10-19T16:45:36+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html"><![CDATA[<p><em>Ditulis oleh Ketut Kumajaya — Oktober 2025</em></p>
 <h2 id="pendahuluan">Pendahuluan</h2>
 <p>Dalam industri proses, sistem kontrol tradisional sering mengandalkan <strong>DCS tertutup</strong> yang mahal dan minim fleksibilitas. <em>Open DCS Framework</em> muncul sebagai <strong>alternatif terbuka, modular, dan terdistribusi</strong>, memanfaatkan <strong>4diac FORTE</strong> sebagai lapisan eksekusi logika dan <strong>Rapid SCADA</strong> sebagai lapisan supervisi dan visualisasi.</p>
@@ -80,8 +80,7 @@
     %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
     flowchart TB
         %% Inisialisasi tema (sama seperti asli)
-        %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
-         subgraph Supervisi ["Lapisan Supervisi"]
+        subgraph Supervisi ["Lapisan Supervisi"]
             SCADA[Rapid SCADA<br /><i>Supervisi &amp; Historisasi</i>]:::scada
         end
         subgraph Komunikasi ["Lapisan Komunikasi"]
@@ -133,6 +132,16 @@
 <li>Keamanan siber perlu perhatian serius.</li>
 <li>Perlu mindset baru: dari siklus tetap (<em>cyclic</em>) ke event-driven.</li>
 <li>Dokumentasi, deployment, dan maintenance menjadi tanggung jawab pengguna.</li>
+<li>Kontribusi komunitas sangat penting—misalnya, <a href="https://github.com/eclipse-4diac/4diac-forte/commits/develop?author=kumajaya&amp;ref=automation.samatorgroup.com" target="_blank">beberapa perbaikan</a> untuk memastikan portability ke edge device seperti Raspberry Pi atau Siemens IoT.</li>
+</ul>
+<h3 id="catatan-untuk-kontrol-kritis">Catatan untuk Kontrol Kritis</h3>
+<p>Open DCS Framework berbasis 4diac FORTE dan Rapid SCADA ideal untuk kontrol proses reguler, monitoring, dan alarm/event.</p>
+<p>Namun, untuk <strong>aplikasi kritis</strong>, seperti proteksi keselamatan (<em>safety interlock</em>), emergency shutdown, atau kontrol dengan siklus waktu sangat ketat, <strong>PLC industri</strong> tetap disarankan sebagai lapisan eksekusi deterministik utama.</p>
+<p>Dalam skenario ini:</p>
+<ul>
+<li><strong>FORTE</strong> berperan sebagai <em>supervisory</em> atau <em>secondary controller</em>.</li>
+<li><strong>PLC</strong> menangani logika kritis yang memerlukan determinisme tinggi.</li>
+<li>Integrasi antar sistem dapat dilakukan melalui <strong>OPC UA atau Modbus</strong>, sehingga komunikasi real-time tetap terjaga.</li>
 </ul>
 <hr />
 

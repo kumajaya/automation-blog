@@ -5,12 +5,13 @@ date: "2025-07-29T15:47:45.000+07:00"
 slug: "about"
 layout: "page"
 excerpt: |
-  Technical & Sustainability Digest is an independent publication launched in July 2025 by Ketut Kumajaya. If you subscribe today, you'll get full access to the website as well as email newsletters about new content when it's available. Your subscription makes this site possible, and allows Technical & Sustainability Digest to continue to exist. Thank you!
+  About Technical & Sustainability Digest
   
   
-  Access all areas
+  Technical & Sustainability Digest is an independent publication founded in July 2025 by Ketut Kumajaya. It shares technical insights, sustainability perspectives, and field-based documentation drawn from real industrial experience.
   
-  By signing up, you'll get access to the full archive of everything that's been published before and everything that's still
+  
+  The author works professionally in the industrial gas and process automation sector, where real-world challenges often inspire the topics discussed here. However, this site is an independent work — not affiliated with or end
 image: ""
 image_alt: ""
 image_caption: ""
@@ -38,7 +39,24 @@ comments: false
 ---
 
 {% raw %}
-<p>Technical &amp; Sustainability Digest is an independent publication launched in July 2025 by Ketut Kumajaya. If you subscribe today, you'll get full access to the website as well as email newsletters about new content when it's available. Your subscription makes this site possible, and allows Technical &amp; Sustainability Digest to continue to exist. Thank you!</p><h3 id="access-all-areas">Access all areas</h3><p>By signing up, you'll get access to the full archive of everything that's been published before and everything that's still to come. Your very own private library.</p><h3 id="fresh-content-delivered">Fresh content, delivered</h3><p>Stay up to date with new content sent straight to your inbox! No more worrying about whether you missed something because of a pesky algorithm or news feed.</p><h3 id="meet-people-like-you">Meet people like you</h3><p>Join a community of other subscribers who share the same interests.</p><h3 id="powered-by-open-source">Powered by Open-Source</h3>
-<p>This site is built with open-source tools and technologies: <a href="https://prismjs.com/?ref=automation.samatorgroup.com">PrismJS</a> for code highlighting, <a href="https://katex.org/?ref=automation.samatorgroup.com">KaTeX</a> for rendering math, <a href="https://mermaid.js.org/?ref=automation.samatorgroup.com">Mermaid</a> and <a href="https://app.diagrams.net/?ref=automation.samatorgroup.com">draw.io</a> for diagrams, <a href="https://jupyter.org/?ref=automation.samatorgroup.com">Jupyter Notebook</a> and <a href="https://www.python.org/?ref=automation.samatorgroup.com">Python</a> for data analysis, and <a href="https://fontawesome.com/?ref=automation.samatorgroup.com">Font Awesome</a> for icons.</p>
-<hr><h3 id="start-your-own-thing">Start your own thing</h3><p>Enjoying the experience? Get started for free and set up your very own subscription business using <a href="https://ghost.org/?ref=automation.samatorgroup.com">Ghost</a>, the same platform that powers this website.</p>
+<h3 id="about-technical-sustainability-digest">About Technical &amp; Sustainability Digest</h3>
+<p><strong>Technical &amp; Sustainability Digest</strong> is an independent publication founded in <strong>July 2025</strong> by <strong>Ketut Kumajaya</strong>. It shares technical insights, sustainability perspectives, and field-based documentation drawn from real industrial experience.</p>
+<p>The author works professionally in the <strong>industrial gas and process automation</strong> sector, where real-world challenges often inspire the topics discussed here. However, this site is an <strong>independent work</strong> — not affiliated with or endorsed by any company or organization. All opinions and analyses are entirely personal and shared for educational and documentation purposes.</p>
+<p>A mirror site, <a href="https://kumajaya.github.io/automation-blog?ref=automation.samatorgroup.com" target="_blank">Automation Blog</a>, hosts a synchronized version of technical articles focused on control systems, data acquisition, and industrial analytics. It serves as an alternate access point for readers interested in the same technical content within a simplified structure.</p>
+<p>All content is openly published and accessible to everyone—no paywalls, no subscriptions, and no algorithms deciding what you should read. The goal is simple: to share knowledge, preserve learning, and keep curiosity alive.</p>
+<hr>
+<h3 id="powered-by-open-source">Powered by Open-Source</h3>
+<p>This site is built entirely with <strong>open-source</strong> tools and technologies:<br>
+<a href="https://prismjs.com/?ref=automation.samatorgroup.com" target="_blank">PrismJS</a> for code highlighting,<br>
+<a href="https://katex.org/?ref=automation.samatorgroup.com" target="_blank">KaTeX</a> for mathematical expressions,<br>
+<a href="https://mermaid.js.org/?ref=automation.samatorgroup.com" target="_blank">Mermaid</a> and <a href="https://app.diagrams.net/?ref=automation.samatorgroup.com" target="_blank">draw.io</a> for diagrams,<br>
+<a href="https://jupyter.org/?ref=automation.samatorgroup.com" target="_blank">Jupyter Notebook</a> and <a href="https://www.python.org/?ref=automation.samatorgroup.com" target="_blank">Python</a> for data analysis,<br>
+and <a href="https://fontawesome.com/?ref=automation.samatorgroup.com" target="_blank">Font Awesome</a> for icons.</p>
+<hr>
+<h3 id="access-and-updates">Access and Updates</h3>
+<p>The full archive of posts is freely available on this site. You can follow updates through the RSS feed or by visiting the connected GitHub repository. If you’re interested in a specific topic, explore the categories and tags to navigate the archive.</p>
+<hr>
+<h3 id="a-space-for-practitioners-and-thinkers">A Space for Practitioners and Thinkers</h3>
+<p>This blog welcomes readers who share interests in <strong>industrial automation, system design, and sustainability</strong>. Every reflection, comment, and discussion is valued—because knowledge grows stronger when it’s shared.</p>
+
 {% endraw %}

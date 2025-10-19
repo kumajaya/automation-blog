@@ -50,7 +50,7 @@ comments: false
 <li>Beberapa vendor menerapkan biaya lisensi tambahan untuk perubahan atau pengembangan logika.</li>
 <li>Sulit diintegrasikan dengan platform modern seperti <strong>IIoT</strong> dan <strong>data analytics</strong>.</li>
 </ul>
-<p><strong>IEC 61499</strong> membuka paradigma baru: kontrol berbasis <em>function block</em>, event-driven, dan terdistribusi. <strong>4diac FORTE</strong> adalah implementasi terbuka dari standar ini, memungkinkan <strong>runtime ringan, portabel</strong>, dan dapat berkomunikasi melalui protokol seperti <strong>OPC UA, MQTT, Modbus TCP/RTU</strong>.</p>
+<p><strong>IEC 61499</strong> membuka paradigma baru: kontrol berbasis <em>function block</em>, event-driven, dan terdistribusi. <strong>4diac FORTE</strong> adalah implementasi terbuka dari standar ini, memungkinkan <strong>runtime ringan, portabel</strong>, dan dapat berkomunikasi melalui protokol seperti <strong>OPC UA, OPC DA, MQTT, Modbus TCP/RTU</strong>.</p>
 <p>Di sisi lain, <strong>Rapid SCADA</strong> menyediakan kemampuan supervisi, visualisasi, historisasi data, alarm/event management, dan scripting, namun <strong>tidak memiliki eksekusi kontrol deterministik</strong>. Integrasi keduanya memungkinkan terciptanya <strong>DCS terbuka yang lengkap</strong>.</p>
 <hr>
 <h2 id="konsep-open-dcs-framework">Konsep Open DCS Framework</h2>
@@ -77,7 +77,7 @@ comments: false
 <tr>
 <td>Komunikasi</td>
 <td>Pertukaran data antar node, integrasi sistem</td>
-<td><strong>OPC UA / Modbus TCP/RTU / MQTT</strong></td>
+<td><strong>OPC UA / OPC DA / Modbus TCP/RTU / MQTT</strong></td>
 </tr>
 <tr>
 <td>Lapisan Input/Output</td>
@@ -90,7 +90,7 @@ comments: false
 <ul>
 <li><strong>Rapid SCADA</strong> berfungsi sebagai antarmuka operator dan pusat pengawasan, termasuk visualisasi, alarm, dan historisasi.</li>
 <li><strong>4diac FORTE</strong> mengeksekusi logika kontrol secara terdistribusi pada node kontrol.</li>
-<li><strong>OPC UA / Modbus TCP/RTU / MQTT</strong> menjembatani komunikasi real-time antara supervisi, kontrol, dan perangkat lapangan.</li>
+<li><strong>OPC UA / OPC DA / Modbus TCP/RTU / MQTT</strong> menjembatani komunikasi real-time antara supervisi, kontrol, dan perangkat lapangan.</li>
 <li><strong>Lapisan Input/Output</strong> terdiri dari sensor, aktuator, dan perangkat I/O industri seperti Moxa ioLogik E2200 atau Advantech ADAM-5000 series. Perangkat I/O ini mendukung protokol Modbus TCP/RTU dan digital/analog signal interface.</li>
 </ul>
 <h3 id="mekanisme-interaksi">Mekanisme Interaksi</h3>
@@ -101,12 +101,12 @@ comments: false
 <li>Operator memantau performa, alarm, dan tren melalui Rapid SCADA, sementara FORTE menangani <strong>logika kontrol deterministik</strong>.</li>
 </ol>
 <hr>
-<h2 id="implementasi-parsial">Implementasi Parsial</h2>
+<h2 id="implementasi">Implementasi</h2>
 <p>Sebagai langkah awal, contoh arsitektur sederhana:</p>
 <ul>
 <li><strong>Node Kontrol</strong>: industrial SBC atau Raspberry Pi menjalankan 4diac FORTE dengan PID dan logika sekuensial. <em>Estimasi biaya awal: Rp 2-5 juta untuk setup dasar, termasuk Raspberry Pi 5.</em></li>
-<li><strong>Node Supervisi</strong>: server Linux menjalankan Rapid SCADA dengan dashboard menampilkan tekanan, <em>flow</em>, dan posisi <em>valve</em>.</li>
-<li><strong>I/O Field</strong>: perangkat <strong>Modbus TCP/RTU</strong> seperti <strong>Moxa ioLogik E2200 series</strong> atau <strong>Advantech ADAM-5000 series</strong> untuk interfacing sensor 4–20 mA dan aktuator digital.</li>
+<li><strong>Node Supervisi</strong>: server Linux/Windows menjalankan Rapid SCADA dengan dashboard menampilkan tekanan, <em>flow</em>, dan posisi <em>valve</em>.</li>
+<li><strong>I/O Field</strong>: perangkat <strong>Modbus TCP/RTU</strong> seperti <strong>Moxa ioLogik E2200 series</strong> atau <strong>Advantech ADAM-5000 series</strong> untuk interfacing sensor 4–20 mA dan aktuator digital. PLCs dapat digunakan untuk eksekusi kontrol kritis sesuai standar SIL.</li>
 <li><strong>Koneksi</strong>: komunikasi antara FORTE dan Rapid SCADA menggunakan OPC UA server-client real-time, <em>dengan dukungan native di Rapid SCADA v6.x untuk subscription data efisien.</em></li>
 </ul>
 <hr>
@@ -117,16 +117,16 @@ comments: false
     flowchart TB
         %% Inisialisasi tema (sama seperti asli)
         subgraph Supervisi ["Lapisan Supervisi"]
-            SCADA[Rapid SCADA<br><i>Supervisi &amp; Historisasi</i>]:::scada
+            SCADA[Rapid SCADA]:::scada
         end
         subgraph Komunikasi ["Lapisan Komunikasi"]
-            OPCUA[OPC UA / Modbus TCP/RTU / MQTT<br><i>Layer Komunikasi</i>]:::comm
+            OPCUA[OPC UA / OPC DA<br>Modbus TCP/RTU<br>MQTT]:::comm
         end
         subgraph Kontrol ["Eksekusi Kontrol"]
-            FORTE[4diac FORTE<br><i>Logic Controller</i>]:::forte
+            FORTE[4diac FORTE]:::forte
         end
         subgraph Lapangan ["Lapisan Input/Output"]
-            IO[Perangkat Lapangan<br><i>Moxa ioLogik E2200 / ADAM-5000</i>]:::io
+            IO[Moxa ioLogik E2200<br>Advantech ADAM-5000<br>PLCs for SIL]:::io
         end
         %% Command Flow (dashed merah)
         SCADA -.-&gt;|Command| OPCUA
@@ -149,7 +149,7 @@ comments: false
         linkStyle 5 stroke:#3a3,stroke-width:2px
   </div>
   <figcaption style="text-align:center; font-size:13px; color:#555;">
-    Integrasi Rapid SCADA, 4diac FORTE, dan I/O Field (Moxa E2200 / ADAM-5000)
+    Integrasi Rapid SCADA, 4diac FORTE, dan I/O Field Devices, dengan PLCs untuk aplikasi SIL
   </figcaption>
 </figure>
 <hr>
@@ -178,6 +178,9 @@ comments: false
 <li><strong>PLC</strong> menangani logika kritis yang memerlukan determinisme tinggi.</li>
 <li>Integrasi antar sistem dapat dilakukan melalui <strong>OPC UA atau Modbus</strong>, sehingga komunikasi real-time tetap terjaga.</li>
 </ul>
+<blockquote>
+<p><em>SIL (Safety Integrity Level) menunjukkan tingkat keandalan sistem dalam mencegah bahaya; aplikasi kritis seperti emergency shutdown biasanya memerlukan PLC yang memenuhi SIL tertentu.</em></p>
+</blockquote>
 <hr>
 <h2 id="refleksi-dan-arah-pengembangan">Refleksi dan Arah Pengembangan</h2>
 <p><em>Open DCS Framework</em> bukan sekadar penggabungan teknologi, tetapi <strong>perubahan paradigma</strong>.</p>

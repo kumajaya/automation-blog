@@ -13,11 +13,11 @@ layout: base
     {% endif %}
 
     {% if cat %}
-    <div class="post-category" style="text-transform:uppercase; font-size:0.875rem; margin-bottom:0.25rem;">
-    {% assign cat_slug = cat | slugify %}
-    <a href="{{ '/tags/' | append: cat_slug | relative_url }}">
-      {{ cat }}
-    </a>
+    <div class="post-category">
+      {% assign cat_slug = cat | slugify %}
+      <a href="{{ '/tags/' | append: cat_slug | relative_url }}">
+        {{ cat }}
+      </a>
     </div>
     {% endif %}
 
@@ -61,10 +61,10 @@ layout: base
   {% endif %}
 
   {% if page.image %}
-  <figure class="post-feature-image" style="margin-top:1rem;">
-    <img src="{{ page.image }}" alt="{{ page.image_alt | default: page.title | escape }}" loading="lazy" style="width:100%; height:auto; border-radius:6px;">
+  <figure class="post-feature-image">
+    <img src="{{ page.image }}" alt="{{ page.image_alt | default: page.title | escape }}" loading="lazy" class="post-feature-img">
     {% if page.image_caption %}
-    <figcaption style="font-size:0.875rem; color:#6b7280; margin-top:0.25rem;">
+    <figcaption class="post-feature-caption">
       {{ page.image_caption | markdownify }}
     </figcaption>
     {% endif %}
@@ -88,3 +88,27 @@ layout: base
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
   <meta itemprop="mainEntityOfPage" content="{{ page.url | absolute_url }}">
 </article>
+
+<style>
+.post-category {
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.post-feature-image {
+  margin-top: 1rem;
+}
+
+.post-feature-img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.post-feature-caption {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+</style>

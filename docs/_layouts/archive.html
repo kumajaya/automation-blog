@@ -3,16 +3,8 @@ layout: base
 ---
 
 <h1>
-  {% if page.type == "tag" or page.type == "category" %}
-    {% assign first_post = page.posts | first %}
-    {% if first_post.tags and first_post.tags.size > 0 %}
-      {{ first_post.tags[0] }}
-    {% else %}
-      {% assign words = page.title | replace: "-", " " | split: " " %}
-      {% for w in words %}
-        {{ w | capitalize }}{% unless forloop.last %} {% endunless %}
-      {% endfor %}
-    {% endif %}
+  {% if page.type == "category" or page.type == "tag" %}
+    {{ page.title | replace: "-", " " | upcase }}
   {% endif %}
 </h1>
 

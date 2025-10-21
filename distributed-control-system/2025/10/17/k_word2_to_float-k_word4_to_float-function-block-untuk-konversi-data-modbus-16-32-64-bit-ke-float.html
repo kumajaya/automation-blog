@@ -224,7 +224,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
       </div>
       
       <div class="force-inline post-authors">
-        <span class="reading-time">7 min read</span>
+        <span class="reading-time">9 min read</span>
       </div>
       
     </div>
@@ -326,28 +326,32 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
   <div class="mermaid" style="width:70%; max-width:700px; font-size:16px;">
     %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
     flowchart TD
-            A["Start: Baca Register Modbus<br />IN0 UINT LSB<br />IN1 UINT MSB"] --&gt; B{Cek Endianness<br />Hasil sesuai?}
-            B --&gt;|Ya| C["Gabung ke 32-bit<br />Temp32 = IN0 + IN1 &lt;&lt; 16"]
-            B --&gt;|Tidak - Endian salah| D["Tukar Urutan<br />Swap IN0 ↔ IN1<br />Ulangi Cek"]
-            D --&gt; B
-            C --&gt; E{"D = 0?"}
-            E --&gt;|Ya| F["OUT = 0.0<br />Proteksi Div-by-Zero"]
-            E --&gt;|Tidak| G{IEE = TRUE?}
-            G --&gt;|Ya| H["Mode IEEE 754<br />OUT = GETFLOAT(Temp32) / D"]
-            G --&gt;|Tidak| I["Mode Numerik<br />OUT = Temp32 as LONG / D"]
-            H --&gt; J["End: Output FLOAT<br />(Siap untuk Tampilan/Proses)"]
-            I --&gt; J
-            F --&gt; J
-            classDef start fill:#e1f5fe,stroke:#333,stroke-width:2px
-            classDef final fill:#c8e6c9,stroke:#333,stroke-width:2px
-            classDef swap fill:#fff3e0,stroke:#333,stroke-width:2px
-            classDef decision fill:#f3e5f5,stroke:#333,stroke-width:2px
-            classDef process fill:#ffffff,stroke:#333,stroke-width:2px
-            class A start
-            class J final
-            class D swap
-            class B,E,G decision
-            class C,F,H,I process
+        A["Start: Baca Register Modbus<br />IN0 UINT LSB<br />IN1 UINT MSB"] --&gt; B{Cek Endianness<br />Hasil sesuai?}
+        B --&gt;|Ya| C["Gabung ke 32-bit<br />Temp32 = IN0 OR (IN1 &lt;&lt; 16)"]
+        B --&gt;|Tidak - Endian salah| D["Tukar Urutan<br />Swap IN0 ↔ IN1<br />Ulangi Cek"]
+        D --&gt; B
+        C --&gt; E{"D = 0?"}
+        E --&gt;|Ya| F["RawFloat = 0.0<br />Proteksi Div-by-Zero"]
+        E --&gt;|Tidak| G{IEE = TRUE?}
+        G --&gt;|Ya| H["Mode IEEE 754<br />RawFloat = GETFLOAT(Temp32)/D"]
+        G --&gt;|Tidak| I["Mode Numerik<br />RawFloat = Temp32 as UDINT / D"]
+        H --&gt; K{"IHL = ILL?"}
+        I --&gt; K
+        F --&gt; K
+        K --&gt;|Ya| L["OUT = OLL<br />(Fallback jika range input nol)"]
+        K --&gt;|Tidak| M["Scaling Linier:<br />OUT = (OHL-OLL)/(IHL-ILL) * (RawFloat-ILL) + OLL"]
+        L --&gt; N["End: Output FLOAT<br />(Siap untuk Tampilan/Proses)"]
+        M --&gt; N
+        classDef start fill:#e1f5fe,stroke:#333,stroke-width:2px
+        classDef final fill:#c8e6c9,stroke:#333,stroke-width:2px
+        classDef swap fill:#fff3e0,stroke:#333,stroke-width:2px
+        classDef decision fill:#f3e5f5,stroke:#333,stroke-width:2px
+        classDef process fill:#ffffff,stroke:#333,stroke-width:2px
+        class A start
+        class N final
+        class D swap
+        class B,E,G,K decision
+        class C,F,H,I,L,M process
   </div>
   <figcaption style="text-align:center; font-size:13px; color:#555;">
     Gambar 1: Alur Konversi Register Modbus 32-bit ke FLOAT Menggunakan Function Block K_WORD2_TO_FLOAT
@@ -366,66 +370,91 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 <pre><code class="language-pascal">(*
 ------------------------------------------------------------------------------
  FB Name     : K_WORD2_TO_FLOAT
- Purpose     : Konversi atau interpretasi 2 register UINT menjadi FLOAT
-               - Mode numerik: gabungan register sebagai accumulator
-               - Mode IEEE 754 FLOAT: interpretasi bit pattern sebagai IEEE 754
+ Purpose     : Konversi 2 register UINT menjadi FLOAT lalu scaling linier
+               ke Engineering Unit (EU) dengan proteksi div/0.
  Author      : Ketut Kumajaya
  Contributor : Copilot (Microsoft AI)
- Version     : 1.0
- Date        : 17/10/2025
- Input       : 
-    IN0 (UINT) - LSB dari data Modbus
-    IN1 (UINT) - MSB dari data Modbus
-    D   (LONG) - skala pembagi (misalnya Wh ke kWh)
-    IEE (BOOL) - TRUE untuk interpretasi IEEE 754 FLOAT
-                 FALSE untuk konversi numerik dari accumulator
- Output      : 
-    OUT (FLOAT) - hasil akhir
- Notes       : 
-    - Cocok untuk perangkat yang mengirim data FLOAT 32-bit via Modbus
-    - D diuji dan digunakan di kedua mode
-    - Jika D = 0 maka OUT = 0.0 untuk mencegah pembagian nol
-    - IEE = TRUE menggunakan GETFLOAT untuk interpretasi bit pattern
-    - IEE = FALSE menghitung nilai sebagai integer lalu dibagi D
-    - Urutan IN0 dan IN1 dapat disesuaikan jika perangkat menggunakan format endian berbeda
-    - Jika hasil tidak sesuai, coba tukar IN0 dan IN1
+ Version     : 1.1
+ Date        : 21/10/2025
+
+ Input       :
+    IN0 (UINT) - LSB Modbus
+    IN1 (UINT) - MSB Modbus
+    D   (LONG) - Skala pembagi (anti-div-zero tahap dasar)
+    IEE (BOOL) - TRUE = interpretasi IEEE 754 FLOAT
+    ILL (FLOAT)- Input Low Limit
+    IHL (FLOAT)- Input High Limit
+    OLL (FLOAT)- Output Low Limit
+    OHL (FLOAT)- Output High Limit
+
+ Output      :
+    OUT (FLOAT) - Nilai hasil scaling ke EU
+
+ Notes       :
+    - Proteksi div/0:
+        * Jika D=0 maka OUT=0.0
+        * Jika IHL=ILL maka OUT=OLL
+    - Rumus scaling:
+        OUT = (OHL - OLL) / (IHL - ILL) * (Raw - ILL) + OLL
+    - Urutan IN0/IN1 dapat ditukar jika perangkat menggunakan endian berbeda
+    - Cocok untuk konversi register mentah atau data FLOAT ke engineering unit
     - FB ini tidak mendukung data 64-bit
-    - Menggunakan SHL_DWORD dan DWORD untuk kompatibilitas Supcon
+    - Untuk "tanpa scaling", gunakan ILL=0.0, IHL=1.0, OLL=0.0, OHL=1.0
+      -&gt; OUT = Raw (identitas)
+
+ Contoh konfigurasi:
+    1. Sensor 4–20 mA -&gt; 0–100 bar
+       ILL=4.0, IHL=20.0, OLL=0.0, OHL=100.0
+    2. Register 0–32767 -&gt; 0–5000 Nm³/h
+       ILL=0.0, IHL=32767.0, OLL=0.0, OHL=5000.0
+    3. Tanpa scaling (nilai asli diteruskan)
+       ILL=0.0, IHL=1.0, OLL=0.0, OHL=1.0
 ------------------------------------------------------------------------------
 *)
-
 FUNCTION_BLOCK K_WORD2_TO_FLOAT
 VAR_INPUT
-    IN0 : UINT; (* LSB *)
-    IN1 : UINT; (* MSB *)
-    D   : LONG; (* Skala pembagi *)
-    IEE : BOOL; (* TRUE = interpretasi bit sebagai IEEE 754 FLOAT *)
+    IN0 : UINT;
+    IN1 : UINT;
+    D   : LONG;
+    IEE : BOOL;
+    ILL : FLOAT;
+    IHL : FLOAT;
+    OLL : FLOAT;
+    OHL : FLOAT;
 END_VAR
 
 VAR_OUTPUT
-    OUT : FLOAT; (* Hasil akhir *)
+    OUT : FLOAT;
 END_VAR
 
 VAR
-    Temp32 : DWORD;
+    Temp32   : DWORD;
+    RawFloat : FLOAT;
 END_VAR
 
-(* Gabungkan 2 UINT menjadi 32-bit bit pattern *)
+(* Gabungkan 2 UINT menjadi pola bit 32-bit *)
 Temp32 := ULONG_TO_DWORD(UINT_TO_ULONG(IN0));
 Temp32 := Temp32 + SHL_DWORD(ULONG_TO_DWORD(UINT_TO_ULONG(IN1)), 16);
 
-(* Interpretasi sesuai mode *)
+(* Hitung nilai dasar *)
 IF D &lt;&gt; 0 THEN
     IF IEE THEN
-        OUT := GETFLOAT(Temp32) / LONG_TO_FLOAT(D);
+        RawFloat := GETFLOAT(Temp32) / LONG_TO_FLOAT(D);
     ELSE
-        OUT := LONG_TO_FLOAT(DWORD_TO_LONG(Temp32)) / LONG_TO_FLOAT(D);
+        RawFloat := LONG_TO_FLOAT(DWORD_TO_LONG(Temp32)) / LONG_TO_FLOAT(D);
     END_IF;
 ELSE
-    OUT := 0.0;
+    RawFloat := 0.0;
 END_IF;
-END_FUNCTION_BLOCK
 
+(* Scaling linier ke engineering unit *)
+IF (IHL &lt;&gt; ILL) THEN
+    OUT := ((OHL - OLL) / (IHL - ILL)) * (RawFloat - ILL) + OLL;
+ELSE
+    OUT := OLL;  (* fallback jika range input nol *)
+END_IF;
+
+END_FUNCTION_BLOCK
 </code></pre>
 </details>
 <hr />
@@ -436,25 +465,29 @@ END_FUNCTION_BLOCK
   <div class="mermaid" style="width:70%; max-width:700px; font-size:16px;">
     %%{init: {'themeVariables': { 'fontSize': '16px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#ffffff'}}}%%
     flowchart TD
-            A["Start: Baca Register Modbus<br />IN0 UINT LSB Low<br />IN1 UINT MSB Low<br />IN2 UINT LSB High<br />IN3 UINT MSB High"] --&gt; B{Cek Endianness<br />Hasil sesuai?}
-            B --&gt;|Ya| C["Gabung Low32 = IN1 &lt;&lt; 16 + IN0<br />High32 = IN3 &lt;&lt; 16 + IN2"]
-            B --&gt;|Tidak - Endian salah| D["Tukar Urutan<br />Swap IN0 ↔ IN1 (Low)<br />Swap IN2 ↔ IN3 (High)<br />Ulangi Cek"]
-            D --&gt; B
-            C --&gt; E{"D = 0?"}
-            E --&gt;|Ya| F["OUT = 0.0<br />Proteksi Div-by-Zero"]
-            E --&gt;|Tidak| G["Hitung 64-bit ke FLOAT<br />OUT = (High32 as LONG * 4294967296.0 + Low32 as LONG) / D"]
-            G --&gt; H["End: Output FLOAT<br />(Untuk Monitoring/Estimasi)"]
-            F --&gt; H
-            classDef start fill:#e1f5fe,stroke:#333,stroke-width:2px
-            classDef final fill:#c8e6c9,stroke:#333,stroke-width:2px
-            classDef swap fill:#fff3e0,stroke:#333,stroke-width:2px
-            classDef decision fill:#f3e5f5,stroke:#333,stroke-width:2px
-            classDef process fill:#ffffff,stroke:#333,stroke-width:2px
-            class A start
-            class H final
-            class D swap
-            class B,E decision
-            class C,F,G process
+        A["Start: Baca Register Modbus<br />IN0 UINT LSB Low<br />IN1 UINT MSB Low<br />IN2 UINT LSB High<br />IN3 UINT MSB High"] --&gt; B{Cek Endianness<br />Hasil sesuai?}
+        B --&gt;|Ya| C["Gabung Low32 = IN1 &lt;&lt; 16 OR IN0<br />High32 = IN3 &lt;&lt; 16 OR IN2"]
+        B --&gt;|Tidak - Endian salah| D["Tukar Urutan<br />Swap IN0 ↔ IN1 (Low)<br />Swap IN2 ↔ IN3 (High)<br />Ulangi Cek"]
+        D --&gt; B
+        C --&gt; E{"D = 0?"}
+        E --&gt;|Ya| F["Raw64 = 0.0<br />Proteksi Div-by-Zero"]
+        E --&gt;|Tidak| G["Hitung 64-bit dasar<br />Raw64 = (High32 * 2^32 + Low32) / D"]
+        F --&gt; K{"IHL = ILL?"}
+        G --&gt; K
+        K --&gt;|Ya| L["OUT = OLL<br />(Fallback jika range input nol)"]
+        K --&gt;|Tidak| M["Scaling Linier:<br />OUT = (OHL-OLL)/(IHL-ILL) * (Raw64-ILL) + OLL"]
+        L --&gt; N["End: Output FLOAT<br />(Untuk Monitoring/Estimasi)"]
+        M --&gt; N
+        classDef start fill:#e1f5fe,stroke:#333,stroke-width:2px
+        classDef final fill:#c8e6c9,stroke:#333,stroke-width:2px
+        classDef swap fill:#fff3e0,stroke:#333,stroke-width:2px
+        classDef decision fill:#f3e5f5,stroke:#333,stroke-width:2px
+        classDef process fill:#ffffff,stroke:#333,stroke-width:2px
+        class A start
+        class N final
+        class D swap
+        class B,E,K decision
+        class C,F,G,L,M process
   </div>
   <figcaption style="text-align:center; font-size:13px; color:#555;">
     Gambar 2: Alur Rekonstruksi Data 64-bit dari Empat Register Modbus ke FLOAT
@@ -472,40 +505,61 @@ END_FUNCTION_BLOCK
 <pre><code class="language-pascal">(*
 ------------------------------------------------------------------------------
  FB Name     : K_WORD4_TO_FLOAT
- Purpose     : Menggabungkan 4 register UINT menjadi nilai FLOAT 64-bit
-               - Low32 dan High32 dibaca terpisah lalu digabung manual
+ Purpose     : Menggabungkan 4 register UINT menjadi nilai 64-bit lalu scaling
+               linier ke Engineering Unit (EU).
  Author      : Ketut Kumajaya
  Contributor : Copilot (Microsoft AI)
- Version     : 1.0
- Date        : 17/10/2025
- Input       : 
-    IN0 (UINT) - LSB dari bagian bawah (Low32)
-    IN1 (UINT) - MSB dari bagian bawah (Low32)
-    IN2 (UINT) - LSB dari bagian atas (High32)
-    IN3 (UINT) - MSB dari bagian atas (High32)
-    D   (LONG) - skala pembagi (misalnya Wh ke kWh)
- Output      : 
-    OUT (FLOAT) - hasil akhir
- Notes       : 
-    - Cocok untuk perangkat yang mengirim data 64-bit integer via Modbus
-    - Supcon tidak mendukung tipe data 64-bit, maka penggabungan dilakukan manual
-    - OUT = (High32 × 4294967296.0 + Low32) ÷ D
-    - Jika D = 0 maka OUT = 0.0 untuk mencegah pembagian nol
-    - Jika hasil tidak sesuai, coba tukar IN0 dan IN1, atau IN2 dan IN3
+ Version     : 1.1
+ Date        : 21/10/2025
+
+ Input       :
+    IN0 (UINT) - LSB dari Low32
+    IN1 (UINT) - MSB dari Low32
+    IN2 (UINT) - LSB dari High32
+    IN3 (UINT) - MSB dari High32
+    D   (LONG) - Skala pembagi (anti-div-zero tahap dasar)
+    ILL (FLOAT)- Input Low Limit
+    IHL (FLOAT)- Input High Limit
+    OLL (FLOAT)- Output Low Limit
+    OHL (FLOAT)- Output High Limit
+
+ Output      :
+    OUT (FLOAT) - Nilai hasil scaling ke EU
+
+ Notes       :
+    - OUT = (High32 * 2^32 + Low32) / D
+    - Konstanta 4294967296.0 = 2^32, digunakan untuk menggeser High32
+    - Proteksi div/0:
+        * Jika D=0 maka OUT=0.0
+        * Jika IHL=ILL maka OUT=OLL
+    - Scaling linier:
+        OUT = (OHL - OLL) / (IHL - ILL) * (Raw - ILL) + OLL
+    - Urutan IN0/IN1 dan IN2/IN3 dapat ditukar jika perangkat endian berbeda
     - Presisi terbatas karena hasil disimpan sebagai FLOAT 32-bit
-    - Gunakan FLOAT hanya untuk tampilan atau estimasi, bukan akurasi billing
-    - Untuk audit, pastikan urutan register sesuai dokumentasi perangkat
-    - Menggunakan SHL_DWORD dan DWORD untuk kompatibilitas Supcon
+    - Untuk "tanpa scaling", gunakan ILL=0.0, IHL=1.0, OLL=0.0, OHL=1.0
+      (hasil OUT = Raw, identitas)
+    - Gunakan hanya untuk tampilan/estimasi, bukan akurasi billing
+
+ Contoh konfigurasi:
+    1. Energi Wh 64-bit ke kWh
+       D=1000, ILL=0.0, IHL=1000000.0, OLL=0.0, OHL=1000.0
+    2. Counter 0–1e12 ke 0–100 %
+       D=1, ILL=0.0, IHL=1.0e12, OLL=0.0, OHL=100.0
+    3. Tanpa scaling
+       D=1, ILL=0.0, IHL=1.0, OLL=0.0, OHL=1.0
 ------------------------------------------------------------------------------
 *)
-
 FUNCTION_BLOCK K_WORD4_TO_FLOAT
 VAR_INPUT
-    IN0 : UINT; (* LSB Low *)
-    IN1 : UINT; (* MSB Low *)
-    IN2 : UINT; (* LSB High *)
-    IN3 : UINT; (* MSB High *)
-    D   : LONG; (* Skala pembagi *)
+    IN0 : UINT;
+    IN1 : UINT;
+    IN2 : UINT;
+    IN3 : UINT;
+    D   : LONG;
+    ILL : FLOAT;
+    IHL : FLOAT;
+    OLL : FLOAT;
+    OHL : FLOAT;
 END_VAR
 
 VAR_OUTPUT
@@ -513,20 +567,33 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-    Low32  : DWORD;
-    High32 : DWORD;
+    Low32   : DWORD;
+    High32  : DWORD;
+    Raw64   : FLOAT;
 END_VAR
 
 (* Gabungkan masing-masing pasangan *)
-Low32  := SHL_DWORD(ULONG_TO_DWORD(UINT_TO_ULONG(IN1)), 16) + ULONG_TO_DWORD(UINT_TO_ULONG(IN0));
-High32 := SHL_DWORD(ULONG_TO_DWORD(UINT_TO_ULONG(IN3)), 16) + ULONG_TO_DWORD(UINT_TO_ULONG(IN2));
+Low32  := SHL_DWORD(ULONG_TO_DWORD(UINT_TO_ULONG(IN1)), 16) 
+        + ULONG_TO_DWORD(UINT_TO_ULONG(IN0));
+High32 := SHL_DWORD(ULONG_TO_DWORD(UINT_TO_ULONG(IN3)), 16) 
+        + ULONG_TO_DWORD(UINT_TO_ULONG(IN2));
 
-(* Hitung total sebagai FLOAT *)
+(* Hitung nilai dasar sebagai FLOAT *)
 IF D &lt;&gt; 0 THEN
-    OUT := (LONG_TO_FLOAT(DWORD_TO_LONG(High32)) * 4294967296.0 + LONG_TO_FLOAT(DWORD_TO_LONG(Low32))) / LONG_TO_FLOAT(D);
+    Raw64 := (LONG_TO_FLOAT(DWORD_TO_LONG(High32)) * 4294967296.0  (* 2^32 *)
+            + LONG_TO_FLOAT(DWORD_TO_LONG(Low32))) 
+            / LONG_TO_FLOAT(D);
 ELSE
-    OUT := 0.0;
+    Raw64 := 0.0;
 END_IF;
+
+(* Scaling linier ke engineering unit *)
+IF (IHL &lt;&gt; ILL) THEN
+    OUT := ((OHL - OLL) / (IHL - ILL)) * (Raw64 - ILL) + OLL;
+ELSE
+    OUT := OLL;  (* fallback jika range input nol *)
+END_IF;
+
 END_FUNCTION_BLOCK
 </code></pre>
 </details>
@@ -543,6 +610,8 @@ END_FUNCTION_BLOCK
 </ul>
 </li>
 <li>Jika hasil tidak sesuai, coba tukar IN0 dan IN1.</li>
+<li>Setelah nilai dasar diperoleh, FB otomatis melakukan scaling linier dari range input (<code>ILL–IHL</code>) ke range output (<code>OLL–OHL</code>).</li>
+<li>Untuk tanpa scaling, gunakan konfigurasi identitas: <code>ILL=0.0, IHL=1.0, OLL=0.0, OHL=1.0</code>.</li>
 </ul>
 <p>FB ini ideal untuk parsing data register tunggal atau ganda yang umum ditemui pada sensor dan flowmeter.</p>
 <h3 id="kapan-menggunakan-kword4tofloat">Kapan menggunakan K_WORD4_TO_FLOAT</h3>
@@ -551,8 +620,53 @@ END_FUNCTION_BLOCK
 <li>Cocok untuk akumulator besar (misalnya energi, volume kumulatif, atau counter jarak jauh).</li>
 <li>OUT hanya untuk monitoring, bukan billing.</li>
 <li>Jika hasil tidak sesuai, coba tukar pasangan register.</li>
+<li>Setelah nilai dasar diperoleh, FB otomatis melakukan scaling linier dari range input (<code>ILL–IHL</code>) ke range output (<code>OLL–OHL</code>).</li>
+<li>Untuk tanpa scaling, gunakan konfigurasi identitas: <code>ILL=0.0, IHL=1.0, OLL=0.0, OHL=1.0</code>.</li>
 </ul>
 <p>FB ini relevan untuk perangkat yang mengirimkan nilai kumulatif besar, dengan catatan hasil konversi hanya dipakai untuk tampilan dan analisis tren.</p>
+<h3 id="contoh-konfigurasi-uji">Contoh Konfigurasi Uji</h3>
+<table>
+<thead>
+<tr>
+<th>FB</th>
+<th>Input Register</th>
+<th>Mode</th>
+<th>D</th>
+<th>ILL/IHL</th>
+<th>OLL/OHL</th>
+<th>OUT (ekspektasi)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K_WORD2_TO_FLOAT</td>
+<td>IN0=0x51EC, IN1=0x449A</td>
+<td>IEE=TRUE</td>
+<td>1</td>
+<td>0.0 / 1.0</td>
+<td>0.0 / 1.0</td>
+<td>1234.56</td>
+</tr>
+<tr>
+<td>K_WORD2_TO_FLOAT</td>
+<td>IN0=1000, IN1=0</td>
+<td>IEE=FALSE</td>
+<td>10</td>
+<td>0.0 / 1.0</td>
+<td>0.0 / 1.0</td>
+<td>100.0</td>
+</tr>
+<tr>
+<td>K_WORD4_TO_FLOAT</td>
+<td>IN0=0, IN1=0, IN2=1, IN3=0</td>
+<td>Numerik</td>
+<td>1</td>
+<td>0.0 / 1.0</td>
+<td>0.0 / 1.0</td>
+<td>4294967296.0</td>
+</tr>
+</tbody>
+</table>
 <h3 id="catatan-umum">Catatan Umum</h3>
 <ul>
 <li><strong>D = 0 → OUT = 0.0</strong>.</li>

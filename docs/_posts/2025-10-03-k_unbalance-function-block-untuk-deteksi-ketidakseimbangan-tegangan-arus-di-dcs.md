@@ -31,7 +31,7 @@ twitter_description: ""
 twitter_image: ""
 url: "https://automation.samatorgroup.com/blog/k_unbalance-function-block-untuk-deteksi-ketidakseimbangan-tegangan-arus-di-dcs/"
 comment_id: "68df8d117f770e05777e0ca8"
-reading_time: 2
+reading_time: 3
 access: true
 comments: false
 ---
@@ -42,83 +42,108 @@ comments: false
 <p>Dalam sistem distribusi daya, ketidakseimbangan antar fase tegangan atau arus dapat menyebabkan panas berlebih, penurunan efisiensi, dan gangguan pada peralatan. Sayangnya, banyak power meter tidak menyediakan informasi unbalance secara langsung. Untuk menutup celah ini, Function Block <code>K_UNBALANCE</code> dirancang menggunakan Structured Text (ST) di Supcon DCS sebagai artefak modular yang siap diaudit dan teachable lintas operator.</p>
 <hr>
 <h3 id="struktur-function-block">Struktur Function Block</h3>
-<pre><code class="language-pascal">(*=============================================================================
-  Function Block Name : K_UNBALANCE
-  Author              : Ketut P. Kumajaya
-  Date Created        : 18/03/2025
-  Description         : Menghitung persentase ketidakseimbangan dari tiga input
-                        dan memberikan nilai rata-rata sebagai referensi audit.
-                        Dirancang untuk melengkapi power meter yang tidak
-                        menyediakan informasi unbalance.
-  Inputs              : IN1 - Input pertama (FLOAT)
-                        IN2 - Input kedua (FLOAT)
-                        IN3 - Input ketiga (FLOAT)
-  Outputs             : UNB - Persentase ketidakseimbangan (FLOAT)
-                        AVG - Nilai rata-rata dari ketiga input (FLOAT)
-  Artefak Pairing     : arrayUNB - ARRAY [0..2] OF FLOAT
-  Proteksi Audit      : Pembagian dengan nol dicegah secara eksplisit.
-                        Nilai absolut dari AVG digunakan sebagai denominator
-                        untuk memastikan UNB selalu positif, termasuk pada
-                        input negatif akibat noise atau simulasi.
-=============================================================================*)
+<pre><code class="language-pascal">(*------------------------------------------------------------------------------
+ FB Name     : K_UNBALANCE
+ Purpose     : Menghitung persentase ketidakseimbangan dari tiga input
+               (tegangan atau arus 3-fasa) berdasarkan metode Unbalance Ratio
+               (Voltage/Current). Memberikan nilai rata-rata sebagai referensi
+               audit dan status alarm jika melebihi ambang batas.
+ Author      : Ketut P. Kumajaya
+ Contributor : Copilot (Microsoft AI)
+ Version     : 1.1
+ Date        : 21/10/2025
+
+ Input       :
+    IN1 (FLOAT) - Input pertama (misalnya V_A atau I_A)
+    IN2 (FLOAT) - Input kedua (misalnya V_B atau I_B)
+    IN3 (FLOAT) - Input ketiga (misalnya V_C atau I_C)
+    THR (FLOAT) - Batas maksimum unbalance yang diperbolehkan
+
+ Output      :
+    UNB (FLOAT) - Persentase ketidakseimbangan
+    AVG (FLOAT) - Nilai rata-rata dari ketiga input
+    ALM (BOOL)  - Status alarm jika UNB &gt; THR
+
+  Notes       :
+    - UNB dihitung sebagai (deviasi maksimum / rata-rata) * 100% 
+      (aproksimasi sederhana; untuk IEC Class A gunakan metode symmetrical components).
+    - Proteksi div/0: jika AVG=0 maka UNB=0 dan ALM=FALSE.
+    - Nilai absolut AVG digunakan sebagai denominator agar hasil selalu positif.
+    - Voltage Unbalance harus dijaga ≤ 2% continuous (IEC 61000-4-30) 
+      atau ≤ 1% di motor terminals (NEMA MG-1).
+      Tegangan yang tidak seimbang sekecil 1–2% dapat memicu Current Unbalance 
+      hingga 6–10 kali lebih besar. Current Unbalance direkomendasikan ≤ 10% 
+      untuk menghindari derating motor.
+    - Current Unbalance sangat sensitif terhadap voltage imbalance 
+      dan dapat menyebabkan pemanasan berlebih. 
+      Motor biasanya perlu derating 0.5–2% daya untuk setiap 1% Current Unbalance 
+      yang melebihi batas.
+
+  Referensi Standar :
+    - IEC 61000-4-30 : Metode symmetrical components untuk Voltage Unbalance 
+                       (Class A: agregasi 10-menit).
+    - NEMA MG-1      : Voltage Unbalance &lt; 1% di motor terminals; 
+                       Current Unbalance bisa 6–10 kali lebih besar 
+                       (≤ 10% direkomendasikan).
+    - IEEE 1159      : Praktik monitoring kualitas daya, termasuk imbalance detection.
+------------------------------------------------------------------------------*)
 
 FUNCTION_BLOCK K_UNBALANCE
 
 VAR_INPUT
-    IN1 : FLOAT; (* Input pertama *)
-    IN2 : FLOAT; (* Input kedua *)
-    IN3 : FLOAT; (* Input ketiga *)
+    IN1 : FLOAT;   (* Input pertama *)
+    IN2 : FLOAT;   (* Input kedua *)
+    IN3 : FLOAT;   (* Input ketiga *)
+    THR : FLOAT;   (* Threshold unbalance *)
 END_VAR
 
 VAR_OUTPUT
-    UNB : FLOAT; (* Persentase ketidakseimbangan *)
-    AVG : FLOAT; (* Nilai rata-rata dari ketiga input *)
+    AVG : FLOAT;   (* Nilai rata-rata dari ketiga input *)
+    UNB : FLOAT;   (* Persentase ketidakseimbangan *)
+    ALM : BOOL;    (* Alarm jika UNB &gt; THR *)
 END_VAR
 
 VAR
-    AvgValue      : FLOAT;
-    MaxDeviation  : FLOAT;
-    Deviation     : FLOAT;
-    i             : INT;
-    Values        : arrayUNB; (* arrayUNB = ARRAY [0..2] OF FLOAT *)
+    Delta1 : FLOAT;
+    Delta2 : FLOAT;
+    Delta3 : FLOAT;
+    DeltaMax : FLOAT;
 END_VAR
 
-(* Pairing input ke array *)
-Values[0] := IN1;
-Values[1] := IN2;
-Values[2] := IN3;
+(* Hitung rata-rata *)
+AVG := (IN1 + IN2 + IN3) / 3.0;
 
-(* Hitung nilai rata-rata *)
-AvgValue := 0.0;
-FOR i := 0 TO 2 DO
-    AvgValue := AvgValue + Values[i];
-END_FOR;
-AvgValue := AvgValue / 3.0;
+(* Proteksi div/0 *)
+IF AVG &lt;&gt; 0.0 THEN
+    (* Deviasi masing-masing input *)
+    Delta1 := ABS_FLOAT(IN1 - AVG);
+    Delta2 := ABS_FLOAT(IN2 - AVG);
+    Delta3 := ABS_FLOAT(IN3 - AVG);
 
-(* Cari deviasi maksimum terhadap rata-rata *)
-MaxDeviation := 0.0;
-FOR i := 0 TO 2 DO
-    Deviation := ABS_FLOAT(Values[i] - AvgValue);
-    IF Deviation &gt; MaxDeviation THEN
-        MaxDeviation := Deviation;
+    (* Cari deviasi terbesar *)
+    DeltaMax := MAX_FLOAT(Delta1, Delta2);
+    DeltaMax := MAX_FLOAT(DeltaMax, Delta3);
+
+    (* Hitung unbalance *)
+    UNB := (DeltaMax / ABS_FLOAT(AVG)) * 100.0;
+
+    (* Alarm check *)
+    IF UNB &gt; THR THEN
+        ALM := TRUE;
+    ELSE
+        ALM := FALSE;
     END_IF;
-END_FOR;
-
-(* Hitung unbalance dan kirim nilai rata-rata *)
-IF AvgValue &lt;&gt; 0.0 THEN
-    UNB := (MaxDeviation / ABS_FLOAT(AvgValue)) * 100.0;
 ELSE
-    UNB := 0.0; (* Proteksi pembagian dengan nol *)
+    UNB := 0.0;
+    ALM := FALSE;
 END_IF;
-
-AVG := AvgValue;
 
 END_FUNCTION_BLOCK
 </code></pre>
 <hr>
 <h3 id="penjelasan-modularitas">Penjelasan Modularitas</h3>
-<p>FB ini menggunakan pendekatan array (<code>arrayUNB</code>) untuk menyimpan input, sehingga logika perhitungan menjadi ringkas dan konsisten. Looping untuk rata-rata dan deviasi maksimum dilakukan secara eksplisit, memudahkan validasi runtime dan audit pairing.</p>
-<p>Output <code>UNB</code> menunjukkan persentase ketidakseimbangan, sedangkan <code>AVG</code> memberikan baseline referensi untuk analisis deviasi. Proteksi terhadap pembagian nol memastikan FB ini robust dan siap digunakan dalam sistem SCADA.</p>
+<p>FB ini menggunakan pendekatan perhitungan eksplisit untuk menghitung rata-rata (<code>AVG</code>), deviasi tiap input, dan deviasi maksimum. Dengan cara ini, setiap langkah logika terlihat jelas dan mudah dipahami.</p>
+<p>Output <code>UNB</code> menunjukkan persentase ketidakseimbangan, <code>AVG</code> menjadi baseline referensi, dan <code>ALM</code> memberikan status alarm otomatis jika nilai unbalance melebihi ambang batas (<code>THR</code>). Proteksi terhadap pembagian nol tetap diterapkan, sehingga FB robust dan siap diintegrasikan ke sistem SCADA lintas plant.</p>
 <hr>
 <h3 id="flowchart">Flowchart</h3>
 <div style="width: 100%; text-align: center; margin: 0.5em auto; max-width: 800px;">
@@ -127,27 +152,34 @@ END_FUNCTION_BLOCK
         IN1["IN1 (Input pertama)"]
         IN2["IN2 (Input kedua)"]
         IN3["IN3 (Input ketiga)"]
-        ARRAY["Values : arrayUNB"]
-        AVG_LOOP["Loop Hitung Rata-rata"]
-        DEV_LOOP["Loop Deviasi Maksimum"]
-        PROTEKSI["Proteksi: AvgValue ≠ 0"]
-        HITUNG_UNB["Hitung UNB (%)"]
-        OUTPUT_UNB["UNB (Output ketidakseimbangan)"]
-        OUTPUT_AVG["AVG (Output rata-rata)"]
-        IN1 --&gt; ARRAY
-        IN2 --&gt; ARRAY
-        IN3 --&gt; ARRAY
-        ARRAY --&gt; AVG_LOOP
-        AVG_LOOP --&gt; DEV_LOOP
-        DEV_LOOP --&gt; PROTEKSI
-        PROTEKSI --&gt;|True| HITUNG_UNB
+        THR["THR (Threshold)"]
+        AVG_CALC["Hitung AVG = (IN1+IN2+IN3)/3"]
+        PROTEKSI{"AVG ≠ 0 ?"}
+        DELTA["Hitung deviasi Δ1, Δ2, Δ3"]
+        DELTAMAX["Cari deviasi maksimum"]
+        HITUNG_UNB["Hitung UNB = (Δmax / |AVG|) * 100%"]
+        CEK_ALM{"UNB &gt; THR ?"}
+        OUTPUT_UNB["UNB (Persentase ketidakseimbangan)"]
+        OUTPUT_AVG["AVG (Nilai rata-rata)"]
+        OUTPUT_ALM["ALM (Status Alarm)"]
+        IN1 --&gt; AVG_CALC
+        IN2 --&gt; AVG_CALC
+        IN3 --&gt; AVG_CALC
+        AVG_CALC --&gt; PROTEKSI
+        PROTEKSI --&gt;|True| DELTA
         PROTEKSI --&gt;|False| OUTPUT_UNB
+        DELTA --&gt; DELTAMAX
+        DELTAMAX --&gt; HITUNG_UNB
+        HITUNG_UNB --&gt; CEK_ALM
+        THR --&gt; CEK_ALM
+        CEK_ALM --&gt;|Ya| OUTPUT_ALM
+        CEK_ALM --&gt;|Tidak| OUTPUT_ALM
         HITUNG_UNB --&gt; OUTPUT_UNB
-        AVG_LOOP --&gt; OUTPUT_AVG
+        AVG_CALC --&gt; OUTPUT_AVG
     </div>
 </div>
 <hr>
 <h3 id="kesimpulan">Kesimpulan</h3>
-<p>Function Block <code>K_UNBALANCE</code> adalah artefak modular yang memperkuat transparansi dan efisiensi dalam sistem DCS. Dengan pairing array, proteksi multi-lapis, dan output yang informatif, FB ini bisa dijadikan template untuk pengembangan Function Block lain yang audit-grade dan teachable lintas plant.</p>
+<p>Function Block <code>K_UNBALANCE</code> adalah artefak modular yang memperkuat transparansi dan efisiensi dalam sistem DCS. Dengan perhitungan eksplisit, proteksi terhadap pembagian nol, serta output yang informatif (<code>UNB</code>, <code>AVG</code>, dan <code>ALM</code>), FB ini siap dijadikan template untuk pengembangan Function Block lain yang audit‑grade dan teachable lintas plant.</p>
 
 {% endraw %}

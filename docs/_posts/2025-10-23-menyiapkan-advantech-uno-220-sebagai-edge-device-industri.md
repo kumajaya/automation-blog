@@ -32,7 +32,7 @@ twitter_description: ""
 twitter_image: ""
 url: "https://automation.samatorgroup.com/blog/menyiapkan-advantech-uno-220-sebagai-edge-device-industri/"
 comment_id: "68f8facb8a77df069caabfbb"
-reading_time: 23
+reading_time: 28
 access: true
 comments: false
 ---
@@ -55,10 +55,51 @@ comments: false
 <li>Terhubung <strong>aman</strong> ke server pusat melalui jaringan terenkripsi,</li>
 <li>Menjalankan fungsi <strong>pengolahan data real‑time</strong> sekaligus <strong>visualisasi</strong> menggunakan <strong>Node‑RED</strong> (v4.x dengan Node.js v22 LTS) dan <strong>Rapid SCADA 6.4.3</strong>.</li>
 </ul>
+<figure style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
+  <div class="mermaid" style="width:600px;">
+    ---
+    config:
+      theme: neutral
+    ---
+    flowchart TD
+            A["DCS / PLC<br>(Modbus RTU)"]:::legacy
+            subgraph Integrasi
+                direction LR
+                B["Modbus Gateway"]:::gateway
+                C["Node-RED"]:::nodered
+                D["Rapid SCADA"]:::scada
+                E["SCADA Grafana Proxy"]:::proxy
+            end
+            F["OS &amp; Hardening"]:::os
+            G["Backup &amp; Recovery"]:::backup
+            H["Deployment"]:::deploy
+            I["ZeroTier"]:::network
+            J["Server Integrasi"]:::server
+            A --&gt; B
+            B --&gt; C --&gt; I
+            B --&gt; D --&gt; E
+            Integrasi --&gt; F --&gt; G --&gt; H --&gt; Integrasi
+            E --&gt; I --&gt; J
+            classDef legacy fill:#efefef,stroke:#999,stroke-width:2px,color:#000
+            classDef hardware fill:#f4cccc,stroke:#cc0000,stroke-width:2px,color:#000
+            classDef os fill:#cfe2f3,stroke:#1155cc,stroke-width:2px,color:#000
+            classDef nodered fill:#d9ead3,stroke:#38761d,stroke-width:2px,color:#000
+            classDef scada fill:#fff2cc,stroke:#bf9000,stroke-width:2px,color:#000
+            classDef proxy fill:#ead1dc,stroke:#741b47,stroke-width:2px,color:#000,stroke-dasharray:4 3
+            classDef gateway fill:#e2efd9,stroke:#274e13,stroke-width:2px,color:#000,stroke-dasharray:4 3
+            classDef network fill:#d0e0e3,stroke:#134f5c,stroke-width:2px,color:#000
+            classDef backup fill:#e6e6e6,stroke:#666666,stroke-width:2px,color:#000
+            classDef deploy fill:#fce5cd,stroke:#e69138,stroke-width:2px,color:#000
+            classDef server fill:#d9d2e9,stroke:#351c75,stroke-width:2px,color:#000
+  </div>
+  <figcaption style="text-align:center; font-size:14px; color:#555;">
+    Alur Terpadu UNO-220 untuk Integrasi Edge Industri yang Andal
+  </figcaption>
+</figure>
 <p>Seluruh tahapan — mulai dari aktivasi fitur perangkat keras, penguatan keamanan sistem operasi, hingga instalasi perangkat lunak produksi — telah digabungkan dalam satu dokumen terpadu. Dengan demikian, panduan ini dapat dijadikan <strong>standar operasional</strong> untuk deployment UNO‑220 di lingkungan industri, tanpa perlu merujuk ke dokumen eksternal tambahan.</p>
 <figure style="display:flex; flex-direction:column; align-items:center;">
   <img src="https://advanbuy.com/wp-content/uploads/UNO-220-P4N1AE.jpg" alt="Advantech UNO-220" style="width:75%; display:block;">
-  <figcaption style="text-align:center; margin-top:4px;">
+  <figcaption style="text-align:center; font-size:14px; color:#555;">
     Advantech UNO‑220 sebagai edge device industri
   </figcaption>
 </figure>
@@ -114,10 +155,26 @@ comments: false
 <hr>
 <h3 id="22-perangkat-lunak">2.2 Perangkat Lunak</h3>
 <ul>
-<li><strong>Ubuntu Server 25.10 (arm64, kernel 6.17+)</strong> → sistem operasi modern, rilis interim saat ini (non-LTS; upgrade ke 26.04 LTS nanti untuk produksi jangka panjang), kompatibel dengan Raspberry Pi 4.</li>
-<li><strong>Tool flashing</strong>: Raspberry Pi Imager atau Balena Etcher → untuk menulis image OS ke microSD.</li>
-<li><strong>Akses jaringan &amp; SSH dari komputer host</strong> → diperlukan untuk konfigurasi awal headless (tanpa monitor/keyboard).</li>
+<li><strong>Ubuntu Server 25.10 (arm64, kernel 6.17+)</strong> → rilis interim, cocok untuk commissioning; untuk produksi jangka panjang gunakan <strong>Ubuntu 26.04 LTS</strong> (rilis 23 April 2026) atau <strong>Ubuntu 24.04 LTS</strong> yang sudah tersedia.</li>
+<li><strong>Tool flashing</strong>: Raspberry Pi Imager atau Balena Etcher → tulis image OS ke microSD.</li>
+<li><strong>Akses jaringan &amp; SSH dari komputer host</strong> → konfigurasi awal headless (tanpa monitor/keyboard).</li>
 </ul>
+<p><strong>Upgrade ke Ubuntu 26.04 LTS</strong><br>
+Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
+<ol>
+<li>Backup penuh sistem (lihat Bab 11) dan uji di staging.</li>
+<li>Update paket: <code>sudo apt update &amp;&amp; sudo apt full-upgrade</code>.</li>
+<li>Pastikan tool upgrade: <code>sudo apt install update-manager-core</code>.</li>
+<li>Jalankan upgrade: <code>sudo do-release-upgrade</code> → konfirmasi.</li>
+<li>Reboot, lalu verifikasi:
+<ul>
+<li><code>lsb_release -a</code> (versi Ubuntu)</li>
+<li><code>uname -r</code> (kernel ARM64)</li>
+<li>test service (Node‑RED, ZeroTier, Rapid SCADA).</li>
+</ul>
+</li>
+</ol>
+<p><strong>Catatan:</strong> Hindari opsi <code>-d</code> (development). Tunggu path resmi Canonical agar kernel &amp; driver ARM64 tetap kompatibel dengan UNO‑220.</p>
 <hr>
 <h2 id="3-instalasi-ubuntu-server-2510">3. Instalasi Ubuntu Server 25.10</h2>
 <p>Penggunaan <strong>microSD industrial‑grade</strong> sangat disarankan untuk UNO‑220 karena:</p>
@@ -338,7 +395,7 @@ Pengujian manual dapat dilakukan dengan perintah:</p>
 gpioset 0 12=0   # LED OFF
 </code></pre>
 <h3 id="46-serial-console-rs%E2%80%91232rs%E2%80%91485">4.6 Serial Console (RS‑232/RS‑485)</h3>
-<p>UNO‑220 mendukung koneksi fisik RS‑232 dan RS‑485 yang dipetakan ke <code>/dev/ttyS0</code>. Secara default, <code>/dev/ttyS0</code> digunakan sebagai <strong>console debug</strong> oleh kernel. Agar port ini dapat digunakan aplikasi lain (misalnya komunikasi dengan perangkat eksternal atau Modbus RTU), hapus parameter berikut dari <code>/boot/firmware/cmdline.txt</code>:</p>
+<p>UNO‑220 mendukung koneksi fisik RS‑232 dan RS‑485 yang dipetakan ke <code>/dev/ttyS0</code>. Secara default, <code>/dev/ttyS0</code> digunakan sebagai <strong>console debug</strong> oleh kernel. Agar port ini dapat digunakan aplikasi lain (misalnya komunikasi dengan perangkat eksternal atau Modbus RTU, termasuk <em>classic</em> DCS), hapus parameter berikut dari <code>/boot/firmware/cmdline.txt</code>:</p>
 <pre><code class="language-text">console=serial0,115200
 </code></pre>
 <p>Simpan perubahan lalu reboot.</p>
@@ -536,13 +593,24 @@ node-red-log
 <li>Memory Usage &gt; 80%</li>
 <li>Disk Usage &gt; 80%</li>
 </ul>
-<h3 id="531-instal-node-tambahan">5.3.1 Instal Node Tambahan</h3>
+<h3 id="531-setup-visudo-untuk-vcgencmd">5.3.1 Setup <code>visudo</code> untuk <code>vcgencmd</code></h3>
+<p>Agar Node‑RED bisa membaca suhu CPU via <code>sudo vcgencmd</code> tanpa prompt password:</p>
+<pre><code class="language-bash">sudo visudo
+</code></pre>
+<p>Tambahkan di akhir:</p>
+<pre><code>ubuntu ALL=(ALL) NOPASSWD: /usr/bin/vcgencmd
+</code></pre>
+<p>Simpan → keluar. Uji:</p>
+<pre><code class="language-bash">sudo vcgencmd measure_temp
+# contoh output: temp=45.2'C
+</code></pre>
+<h3 id="532-instal-node-tambahan">5.3.2 Instal Node Tambahan</h3>
 <p>Di editor Node‑RED (<code>http://&lt;ip&gt;:1880</code>), buka <strong>Menu → Manage palette → Install</strong>:</p>
 <ul>
 <li><code>node-red-dashboard</code> (untuk UI gauge/chart)</li>
 </ul>
 <p>Restart Node‑RED setelah instalasi.</p>
-<h3 id="532-flow-lengkap">5.3.2 Flow Lengkap</h3>
+<h3 id="533-flow-lengkap">5.3.3 Flow Lengkap</h3>
 <p>Flow berikut melakukan polling setiap 10 detik, mengeksekusi perintah sistem, menggabungkan hasil, menuliskannya ke CSV, dan menampilkan di dashboard.</p>
 <p><strong>Langkah Import:</strong></p>
 <ol>
@@ -550,654 +618,18 @@ node-red-log
 <li>Di Node‑RED editor, pilih <strong>Menu → Import → Clipboard</strong>.</li>
 <li>Paste JSON, lalu klik <strong>Import</strong>.</li>
 </ol>
-<details>
-<summary>Klik untuk lihat JSON Flow</summary>
-<pre><code class="language-json">[
-  {
-    "id": "fe919f4f898a361a",
-    "type": "inject",
-    "z": "2aa78c88.04da44",
-    "name": "Poll 10s",
-    "props": [
-      {
-        "p": "payload",
-        "v": "",
-        "vt": "str"
-      },
-      {
-        "p": "topic",
-        "v": "",
-        "vt": "str"
-      }
-    ],
-    "repeat": "10",
-    "once": true,
-    "onceDelay": "5",
-    "x": 120,
-    "y": 220,
-    "wires": [
-      [
-        "fca6b8400889d4f3",
-        "27f74b0ccf05dca3",
-        "231f57b96b131413",
-        "450425f381c32b46",
-        "01694ddd54ec6a73"
-      ]
-    ]
-  },
-  {
-    "id": "f1188809e56ab2de",
-    "type": "exec",
-    "z": "2aa78c88.04da44",
-    "command": "nproc --all",
-    "addpay": "",
-    "append": "",
-    "timer": "",
-    "winHide": false,
-    "name": "Get CPU Cores",
-    "x": 340,
-    "y": 200,
-    "wires": [
-      [
-        "d204093578cae4b4"
-      ],
-      [],
-      []
-    ]
-  },
-  {
-    "id": "fca6b8400889d4f3",
-    "type": "exec",
-    "z": "2aa78c88.04da44",
-    "command": "bash -c 'if sudo command -v vcgencmd &gt;/dev/null 2&gt;&amp;1; then sudo vcgencmd measure_temp | grep -o \"[0-9]*\\.[0-9]*\"; else awk \"{printf(\\\"%.1f\\\", \\$1/1000)}\" /sys/class/thermal/thermal_zone0/temp; fi'",
-    "addpay": "",
-    "append": "",
-    "timer": "",
-    "winHide": false,
-    "name": "CPU Temp",
-    "x": 330,
-    "y": 80,
-    "wires": [
-      [
-        "23fd137e13f7dd24"
-      ],
-      [],
-      []
-    ]
-  },
-  {
-    "id": "23fd137e13f7dd24",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "Set Topic Temp",
-    "rules": [
-      {
-        "t": "set",
-        "p": "topic",
-        "pt": "msg",
-        "to": "Temperature",
-        "tot": "str"
-      }
-    ],
-    "x": 560,
-    "y": 80,
-    "wires": [
-      [
-        "71d65c821a231f67"
-      ]
-    ]
-  },
-  {
-    "id": "27f74b0ccf05dca3",
-    "type": "exec",
-    "z": "2aa78c88.04da44",
-    "command": "awk '{print $1}' /proc/loadavg",
-    "addpay": "",
-    "append": "",
-    "timer": "",
-    "winHide": false,
-    "name": "CPU Load",
-    "x": 330,
-    "y": 140,
-    "wires": [
-      [
-        "a75ecd76131c54e9"
-      ],
-      [],
-      []
-    ]
-  },
-  {
-    "id": "a75ecd76131c54e9",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "Set Topic Load",
-    "rules": [
-      {
-        "t": "set",
-        "p": "topic",
-        "pt": "msg",
-        "to": "Load",
-        "tot": "str"
-      },
-      {
-        "t": "set",
-        "p": "payload",
-        "pt": "msg",
-        "to": "($number($trim(payload)) ? $number($trim(payload)) : 0) / ($flowContext(\"cpu_cores\") ? $flowContext(\"cpu_cores\") : 4) * 100.0 ~&gt; $round(2)\t",
-        "tot": "jsonata"
-      }
-    ],
-    "x": 560,
-    "y": 140,
-    "wires": [
-      [
-        "71d65c821a231f67"
-      ]
-    ]
-  },
-  {
-    "id": "231f57b96b131413",
-    "type": "exec",
-    "z": "2aa78c88.04da44",
-    "command": "free | awk '/Mem/ {printf(\"%.2f\", $3/$2 * 100.0)}'",
-    "addpay": "",
-    "append": "",
-    "timer": "",
-    "winHide": false,
-    "name": "Memory Usage",
-    "x": 340,
-    "y": 260,
-    "wires": [
-      [
-        "fe468f39b7e6bb81"
-      ],
-      [],
-      []
-    ]
-  },
-  {
-    "id": "fe468f39b7e6bb81",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "Set Topic Mem",
-    "rules": [
-      {
-        "t": "set",
-        "p": "topic",
-        "pt": "msg",
-        "to": "Memory",
-        "tot": "str"
-      }
-    ],
-    "x": 560,
-    "y": 260,
-    "wires": [
-      [
-        "71d65c821a231f67"
-      ]
-    ]
-  },
-  {
-    "id": "450425f381c32b46",
-    "type": "exec",
-    "z": "2aa78c88.04da44",
-    "command": "df -h / | awk 'NR==2 {print $5}' | tr -d '%' | awk '{print $1 + 0}'",
-    "addpay": "",
-    "append": "",
-    "timer": "",
-    "winHide": false,
-    "name": "Disk Usage",
-    "x": 330,
-    "y": 380,
-    "wires": [
-      [
-        "49baac92701386dd"
-      ],
-      [],
-      []
-    ]
-  },
-  {
-    "id": "49baac92701386dd",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "Set Topic Disk",
-    "rules": [
-      {
-        "t": "set",
-        "p": "topic",
-        "pt": "msg",
-        "to": "Disk",
-        "tot": "str"
-      },
-      {
-        "t": "set",
-        "p": "payload",
-        "pt": "msg",
-        "to": "$trim(payload)",
-        "tot": "jsonata"
-      }
-    ],
-    "x": 560,
-    "y": 380,
-    "wires": [
-      [
-        "71d65c821a231f67"
-      ]
-    ]
-  },
-  {
-    "id": "01694ddd54ec6a73",
-    "type": "exec",
-    "z": "2aa78c88.04da44",
-    "command": "awk '{print $1}' /proc/uptime",
-    "addpay": "",
-    "append": "",
-    "timer": "",
-    "winHide": false,
-    "name": "Uptime",
-    "x": 320,
-    "y": 320,
-    "wires": [
-      [
-        "198a0c0ac2416c0c"
-      ],
-      [],
-      []
-    ]
-  },
-  {
-    "id": "198a0c0ac2416c0c",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "Set Topic Uptime",
-    "rules": [
-      {
-        "t": "set",
-        "p": "topic",
-        "pt": "msg",
-        "to": "Uptime",
-        "tot": "str"
-      },
-      {
-        "t": "set",
-        "p": "payload",
-        "pt": "msg",
-        "to": "($number($trim(payload)) ? $number($trim(payload)) : 0) / 3600 ~&gt; $round(2)",
-        "tot": "jsonata"
-      }
-    ],
-    "x": 570,
-    "y": 320,
-    "wires": [
-      [
-        "71d65c821a231f67"
-      ]
-    ]
-  },
-  {
-    "id": "71d65c821a231f67",
-    "type": "join",
-    "z": "2aa78c88.04da44",
-    "name": "Join Metrics",
-    "mode": "manual",
-    "build": "object",
-    "property": "payload",
-    "timeout": "10",
-    "count": "5",
-    "x": 830,
-    "y": 240,
-    "wires": [
-      [
-        "a7f8cf77487b9a83",
-        "891b1b27.c66998",
-        "30378886.4cc918",
-        "500cb64f.5bd7c8",
-        "70e60250.56125c",
-        "2280e8e0.31af58"
-      ]
-    ]
-  },
-  {
-    "id": "a7f8cf77487b9a83",
-    "type": "function",
-    "z": "2aa78c88.04da44",
-    "name": "Format CSV",
-    "func": "let ts = moment().utc().format('YYYY.MM.DD HH:mm:ss');\nlet p = msg.payload;\nlet row = `${ts},${p.Temperature},${p.Load},${p.Memory},${p.Uptime},${p.Disk}`;\nmsg.payload = row;\nreturn msg;",
-    "outputs": 1,
-    "timeout": "",
-    "noerr": 0,
-    "initialize": "",
-    "finalize": "",
-    "libs": [
-      {
-        "var": "moment",
-        "module": "moment"
-      }
-    ],
-    "x": 1070,
-    "y": 300,
-    "wires": [
-      [
-        "375bd16453cc4dd0"
-      ]
-    ]
-  },
-  {
-    "id": "375bd16453cc4dd0",
-    "type": "file",
-    "z": "2aa78c88.04da44",
-    "name": "Append CSV",
-    "filename": "/home/ubuntu/uno220_stat.csv",
-    "filenameType": "str",
-    "appendNewline": true,
-    "createDir": true,
-    "overwriteFile": "false",
-    "x": 1270,
-    "y": 300,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "8f5767ef7b5ad18c",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "",
-    "rules": [
-      {
-        "t": "set",
-        "p": "payload",
-        "pt": "msg",
-        "to": "Timestamp,Temperature,Load,Memory,Uptime,Disk",
-        "tot": "str"
-      }
-    ],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 1080,
-    "y": 340,
-    "wires": [
-      [
-        "6aef7d561dd3b777"
-      ]
-    ]
-  },
-  {
-    "id": "3668be62b36e7593",
-    "type": "inject",
-    "z": "2aa78c88.04da44",
-    "name": "Clear",
-    "props": [
-      {
-        "p": "payload"
-      },
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "60",
-    "crontab": "",
-    "once": true,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "",
-    "payloadType": "date",
-    "x": 890,
-    "y": 340,
-    "wires": [
-      [
-        "8f5767ef7b5ad18c"
-      ]
-    ]
-  },
-  {
-    "id": "6aef7d561dd3b777",
-    "type": "file",
-    "z": "2aa78c88.04da44",
-    "name": "Clear CSV",
-    "filename": "/home/ubuntu/uno220_stat.csv",
-    "filenameType": "str",
-    "appendNewline": true,
-    "createDir": false,
-    "overwriteFile": "true",
-    "encoding": "none",
-    "x": 1270,
-    "y": 340,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "891b1b27.c66998",
-    "type": "ui_gauge",
-    "z": "2aa78c88.04da44",
-    "name": "",
-    "group": "dafb9311.e6497",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "gtype": "gage",
-    "title": "Temperature",
-    "label": "",
-    "format": "{{msg.payload.Temperature}}°C",
-    "min": 0,
-    "max": "100",
-    "colors": [
-      "#00b500",
-      "#e6e600",
-      "#ca3838"
-    ],
-    "seg1": "",
-    "seg2": "",
-    "diff": false,
-    "className": "",
-    "x": 1070,
-    "y": 100,
-    "wires": []
-  },
-  {
-    "id": "30378886.4cc918",
-    "type": "ui_template",
-    "z": "2aa78c88.04da44",
-    "group": "dafb9311.e6497",
-    "name": "CPU Load",
-    "order": 3,
-    "width": 6,
-    "height": 2,
-    "format": "&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n    &lt;b&gt;CPU Load:&lt;/b&gt;\n    &lt;div class=\"w3-light-grey w3-xlarge w3-border w3-round-medium\"&gt;\n        &lt;div class=\"w3-container w3-green w3-round-medium\" style=\"width:{{msg.payload.Load}}%;color: #000!important;\"&gt;{{msg.payload.Load}}%&lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;",
-    "storeOutMessages": true,
-    "fwdInMessages": true,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 1070,
-    "y": 140,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "500cb64f.5bd7c8",
-    "type": "ui_gauge",
-    "z": "2aa78c88.04da44",
-    "name": "",
-    "group": "d597c1ca.fe019",
-    "order": 1,
-    "width": 0,
-    "height": 0,
-    "gtype": "gage",
-    "title": "Memory Usage",
-    "label": "",
-    "format": "{{msg.payload.Memory}}%",
-    "min": 0,
-    "max": "100",
-    "colors": [
-      "#00b500",
-      "#e6e600",
-      "#ca3838"
-    ],
-    "seg1": "",
-    "seg2": "",
-    "diff": false,
-    "className": "",
-    "x": 1080,
-    "y": 180,
-    "wires": []
-  },
-  {
-    "id": "70e60250.56125c",
-    "type": "ui_text",
-    "z": "2aa78c88.04da44",
-    "group": "dafb9311.e6497",
-    "order": 2,
-    "width": 0,
-    "height": 0,
-    "name": "",
-    "label": "Uptime",
-    "format": "{{msg.payload.Uptime}}hour(s)",
-    "layout": "row-center",
-    "className": "",
-    "style": false,
-    "font": "",
-    "fontSize": "",
-    "color": "#000000",
-    "x": 1060,
-    "y": 220,
-    "wires": []
-  },
-  {
-    "id": "2280e8e0.31af58",
-    "type": "ui_template",
-    "z": "2aa78c88.04da44",
-    "group": "d597c1ca.fe019",
-    "name": "Disk Usage",
-    "order": 3,
-    "width": 6,
-    "height": 2,
-    "format": "&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n    &lt;b&gt;Disk Usage:&lt;/b&gt;\n    &lt;div class=\"w3-light-grey w3-xlarge w3-border w3-round-medium\"&gt;\n        &lt;div class=\"w3-container w3-green w3-round-medium\" style=\"width:{{msg.payload.Disk}}%;color: #000!important;\"&gt;{{msg.payload.Disk}}%&lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;",
-    "storeOutMessages": true,
-    "fwdInMessages": true,
-    "resendOnRefresh": true,
-    "templateScope": "local",
-    "className": "",
-    "x": 1070,
-    "y": 260,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "d204093578cae4b4",
-    "type": "change",
-    "z": "2aa78c88.04da44",
-    "name": "Store Cores",
-    "rules": [
-      {
-        "t": "set",
-        "p": "cpu_cores",
-        "pt": "flow",
-        "to": "$number($trim(payload)) ? $number($trim(payload)) : 4",
-        "tot": "jsonata"
-      }
-    ],
-    "action": "",
-    "property": "",
-    "from": "",
-    "to": "",
-    "reg": false,
-    "x": 550,
-    "y": 200,
-    "wires": [
-      []
-    ]
-  },
-  {
-    "id": "ebf66d26260831f1",
-    "type": "inject",
-    "z": "2aa78c88.04da44",
-    "name": "Init 3s",
-    "props": [
-      {
-        "p": "payload"
-      },
-      {
-        "p": "topic",
-        "vt": "str"
-      }
-    ],
-    "repeat": "",
-    "crontab": "",
-    "once": true,
-    "onceDelay": "3",
-    "topic": "",
-    "payload": "",
-    "payloadType": "str",
-    "x": 130,
-    "y": 160,
-    "wires": [
-      [
-        "f1188809e56ab2de"
-      ]
-    ]
-  },
-  {
-    "id": "dafb9311.e6497",
-    "type": "ui_group",
-    "name": "",
-    "tab": "d7c34f92.385aa",
-    "order": 1,
-    "disp": true,
-    "width": 6,
-    "collapse": false
-  },
-  {
-    "id": "d597c1ca.fe019",
-    "type": "ui_group",
-    "name": "",
-    "tab": "d7c34f92.385aa",
-    "order": 2,
-    "disp": true,
-    "width": 6,
-    "collapse": false
-  },
-  {
-    "id": "d7c34f92.385aa",
-    "type": "ui_tab",
-    "name": "UNO-220",
-    "icon": "dashboard",
-    "disabled": false,
-    "hidden": false
-  },
-  {
-    "id": "41ff339a7cb34b56",
-    "type": "global-config",
-    "env": [],
-    "modules": {
-      "node-red-dashboard": "3.6.6"
-    }
-  }
-]
+<pre><code class="language-json">[{"id":"fe919f4f898a361a","type":"inject","z":"2aa78c88.04da44","name":"Poll 10s","props":[{"p":"payload","v":"","vt":"str"},{"p":"topic","v":"","vt":"str"}],"repeat":"10","once":true,"onceDelay":"5","x":180,"y":240,"wires":[["fca6b8400889d4f3","27f74b0ccf05dca3","231f57b96b131413","450425f381c32b46","01694ddd54ec6a73"]]},{"id":"f1188809e56ab2de","type":"exec","z":"2aa78c88.04da44","command":"nproc --all","addpay":"","append":"","timer":"","winHide":false,"name":"Get CPU Cores","x":400,"y":220,"wires":[["d204093578cae4b4"],[],[]]},{"id":"fca6b8400889d4f3","type":"exec","z":"2aa78c88.04da44","command":"bash -c 'if sudo command -v vcgencmd &gt;/dev/null 2&gt;&amp;1; then sudo vcgencmd measure_temp | grep -o \"[0-9]*\\.[0-9]*\"; else awk \"{printf(\\\"%.1f\\\", \\$1/1000)}\" /sys/class/thermal/thermal_zone0/temp; fi'","addpay":"","append":"","timer":"","winHide":false,"name":"CPU Temp","x":390,"y":100,"wires":[["23fd137e13f7dd24"],[],[]]},{"id":"23fd137e13f7dd24","type":"change","z":"2aa78c88.04da44","name":"Set Topic Temp","rules":[{"t":"set","p":"topic","pt":"msg","to":"Temperature","tot":"str"}],"x":620,"y":100,"wires":[["71d65c821a231f67"]]},{"id":"27f74b0ccf05dca3","type":"exec","z":"2aa78c88.04da44","command":"awk '{print $1}' /proc/loadavg","addpay":"","append":"","timer":"","winHide":false,"name":"CPU Load","x":390,"y":160,"wires":[["a75ecd76131c54e9"],[],[]]},{"id":"a75ecd76131c54e9","type":"change","z":"2aa78c88.04da44","name":"Set Topic Load","rules":[{"t":"set","p":"topic","pt":"msg","to":"Load","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"($number($trim(payload)) ? $number($trim(payload)) : 0) / ($flowContext(\"cpu_cores\") ? $flowContext(\"cpu_cores\") : 4) * 100.0 ~&gt; $round(2)\t","tot":"jsonata"}],"x":620,"y":160,"wires":[["71d65c821a231f67"]]},{"id":"231f57b96b131413","type":"exec","z":"2aa78c88.04da44","command":"free | awk '/Mem/ {printf(\"%.2f\", $3/$2 * 100.0)}'","addpay":"","append":"","timer":"","winHide":false,"name":"Memory Usage","x":400,"y":280,"wires":[["fe468f39b7e6bb81"],[],[]]},{"id":"fe468f39b7e6bb81","type":"change","z":"2aa78c88.04da44","name":"Set Topic Mem","rules":[{"t":"set","p":"topic","pt":"msg","to":"Memory","tot":"str"}],"x":620,"y":280,"wires":[["71d65c821a231f67"]]},{"id":"450425f381c32b46","type":"exec","z":"2aa78c88.04da44","command":"df -h / | awk 'NR==2 {print $5}' | tr -d '%' | awk '{print $1 + 0}'","addpay":"","append":"","timer":"","winHide":false,"name":"Disk Usage","x":390,"y":400,"wires":[["49baac92701386dd"],[],[]]},{"id":"49baac92701386dd","type":"change","z":"2aa78c88.04da44","name":"Set Topic Disk","rules":[{"t":"set","p":"topic","pt":"msg","to":"Disk","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"$trim(payload)","tot":"jsonata"}],"x":620,"y":400,"wires":[["71d65c821a231f67"]]},{"id":"01694ddd54ec6a73","type":"exec","z":"2aa78c88.04da44","command":"awk '{print $1}' /proc/uptime","addpay":"","append":"","timer":"","winHide":false,"name":"Uptime","x":380,"y":340,"wires":[["198a0c0ac2416c0c"],[],[]]},{"id":"198a0c0ac2416c0c","type":"change","z":"2aa78c88.04da44","name":"Set Topic Uptime","rules":[{"t":"set","p":"topic","pt":"msg","to":"Uptime","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"($number($trim(payload)) ? $number($trim(payload)) : 0) / 3600 ~&gt; $round(2)","tot":"jsonata"}],"x":630,"y":340,"wires":[["71d65c821a231f67"]]},{"id":"71d65c821a231f67","type":"join","z":"2aa78c88.04da44","name":"Join Metrics","mode":"manual","build":"object","property":"payload","timeout":"10","count":"5","x":890,"y":260,"wires":[["a7f8cf77487b9a83","891b1b27.c66998","30378886.4cc918","500cb64f.5bd7c8","70e60250.56125c","2280e8e0.31af58","f70a49af60753879","26b5ccd1c2d785e9"]]},{"id":"a7f8cf77487b9a83","type":"function","z":"2aa78c88.04da44","name":"Format CSV","func":"let ts = moment().utc().format('YYYY.MM.DD HH:mm:ss');\nlet p = msg.payload;\nlet row = `${ts},${p.Temperature},${p.Load},${p.Memory},${p.Uptime},${p.Disk}`;\nmsg.payload = row;\nreturn msg;","outputs":1,"timeout":"","noerr":0,"initialize":"","finalize":"","libs":[{"var":"moment","module":"moment"}],"x":1130,"y":360,"wires":[["375bd16453cc4dd0"]]},{"id":"375bd16453cc4dd0","type":"file","z":"2aa78c88.04da44","name":"Append CSV","filename":"/home/ubuntu/uno220_stat.csv","filenameType":"str","appendNewline":true,"createDir":true,"overwriteFile":"false","x":1330,"y":360,"wires":[[]]},{"id":"8f5767ef7b5ad18c","type":"change","z":"2aa78c88.04da44","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"Timestamp,Temperature,Load,Memory,Uptime,Disk","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":1140,"y":400,"wires":[["6aef7d561dd3b777"]]},{"id":"3668be62b36e7593","type":"inject","z":"2aa78c88.04da44","name":"Clear","props":[{"p":"payload"},{"p":"topic","vt":"str"}],"repeat":"60","crontab":"","once":true,"onceDelay":0.1,"topic":"","payload":"","payloadType":"date","x":950,"y":400,"wires":[["8f5767ef7b5ad18c"]]},{"id":"6aef7d561dd3b777","type":"file","z":"2aa78c88.04da44","name":"Clear CSV","filename":"/home/ubuntu/uno220_stat.csv","filenameType":"str","appendNewline":true,"createDir":false,"overwriteFile":"true","encoding":"none","x":1330,"y":400,"wires":[[]]},{"id":"891b1b27.c66998","type":"ui_gauge","z":"2aa78c88.04da44","name":"","group":"dafb9311.e6497","order":1,"width":6,"height":4,"gtype":"gage","title":"Temperature","label":"","format":"{{msg.payload.Temperature}}°C","min":0,"max":"100","colors":["#00b500","#e6e600","#ca3838"],"seg1":"","seg2":"","diff":false,"className":"","x":1130,"y":120,"wires":[]},{"id":"30378886.4cc918","type":"ui_template","z":"2aa78c88.04da44","group":"dafb9311.e6497","name":"CPU Load","order":3,"width":6,"height":2,"format":"&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n    &lt;b&gt;CPU Load:&lt;/b&gt;\n    &lt;div class=\"w3-light-grey w3-xlarge w3-border w3-round-medium\"&gt;\n        &lt;div class=\"w3-container w3-green w3-round-medium\" style=\"width:{{msg.payload.Load}}%;color: #000!important;\"&gt;{{msg.payload.Load}}%&lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;","storeOutMessages":true,"fwdInMessages":true,"resendOnRefresh":true,"templateScope":"local","className":"","x":1130,"y":160,"wires":[[]]},{"id":"500cb64f.5bd7c8","type":"ui_gauge","z":"2aa78c88.04da44","name":"","group":"d597c1ca.fe019","order":1,"width":6,"height":4,"gtype":"gage","title":"Memory Usage","label":"","format":"{{msg.payload.Memory}}%","min":0,"max":"100","colors":["#00b500","#e6e600","#ca3838"],"seg1":"","seg2":"","diff":false,"className":"","x":1140,"y":200,"wires":[]},{"id":"70e60250.56125c","type":"ui_text","z":"2aa78c88.04da44","group":"d597c1ca.fe019","order":2,"width":6,"height":1,"name":"","label":"Uptime","format":"{{msg.payload.Uptime}}hour(s)","layout":"row-center","className":"","style":false,"font":"","fontSize":"","color":"#000000","x":1120,"y":240,"wires":[]},{"id":"2280e8e0.31af58","type":"ui_template","z":"2aa78c88.04da44","group":"d597c1ca.fe019","name":"Disk Usage","order":3,"width":6,"height":2,"format":"&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n    &lt;b&gt;Disk Usage:&lt;/b&gt;\n    &lt;div class=\"w3-light-grey w3-xlarge w3-border w3-round-medium\"&gt;\n        &lt;div class=\"w3-container w3-green w3-round-medium\" style=\"width:{{msg.payload.Disk}}%;color: #000!important;\"&gt;{{msg.payload.Disk}}%&lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;","storeOutMessages":true,"fwdInMessages":true,"resendOnRefresh":true,"templateScope":"local","className":"","x":1130,"y":320,"wires":[[]]},{"id":"d204093578cae4b4","type":"change","z":"2aa78c88.04da44","name":"Store Cores","rules":[{"t":"set","p":"cpu_cores","pt":"flow","to":"$number($trim(payload)) ? $number($trim(payload)) : 4","tot":"jsonata"}],"action":"","property":"","from":"","to":"","reg":false,"x":610,"y":220,"wires":[[]]},{"id":"ebf66d26260831f1","type":"inject","z":"2aa78c88.04da44","name":"Init 3s","props":[{"p":"payload"},{"p":"topic","vt":"str"}],"repeat":"","crontab":"","once":true,"onceDelay":"3","topic":"","payload":"","payloadType":"str","x":190,"y":180,"wires":[["f1188809e56ab2de"]]},{"id":"f70a49af60753879","type":"debug","z":"2aa78c88.04da44","name":"Debug","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","targetType":"msg","statusVal":"","statusType":"auto","x":1110,"y":80,"wires":[]},{"id":"26b5ccd1c2d785e9","type":"ui_template","z":"2aa78c88.04da44","group":"dafb9311.e6497","name":"Spacer","order":2,"width":0,"height":0,"format":"&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n&lt;/div&gt;","storeOutMessages":true,"fwdInMessages":true,"resendOnRefresh":true,"templateScope":"local","className":"","x":1120,"y":280,"wires":[[]]},{"id":"dafb9311.e6497","type":"ui_group","name":"Temperature Group","tab":"d7c34f92.385aa","order":1,"disp":false,"width":6,"collapse":false,"className":""},{"id":"d597c1ca.fe019","type":"ui_group","name":"Memory Group","tab":"d7c34f92.385aa","order":2,"disp":false,"width":6,"collapse":false,"className":""},{"id":"d7c34f92.385aa","type":"ui_tab","name":"UNO-220","icon":"dashboard","disabled":false,"hidden":false},{"id":"11c630d0f7478e8b","type":"global-config","env":[],"modules":{"node-red-dashboard":"3.6.6"}}]
 </code></pre>
-</details>
-<h3 id="533-penjelasan-flow">5.3.3 Penjelasan Flow</h3>
+<h3 id="534-penjelasan-flow">5.3.4 Penjelasan Flow</h3>
 <ul>
 <li><strong>Inject node</strong>: trigger setiap 10 detik.</li>
 <li><strong>Exec nodes</strong>: jalankan perintah Linux untuk ambil metrik.</li>
 <li><strong>Join node</strong>: gabungkan hasil menjadi satu objek (<code>msg.payload.Temperature</code>, <code>Load</code>, <code>Memory</code>, <code>Disk</code>, <code>Uptime</code>).</li>
-<li><strong>Function node</strong>: format ke CSV dengan timestamp ISO.</li>
+<li><strong>Function node</strong>: format ke CSV dengan timestamp UTC ISO 8601 seperti yang diharapkan Rapid SCADA.</li>
 <li><strong>File node</strong>: append ke <code>/home/ubuntu/uno220_stat.csv</code>.</li>
 <li><strong>Dashboard nodes</strong>: gauge untuk Temp, Load, Memory, Disk; text untuk Uptime.</li>
 </ul>
-<h3 id="534-persiapan-csv">5.3.4 Persiapan CSV</h3>
-<p>Buat header file CSV sekali:</p>
-<pre><code class="language-bash">echo "Timestamp,Temperature,Load,Memory,Uptime,Disk" &gt; /home/ubuntu/uno220_stat.csv
-</code></pre>
+<p><strong>Catatan:</strong> File CSV berfungsi sebagai buffer sementara, sedangkan trending historis sepenuhnya ditangani oleh Rapid SCADA.</p>
 <h3 id="535-akses-dashboard">5.3.5 Akses Dashboard</h3>
 <p>Buka:<br>
 <code>http://&lt;ip&gt;:1880/ui</code></p>
@@ -1207,6 +639,37 @@ node-red-log
 <li>Jika <code>join</code> timeout, naikkan <code>timeout</code> ke 15 detik.</li>
 <li>Cek hasil CSV:<pre><code class="language-bash">tail -f /home/ubuntu/uno220_stat.csv
 </code></pre>
+</li>
+</ul>
+<h3 id="54-indikator-heartbeat-led-pl1-dengan-node%E2%80%91red">5.4 Indikator Heartbeat LED PL1 dengan Node‑RED</h3>
+<p>Untuk memastikan Node‑RED service aktif sekaligus memverifikasi sistem operasi berjalan normal, LED PL1 pada UNO‑220 dapat digunakan sebagai indikator heartbeat dengan pola berkedip periodik.</p>
+<h4 id="541-flow-lengkap">5.4.1 Flow Lengkap</h4>
+<p>Flow berikut mengendalikan LED PL1 (GPIO12, pin 32) agar berkedip dengan siklus penuh: 2 detik ON dan 2 detik OFF. Langkah import sama seperti JSON monitoring pada seksi 5.3.</p>
+<pre><code class="language-json">[{"id":"659d98c5338c2aa4","type":"inject","z":"2aa78c88.04da44","name":"Blink Trigger","props":[{"p":"payload"}],"repeat":"2","crontab":"","once":false,"onceDelay":0.1,"topic":"","x":200,"y":480,"wires":[["5a0f6bca78144bc7"]]},{"id":"5a0f6bca78144bc7","type":"delay","z":"2aa78c88.04da44","name":"1s Delay","pauseType":"rate","timeout":"1","timeoutUnits":"seconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"allowrate":false,"outputs":1,"x":400,"y":480,"wires":[["ca0e3b91a72ed37c"]]},{"id":"ca0e3b91a72ed37c","type":"change","z":"2aa78c88.04da44","name":"Toggle LED State (0/1)","rules":[{"t":"set","p":"payload","pt":"msg","to":"$number($not($flowContext(\"led_state\") ? $flowContext(\"led_state\") : 0))","tot":"jsonata"},{"t":"set","p":"led_state","pt":"flow","to":"payload","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":620,"y":480,"wires":[["c23f25c34982533f"]]},{"id":"c23f25c34982533f","type":"rpi-gpio out","z":"2aa78c88.04da44","name":"LED PL1 Output","pin":"12","set":"","level":"msg.payload","freq":"","out":"out","bcm":true,"x":860,"y":480,"wires":[]},{"id":"b1892e385a988550","type":"global-config","env":[],"modules":{"node-red-node-pi-gpio":"2.0.6"}}]
+</code></pre>
+<h4 id="542-penjelasan-flow">5.4.2 Penjelasan Flow</h4>
+<ul>
+<li><strong>Inject node</strong>: memicu alur setiap 2 detik.</li>
+<li><strong>Delay node</strong>: menahan pesan 1 detik untuk menjaga pola stabil.</li>
+<li><strong>Change node</strong>: membalik nilai 0/1 dengan menyimpan status terakhir di flow context <code>led_state</code>.</li>
+<li><strong>rpi-gpio out</strong>: mengirim nilai 0/1 ke GPIO12 (pin 32), yang terhubung ke LED PL1.</li>
+</ul>
+<h4 id="543-hasil">5.4.3 Hasil</h4>
+<p>LED PL1 berkedip dengan siklus penuh: 2 detik ON dan 2 detik OFF, menandakan Node‑RED dan sistem operasi berjalan normal.<br>
+Pola blink dapat diubah (misalnya ON 200 ms, OFF 800 ms) dengan menyesuaikan konfigurasi inject/delay.</p>
+<h4 id="544-troubleshooting">5.4.4 Troubleshooting</h4>
+<ul>
+<li><strong>LED tidak berkedip:</strong> Pastikan udev rules dan grup gpio aktif (lihat 4.5), lalu uji manual:
+<ul>
+<li>gpioset 0 12=1 → LED ON</li>
+<li>gpioset 0 12=0 → LED OFF</li>
+</ul>
+</li>
+<li><strong>Izin Node‑RED GPIO:</strong> Pastikan paket python3‑rpi.gpio terpasang dan user service Node‑RED termasuk grup gpio.</li>
+<li><strong>Mapping pin:</strong> Verifikasi GPIO12 berada di gpiochip0 dan terhubung ke PL1:
+<ul>
+<li>gpioinfo | grep -E "gpiochip0|BCM12"</li>
+</ul>
 </li>
 </ul>
 <hr>
@@ -1250,7 +713,7 @@ sudo systemctl start zerotier-one
 <h3 id="65-catatan-keamanan">6.5 Catatan Keamanan</h3>
 <ul>
 <li>Gunakan <strong>IP ZeroTier</strong> untuk remote SSH, bukan IP publik.</li>
-<li>Pastikan firewall (<code>ufw</code>) hanya membuka port yang diperlukan (22, 80, 443, 1880).</li>
+<li>Pastikan firewall (<code>ufw</code>) hanya membuka port yang diperlukan (22, 80, 443, 1880, 10002).</li>
 <li>ZeroTier menggunakan UDP port 9993; pastikan tidak diblokir di perangkat maupun firewall jaringan.</li>
 <li>Untuk self‑hosted controller, pastikan server controller terlindungi dengan TLS/HTTPS dan hanya dapat diakses oleh admin.</li>
 </ul>
@@ -1272,6 +735,15 @@ zerotier-cli listnetworks
 </ul>
 <hr>
 <h2 id="7-instalasi-rapid-scada-643-nginx">7. Instalasi Rapid SCADA 6.4.3 &amp; Nginx</h2>
+<p>Di era integrasi OT–IT, <strong>OPC UA telah menjadi de facto standar komunikasi industri modern</strong>, terutama saat sistem perlu terhubung dengan <strong>MES, ERP, maupun platform IIoT</strong>.</p>
+<p>Dalam konteks ini, <strong>Rapid SCADA tidak hanya berfungsi sebagai SCADA tradisional</strong>, tetapi juga sebagai <strong>data concentrator</strong> yang mengekspor seluruh tag dari berbagai driver (Modbus, SNMP, CSV, MQTT, dll.) melalui <strong>OPC UA Gateway</strong>. Dengan begitu, sistem eksternal seperti PLC, DCS, Historian, atau Grafana dapat langsung mengakses data tanpa perlu memahami protokol aslinya.</p>
+<p>Kombinasi berikut membentuk <strong>arsitektur edge yang ideal dan future‑proof</strong>:</p>
+<ul>
+<li><strong>Rapid SCADA</strong> → data concentrator &amp; middleware OT–IT</li>
+<li><strong>OPC UA</strong> → standar komunikasi universal</li>
+<li><strong>Node‑RED</strong> → logika automasi &amp; integrasi fleksibel</li>
+<li><strong>Grafana</strong> → visualisasi modern dan analitik real‑time</li>
+</ul>
 <h3 id="71-net-80-runtime">7.1 .NET 8.0 Runtime</h3>
 <p>Rapid SCADA 6.4.3 membutuhkan <strong>ASP.NET Core Runtime 8.0.x</strong>.<br>
 Instalasi di Ubuntu 25.10 ARM64:</p>
@@ -1305,11 +777,15 @@ sudo cp daemons/* /etc/systemd/system/
 sudo systemctl enable scadaagent6 scadaserver6 scadacomm6 scadaweb6
 sudo systemctl start scadaagent6 scadaserver6 scadacomm6 scadaweb6
 </code></pre>
-<h4 id="integrasi-csv-trending">Integrasi CSV Trending</h4>
+<h4 id="catatan-integrasi-system-resource-monitoring">Catatan Integrasi System Resource Monitoring</h4>
 <ul>
-<li>Driver: <strong>CSV File Reader</strong></li>
-<li>File: <code>/home/ubuntu/uno220_stat.csv</code></li>
-<li>Delimiter: <code>,</code> ; Header: Yes</li>
+<li>Driver: <strong>CSV Reader</strong></li>
+<li>DecimalSeparator: <code>.</code></li>
+<li>DemoPeriod: <code>OneHour</code></li>
+<li>FieldDelimiter: <code>FieldDelimiter</code></li>
+<li>FileName: <code>/home/ubuntu/uno220_stat.csv</code></li>
+<li>ReadMode: <code>RealTime</code></li>
+<li>TagCount: <code>5</code></li>
 <li>Map kolom → tag: <code>Timestamp</code>, <code>Temperature</code>, <code>Load</code>, <code>Memory</code>, <code>Uptime</code>, <code>Disk</code></li>
 </ul>
 <h3 id="73-ram-drive-untuk-log">7.3 RAM Drive untuk Log</h3>
@@ -1912,7 +1388,53 @@ gpioset 0 12=0   # LED OFF
 </li>
 </ol>
 <hr>
-<h2 id="14-penutup">14. Penutup</h2>
+<h2 id="14-timeline">14. Timeline</h2>
+<div class="mermaid" style="width:110%;">
+  timeline
+      title Timeline Deployment UNO-220 (Hari 1–3)
+      section Hari 1 - Dasar
+        2025-11-03 : Persiapan perangkat keras (UNO-220, microSD industrial, RTC, TPM, Expander)
+        2025-11-03 : Flash Ubuntu Server 25.10 ke microSD + enable SSH
+        2025-11-03 : Boot pertama, login SSH, ganti password, set timezone
+        2025-11-03 : Update sistem (apt update/upgrade, autoremove, clean)
+      section Hari 2 - Struktur
+        2025-11-04 : Kompilasi &amp; pasang overlay RTC, TPM, Expander
+        2025-11-04 : Edit config.txt, reboot, uji RTC/I2C/TPM
+        2025-11-04 : Setup GPIO rules + grup gpio, uji LED PL1 manual
+        2025-11-04 : Disable serial console untuk ttyS0 (Modbus RTU)
+        2025-11-04 : Konfigurasi EEPROM boot order (disable USB boot)
+      section Hari 3 - Tools
+        2025-11-05 : Instal Node-RED + konfigurasi logging
+        2025-11-05 : Monitoring sistem &amp; LED heartbeat
+        2025-11-05 : Instal mbusd (Modbus TCP&lt;-&gt;RTU gateway)
+        2025-11-05 : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy
+</div>
+<div class="mermaid" style="width:110%;">
+  ---
+  config:
+    theme: mc
+  ---
+  timeline
+      title Timeline Deployment UNO-220 (Hari 4–7)
+      section Hari 4 - Integrasi
+        2025-11-06 : Integrasi ZeroTier VPN overlay
+        2025-11-06 : Integrasi Grafana/ERP via proxy
+      section Hari 5 - Hardening
+        2025-11-07 : Setup SSH key-based login, disable password login
+        2025-11-07 : Konfigurasi UFW + Fail2Ban + auto updates
+        2025-11-07 : Setup cron RTC sync + disable service tidak terpakai
+      section Hari 6 - Backup &amp; Validasi
+        2025-11-08 : Buat script backup_routine.sh + cron
+        2025-11-08 : Uji recovery Node-RED/SCADA/ZeroTier
+        2025-11-08 : Jalankan checklist audit end-to-end
+      section Hari 7 - Deployment
+        2025-11-09 : Pasang fisik UNO-220 di panel lapangan
+        2025-11-09 : Hubungkan ke catu daya PoE+/DC, label unit &amp; IP ZeroTier
+        2025-11-09 : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana
+        2025-11-09 : Dokumentasi commissioning + serah terima
+</div>
+<hr>
+<h2 id="15-penutup">15. Penutup</h2>
 <p>UNO‑220 kini siap beroperasi sebagai <strong>edge device industri</strong> yang tangguh, dengan konfigurasi yang <strong>aman, modular, dan audit‑ready</strong>. Seluruh tahapan — mulai dari instalasi sistem operasi, aktivasi fitur perangkat keras, pengamanan layanan, hingga integrasi aplikasi — telah dirancang agar konsisten, mudah direplikasi, dan dapat diaudit.</p>
 <p>Komponen utama yang terintegrasi:</p>
 <ul>
@@ -1923,9 +1445,11 @@ gpioset 0 12=0   # LED OFF
 <li><strong>Backup rutin + logrotate</strong> → memastikan recovery cepat dan manajemen log yang efisien.</li>
 </ul>
 <p>Dengan rancangan ini, UNO‑220 dapat dijadikan <strong>standar operasional deployment</strong> di seluruh fasilitas industri, menjamin <strong>konsistensi, keamanan, dan keandalan</strong>.</p>
+<p>Lebih jauh lagi, kombinasi <strong>Rapid SCADA (data concentrator) + OPC UA (standar komunikasi) + Node‑RED (logic) + Grafana (visualisasi)</strong> membentuk <strong>arsitektur edge yang future‑proof</strong>. Dengan pendekatan ini, UNO‑220 tidak hanya berfungsi sebagai gateway lokal, tetapi juga sebagai <strong>middleware OT–IT</strong> yang siap menghubungkan lapisan produksi dengan MES, ERP, maupun platform IIoT modern.</p>
 <blockquote>
 <p><strong>Catatan:</strong> Untuk menjaga keberlanjutan, lakukan validasi berkala (service status, backup, update keamanan) dan selalu cek versi terbaru software dari sumber resmi sebelum upgrade.</p>
 </blockquote>
+<p>Sebagai penutup, perlu dicatat bahwa <strong>peluang integrasi lain masih sangat terbuka</strong>. Misalnya, penambahan runtime <strong>Eclipse 4diac FORTE</strong> memungkinkan UNO‑220 menjalankan <strong>soft logic non‑critical</strong> berbasis IEC 61499 langsung di edge. Alternatif lain, <strong>CODESYS Runtime</strong> berbasis IEC 61131‑3 juga dapat dijalankan di Raspberry Pi 4B (dengan lisensi resmi), sehingga UNO‑220 dapat berperan sebagai <strong>SoftPLC komersial ringan</strong>.</p>
 
 <!--kg-card-begin: html-->
 <div class="scroll-button">

@@ -55,8 +55,8 @@ comments: false
 <li>Terhubung <strong>aman</strong> ke server pusat melalui jaringan terenkripsi,</li>
 <li>Menjalankan fungsi <strong>pengolahan data real‑time</strong> sekaligus <strong>visualisasi</strong> menggunakan <strong>Node‑RED</strong> (v4.x dengan Node.js v22 LTS) dan <strong>Rapid SCADA 6.4.3</strong>.</li>
 </ul>
-<figure style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
-  <div class="mermaid" style="width:600px;">
+<div style="overflow-x: auto; margin: 1em 0;">
+  <div class="mermaid">
     ---
     config:
       theme: neutral
@@ -95,14 +95,14 @@ comments: false
   <figcaption style="text-align:center; font-size:14px; color:#555;">
     Alur Terpadu UNO-220 untuk Integrasi Edge Industri yang Andal
   </figcaption>
-</figure>
+</div>
 <p>Seluruh tahapan — mulai dari aktivasi fitur perangkat keras, penguatan keamanan sistem operasi, hingga instalasi perangkat lunak produksi — telah digabungkan dalam satu dokumen terpadu. Dengan demikian, panduan ini dapat dijadikan <strong>standar operasional</strong> untuk deployment UNO‑220 di lingkungan industri, tanpa perlu merujuk ke dokumen eksternal tambahan.</p>
-<figure style="display:flex; flex-direction:column; align-items:center;">
+<div style="display:flex; flex-direction:column; align-items:center;">
   <img src="https://advanbuy.com/wp-content/uploads/UNO-220-P4N1AE.jpg" alt="Advantech UNO-220" style="width:75%; display:block;">
   <figcaption style="text-align:center; font-size:14px; color:#555;">
     Advantech UNO‑220 sebagai edge device industri
   </figcaption>
-</figure>
+</div>
 <hr>
 <h2 id="2-persiapan-perangkat">2. Persiapan Perangkat</h2>
 <h3 id="21-perangkat-keras">2.1 Perangkat Keras</h3>
@@ -122,7 +122,7 @@ comments: false
 </tr>
 <tr>
 <td><strong>Media Penyimpanan</strong></td>
-<td>MicroSD <strong>industrial‑grade</strong> ≥ 32 GB (Swissbit, Transcend, Apacer, Innodisk). Pilih model dengan endurance pSLC/SLC, PLP/ECC bila tersedia.</td>
+<td>MicroSD <strong>industrial‑grade</strong> ≥ 32 GB. Pilih model dengan endurance pSLC/SLC, PLP/ECC bila tersedia.</td>
 <td>Endurance tinggi, tahan suhu ekstrem, mencegah korupsi data akibat siklus tulis intensif.</td>
 </tr>
 <tr>
@@ -181,51 +181,43 @@ Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
 <p><strong>Catatan:</strong> Hindari opsi <code>-d</code> (development). Tunggu path resmi Canonical agar kernel &amp; driver ARM64 tetap kompatibel dengan UNO‑220.</p>
 <h3 id="23-struktur-deployment-timeline-5-hari">2.3 Struktur Deployment (Timeline 5 Hari)</h3>
 <p>Untuk memastikan proses commissioning berjalan konsisten dan dapat diaudit, berikut struktur deployment UNO‑220 selama 5 hari. Setiap langkah telah disusun agar modular, dapat direplikasi, dan mendukung validasi bertahap.</p>
-<div class="mermaid" style="width:110%;">
+<div class="mermaid" style="width:100%;">
     ---
     config:
       theme: neutral
     ---
     timeline
-        title Timeline Deployment UNO-220 (Hari 1–2)
+        title Timeline Deployment UNO-220 (Hari 1–4)
         section Hari 1 - Dasar dan Strukturisasi
             2025-11-03 : Persiapan perangkat &amp; verifikasi PoE
             : UNO-220 casing industrial, microSD pSLC/SLC, Raspberry Pi 4B
-            2025-11-03 : Flash Ubuntu Server 25.10 + aktifkan SSH
+            : Flash Ubuntu Server 25.10 + aktifkan SSH
             : Boot awal, login SSH, ubah password, set zona waktu
-            2025-11-03 : Update sistem + pasang overlay RTC, TPM, Expander
+            : Update sistem + pasang overlay RTC, TPM, Expander
             : Edit config.txt, reboot, uji RTC/I²C/TPM
-            2025-11-03 : Nonaktifkan serial console ttyS0 (untuk RTU)
+            : Nonaktifkan serial console ttyS0 (untuk RTU)
             : Instal ZeroTier + join network, uji ping antar node
         section Hari 2 - Tools dan Integrasi
             2025-11-04 : Setup GPIO rules + grup gpio
             : Uji LED PL1 manual via gpioset
-            2025-11-04 : Instal Node-RED v4.x + konfigurasi logging
+            : Instal Node-RED v4.x + konfigurasi logging
             : Flow monitoring sistem + heartbeat LED PL1
-            2025-11-04 : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy
+            : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy
             : Integrasi CSV monitoring + test curl localhost
-            2025-11-04 : Instal SCADA Grafana proxy + verifikasi endpoint JSON
+            : Instal SCADA Grafana proxy + verifikasi endpoint JSON
             : Instal mbusd sebagai gateway Modbus TCP–RTU via RS-485
-</div>
-<div class="mermaid" style="width:110%;">
-    ---
-    config:
-      theme: neutral
-    ---
-    timeline
-        title Timeline Deployment UNO-220 (Hari 3–5)
-        section Hari 3 - Hardening
+        section Hari 3 - Hardening, Backup, &amp; Validasi
             2025-11-05 : Setup SSH key-based login, nonaktifkan login password
-            2025-11-05 : Konfigurasi UFW + Fail2Ban (whitelist IP ZeroTier)
-            2025-11-05 : Sinkronisasi RTC + aktifkan unattended-upgrades + hold kernel
-        section Hari 4 - Backup &amp; Validasi
-            2025-11-06 : Nonaktifkan service tidak terpakai : Atur EEPROM boot order
-            2025-11-06 : Buat backup_routine.sh + cron : Uji rsync ke USB/NAS + logrotate
-            2025-11-06 : Uji recovery Node-RED/SCADA/ZeroTier : Checklist audit end-to-end
-        section Hari 5 - Deployment
-            2025-11-07 : Pasang fisik UNO-220 di panel lapangan
+            : Konfigurasi UFW + Fail2Ban (whitelist IP ZeroTier)
+            : Sinkronisasi RTC + aktifkan unattended-upgrades + hold kernel
+            : Nonaktifkan service tidak terpakai
+            : Atur EEPROM boot order
+            : Manual backup + auto backup + cron : Uji rsync ke USB/NAS + logrotate
+            : Uji recovery Node-RED/SCADA/ZeroTier : Checklist audit end-to-end
+        section Hari 4 - Deployment
+            2025-11-06 : Pasang fisik UNO-220 di panel lapangan
             : Koneksi RS-485, ethernet, dan power PoE/DC
-            2025-11-07 : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana full
+            : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana full
             : Dokumentasi akhir + handover checklist
 </div>
 <hr>
@@ -1551,7 +1543,7 @@ gpioset 0 12=0   # LED OFF
 <blockquote>
 <p><strong>Catatan:</strong> Untuk menjaga keberlanjutan, lakukan validasi berkala (service status, backup, update keamanan) dan selalu cek versi terbaru software dari sumber resmi sebelum upgrade.</p>
 </blockquote>
-<p>Sebagai penutup, perlu dicatat bahwa <strong>peluang integrasi lain masih sangat terbuka</strong>. Misalnya, penambahan runtime <strong>Eclipse 4diac FORTE</strong> memungkinkan UNO‑220 menjalankan <strong>soft logic non‑critical</strong> berbasis IEC 61499 langsung di edge. Alternatif lain, <strong>CODESYS Runtime</strong> berbasis IEC 61131‑3 juga dapat dijalankan di Raspberry Pi 4B (dengan lisensi resmi), sehingga UNO‑220 dapat berperan sebagai <strong>SoftPLC komersial ringan</strong>.</p>
+<p>Sebagai penutup, perlu dicatat bahwa peluang integrasi lain masih sangat terbuka, menjadikan Advantech UNO-220 sebagai fondasi yang fleksibel untuk evolusi sistem automasi industri. Misalnya, penambahan runtime <strong>Eclipse 4diac FORTE</strong> memungkinkan UNO-220 menjalankan <strong>soft logic non-critical</strong> berbasis IEC 61499 langsung di edge. Alternatif lain, <strong>CODESYS Runtime</strong> berbasis IEC 61131-3 juga dapat dijalankan di Raspberry Pi 4B (dengan lisensi resmi melalui CODESYS Store), sehingga UNO-220 dapat berperan sebagai <strong>SoftPLC komersial ringan</strong> untuk ladder logic atau structured text. Integrasi ini bisa dikombinasikan dengan elemen predictive maintenance via <strong>TensorFlow Lite</strong>, di mana output dari FORTE atau CODESYS difeed ke <strong>model AI untuk deteksi fault real-time</strong>, menciptakan hybrid edge device yang efisien dan compliant.</p>
 
 <!--kg-card-begin: html-->
 <div class="scroll-button">

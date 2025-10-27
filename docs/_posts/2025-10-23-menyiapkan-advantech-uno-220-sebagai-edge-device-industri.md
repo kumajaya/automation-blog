@@ -48,7 +48,7 @@ comments: false
 </aside>
 <!--kg-card-end: html-->
 <h2 id="1-pendahuluan">1. Pendahuluan</h2>
-<p>Dokumentasi ini menyajikan panduan menyeluruh untuk menyiapkan <strong>Advantech UNO‑220‑P4N2AE</strong>, sebuah <em>casing</em> standar industri untuk <strong>Raspberry Pi 4 Model B</strong>, agar siap berfungsi sebagai <strong>edge device industri</strong>.</p>
+<p>Dokumentasi ini menyajikan panduan menyeluruh untuk menyiapkan <strong>Advantech UNO-220-P4N2AE</strong> — sebuah industrial <strong>gateway kit</strong> (chassis + HAT I/O) yang dirancang untuk dipasangi Raspberry Pi 4 Model B — agar siap berfungsi sebagai <strong>edge device industri</strong>.</p>
 <p>Panduan ini dirancang untuk memastikan UNO‑220 mampu:</p>
 <ul>
 <li>Beroperasi secara <strong>mandiri di lapangan</strong>, tanpa ketergantungan pada infrastruktur tambahan,</li>
@@ -127,8 +127,8 @@ comments: false
 </tr>
 <tr>
 <td><strong>Catu Daya</strong></td>
-<td>12 – 24 VDC atau PoE (Power over Ethernet). Jika PoE, wajib <strong>IEEE 802.3at (PoE+)</strong> untuk daya stabil hingga 30W.</td>
-<td>Node‑RED + SCADA dapat menarik 15–20W; jika hanya 802.3af (maks 15W), risiko brownout/reboot spontan.</td>
+<td>12–24 VDC atau PoE (varian UNO-220-P4N2AE mendukung PoE). Jika menggunakan PoE,<br> gunakan sumber yang sesuai (802.3at/PoE+ bila beban total sistem memerlukan lebih daya).</td>
+<td>Perkiraan konsumsi untuk sistem Node-RED + SCADA sangat bergantung pada konfigurasi<br> (Raspberry Pi 4 model, jumlah addon USB/serial, beban CPU).</td>
 </tr>
 <tr>
 <td><strong>RTC</strong></td>
@@ -155,7 +155,7 @@ comments: false
 <hr>
 <h3 id="22-perangkat-lunak">2.2 Perangkat Lunak</h3>
 <ul>
-<li><strong>Ubuntu Server 25.10 (arm64, kernel 6.17+)</strong> → rilis interim, cocok untuk commissioning; untuk produksi jangka panjang gunakan <strong>Ubuntu 26.04 LTS</strong> (rilis 23 April 2026) atau <strong>Ubuntu 24.04 LTS</strong> yang sudah tersedia.</li>
+<li><strong>Ubuntu Server 25.10 (arm64, kernel 6.17+)</strong> → rilis interim, ini yang sudah tersedia saat artikel ditulis dan untuk produksi jangka panjang akan dilakukan upgrade ke <strong>Ubuntu 26.04 LTS</strong> (rilis 23 April 2026) atau gunakan <strong>Ubuntu 24.04 LTS</strong> yang sudah tersedia.</li>
 <li><strong>Tool flashing</strong>: Raspberry Pi Imager atau Balena Etcher → tulis image OS ke microSD.</li>
 <li><strong>Akses jaringan &amp; SSH dari komputer host</strong> → konfigurasi awal headless (tanpa monitor/keyboard).</li>
 </ul>
@@ -177,14 +177,7 @@ Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
 <p><strong>Catatan:</strong> Hindari opsi <code>-d</code> (development). Tunggu path resmi Canonical agar kernel &amp; driver ARM64 tetap kompatibel dengan UNO‑220.</p>
 <hr>
 <h2 id="3-instalasi-ubuntu-server-2510">3. Instalasi Ubuntu Server 25.10</h2>
-<p>Penggunaan <strong>microSD industrial‑grade</strong> sangat disarankan untuk UNO‑220 karena:</p>
-<ul>
-<li>Endurance tinggi (pSLC/SLC NAND, High TBW).</li>
-<li>Tahan suhu ekstrem (‑40°C hingga +85°C) dan getaran.</li>
-<li>Dilengkapi <strong>Power Loss Protection</strong> dan <strong>ECC</strong>.</li>
-<li>Dirancang untuk operasi 24/7 di lingkungan industri.</li>
-</ul>
-<h3 id="rekomendasi-spesifikasi-microsd">Rekomendasi Spesifikasi microSD</h3>
+<h3 id="rekomendasi-spesifikasi-microsd-industrial%E2%80%91grade">Rekomendasi Spesifikasi microSD Industrial‑Grade</h3>
 <table>
 <thead>
 <tr>
@@ -211,7 +204,7 @@ Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
 </tr>
 <tr>
 <td>Endurance</td>
-<td>≥ 30K write cycles</td>
+<td>≥ 30K write cycles, Power-Loss Protection (PLP) atau ECC</td>
 </tr>
 <tr>
 <td>Brand</td>
@@ -313,7 +306,7 @@ sudo apt install -y build-essential git curl device-tree-compiler
 <pre><code class="language-bash">git clone --depth=1 https://github.com/kumajaya/uno-220-poe.git
 cd uno-220-poe
 </code></pre>
-<h3 id="40-kompilasi-semua-overlay">4.0 Kompilasi Semua Overlay</h3>
+<h3 id="41-kompilasi-semua-overlay">4.1 Kompilasi Semua Overlay</h3>
 <p>Compile kedua overlay secara berurutan:</p>
 <pre><code class="language-bash">sudo dtc -@ -I dts -O dtb dts/i2c-rtc-overlay.dts -o /boot/firmware/current/overlays/i2c-rtc-mod.dtbo
 sudo dtc -@ -I dts -O dtb dts/tpm-slb9670-overlay.dts -o /boot/firmware/current/overlays/tpm-slb9670-mod.dtbo
@@ -324,7 +317,7 @@ sudo dtc -@ -I dts -O dtb dts/tpm-slb9670-overlay.dts -o /boot/firmware/current/
 <p><strong>Verifikasi:</strong></p>
 <pre><code class="language-bash">ls /boot/firmware/current/overlays/ | grep -E 'i2c-rtc-mod|tpm-slb9670-mod'
 </code></pre>
-<h3 id="41-update-configtxt">4.1 Update config.txt</h3>
+<h3 id="42-update-configtxt">4.2 Update config.txt</h3>
 <p>Edit <code>/boot/firmware/config.txt</code>:</p>
 <pre><code class="language-bash">sudo nano /boot/firmware/config.txt
 </code></pre>
@@ -339,13 +332,13 @@ dtoverlay=tpm-slb9670-mod,cs=0x00
 <p>Simpan, lalu reboot:</p>
 <pre><code class="language-bash">sudo reboot
 </code></pre>
-<h3 id="42-uji-rtc-epson-rx-8010sj-b">4.2 Uji RTC (Epson RX-8010SJ-B)</h3>
+<h3 id="43-uji-rtc-epson-rx-8010sj-b">4.3 Uji RTC (Epson RX-8010SJ-B)</h3>
 <pre><code class="language-bash">sudo apt install util-linux-extra -y
 sudo hwclock -r --verbose
 sudo hwclock -w --verbose
 timedatectl status
 </code></pre>
-<h3 id="43-uji-io-expander-ti-tca9554">4.3 Uji I/O Expander (TI TCA9554)</h3>
+<h3 id="44-uji-io-expander-ti-tca9554">4.4 Uji I/O Expander (TI TCA9554)</h3>
 <p>Uji (hubungkan kabel dari GPIO 0 ke 1 untuk loopback):</p>
 <pre><code class="language-bash">sudo apt install gpiod -y
 gpiodetect
@@ -360,13 +353,13 @@ gpioset 2 0=1 &amp;&amp; gpioget 2 1  # On
 </li>
 <li>Untuk menonaktifkan permanen, tambahkan tanda <code>#</code> di depan baris <code>dtoverlay=pca953x,addr=0x27</code> pada <code>/boot/firmware/config.txt</code>.</li>
 </ul>
-<h3 id="44-uji-trusted-platform-module-slb9670">4.4 Uji Trusted Platform Module (SLB9670)</h3>
+<h3 id="45-uji-trusted-platform-module-slb9670">4.5 Uji Trusted Platform Module (SLB9670)</h3>
 <pre><code class="language-bash">sudo apt install tpm2-tools -y
 tpm2_getrandom 8 | xxd -p
 tpm2_getrandom 16 | xxd -p
 tpm2_getrandom 32 | xxd -p
 </code></pre>
-<h3 id="45-gpio-led-pl1">4.5 GPIO &amp; LED PL1</h3>
+<h3 id="46-gpio-led-pl1">4.6 GPIO &amp; LED PL1</h3>
 <p>Untuk dapat mengendalikan <strong>PL1 GPIO LED</strong> di UNO‑220 dibutuhkan kombinasi konfigurasi <strong>udev rules</strong> + dependensi Python agar Node‑RED dapat melakukan <strong>akses GPIO tanpa hak <code>root</code></strong>.</p>
 <ul>
 <li>
@@ -394,7 +387,7 @@ Pengujian manual dapat dilakukan dengan perintah:</p>
 <pre><code class="language-bash">gpioset 0 12=1   # LED ON
 gpioset 0 12=0   # LED OFF
 </code></pre>
-<h3 id="46-serial-console-rs%E2%80%91232rs%E2%80%91485">4.6 Serial Console (RS‑232/RS‑485)</h3>
+<h3 id="47-serial-console-rs%E2%80%91232rs%E2%80%91485">4.7 Serial Console (RS‑232/RS‑485)</h3>
 <p>UNO‑220 mendukung koneksi fisik RS‑232 dan RS‑485 yang dipetakan ke <code>/dev/ttyS0</code>. Secara default, <code>/dev/ttyS0</code> digunakan sebagai <strong>console debug</strong> oleh kernel. Agar port ini dapat digunakan aplikasi lain (misalnya komunikasi dengan perangkat eksternal atau Modbus RTU, termasuk <em>classic</em> DCS), hapus parameter berikut dari <code>/boot/firmware/cmdline.txt</code>:</p>
 <pre><code class="language-text">console=serial0,115200
 </code></pre>
@@ -403,85 +396,6 @@ gpioset 0 12=0   # LED OFF
 <pre><code class="language-bash">sudo apt install minicom -y
 minicom -D /dev/ttyS0 -b 115200
 </code></pre>
-<h3 id="47-disable-usb-boot-keamanan-fisik-untuk-lapangan-rentan">4.7 Disable USB Boot (Keamanan Fisik untuk Lapangan Rentan)</h3>
-<blockquote>
-<p>“Disarankan untuk selalu menyertakan SD card dalam urutan BOOT_ORDER. Hal ini untuk memastikan dapat melakukan recovery dengan mudah menggunakan image rescue di microSD, jika konfigurasi boot lain gagal.”</p>
-</blockquote>
-<p>Untuk mencegah perangkat <strong>boot dari USB eksternal</strong> (risiko tampering di lapangan), lakukan konfigurasi EEPROM bootloader agar hanya mengizinkan boot dari microSD.</p>
-<ol>
-<li>
-<p><strong>Install tool EEPROM</strong></p>
-<pre><code class="language-bash">sudo apt install rpi-eeprom -y
-</code></pre>
-</li>
-<li>
-<p><strong>Edit konfigurasi EEPROM</strong></p>
-<pre><code class="language-bash">sudo rpi-eeprom-config --edit
-</code></pre>
-<p>Ubah atau tambahkan baris:</p>
-<pre><code class="language-ini">BOOT_ORDER=0xf41
-</code></pre>
-<ul>
-<li><code>0xF41</code> → SD → USB → ulangi (default modern Pi, aman karena SD tetap ada).</li>
-<li><code>0xF0</code>  → hanya SD card (paling ketat, tanpa fallback).</li>
-</ul>
-<p>Simpan dan keluar dari editor.</p>
-</li>
-<li>
-<p><strong>Update EEPROM &amp; reboot</strong></p>
-<pre><code class="language-bash">sudo rpi-eeprom-update -a
-sudo reboot
-</code></pre>
-</li>
-<li>
-<p><strong>Verifikasi konfigurasi</strong></p>
-<pre><code class="language-bash">sudo vcgencmd bootloader_config | grep BOOT_ORDER
-</code></pre>
-<p>Output harus menampilkan <code>0xF41</code> atau <code>0xF0</code>.</p>
-</li>
-</ol>
-<p><strong>Contoh nilai BOOT_ORDER umum:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Nilai</th>
-<th>Urutan Boot</th>
-<th>Catatan</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0xF41</code></td>
-<td>SD → USB → ulangi</td>
-<td>Default modern Pi, aman</td>
-</tr>
-<tr>
-<td><code>0xF14</code></td>
-<td>USB → SD → ulangi</td>
-<td>Masih aman, SD tetap ada</td>
-</tr>
-<tr>
-<td><code>0xF461</code></td>
-<td>SD → NVMe → USB → ulangi</td>
-<td>Cocok untuk CM4/Pi 5 dengan SSD</td>
-</tr>
-<tr>
-<td><code>0xF21</code></td>
-<td>SD → Network (TFTP) → ulangi</td>
-<td>Aman untuk network boot, SD tetap ada</td>
-</tr>
-<tr>
-<td><code>0xF0</code></td>
-<td>SD only</td>
-<td>Paling ketat, tanpa fallback</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Catatan:</strong></p>
-<ul>
-<li>Gunakan microSD industrial‑grade, karena setelah USB boot dinonaktifkan, recovery hanya bisa dilakukan via <strong>Raspberry Pi Imager</strong> dengan flashing ulang bootloader image.</li>
-<li>Jika update EEPROM gagal, fallback ke metode resmi Raspberry Pi Imager untuk restore bootloader.</li>
-</ul>
 <p><strong>Troubleshooting Hardware:</strong></p>
 <ul>
 <li>Jika overlay gagal terpasang:<pre><code class="language-bash">dmesg | grep i2c
@@ -492,7 +406,82 @@ i2cdetect -y 1
 <li>Gunakan <code>ls /boot/firmware/current/overlays/</code> untuk memastikan file <code>.dtbo</code> hasil compile tersedia.</li>
 </ul>
 <hr>
-<h2 id="5-instalasi-node%E2%80%91red">5. Instalasi Node‑RED</h2>
+<h2 id="5-instalasi-zerotier">5. Instalasi ZeroTier</h2>
+<p>ZeroTier digunakan untuk menyediakan konektivitas aman antar perangkat tanpa perlu membuka port publik. UNO‑220 akan bergabung ke jaringan virtual ZeroTier dan dapat diakses menggunakan alamat IP internal ZeroTier.</p>
+<ol>
+<li>
+<p><strong>Instalasi Paket</strong></p>
+<pre><code class="language-bash">curl -s https://install.zerotier.com | sudo bash
+sudo systemctl enable zerotier-one
+sudo systemctl start zerotier-one
+</code></pre>
+<p>Verifikasi instalasi:</p>
+<pre><code class="language-bash">zerotier-cli info
+</code></pre>
+<p>Output normal: <code>200 info &lt;node_id&gt; &lt;version&gt; ONLINE</code></p>
+</li>
+<li>
+<p><strong>Join ke Network</strong></p>
+<pre><code class="language-bash">sudo zerotier-cli join &lt;network_id&gt;
+</code></pre>
+<ul>
+<li><code>&lt;network_id&gt;</code> adalah ID jaringan yang sudah dibuat di controller (publik atau self‑hosted).</li>
+<li>Cek status:<pre><code class="language-bash">zerotier-cli listnetworks
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Otorisasi Node</strong></p>
+<ul>
+<li><strong>Jika menggunakan controller publik (<code>my.zerotier.com</code>)</strong>: login ke dashboard, pilih network, lalu authorize <code>&lt;node_id&gt;</code>.</li>
+<li><strong>Jika menggunakan controller self‑hosted</strong>: lakukan otorisasi node melalui web UI atau API controller internal. Pastikan node muncul di daftar anggota network, lalu tandai sebagai authorized.</li>
+</ul>
+</li>
+<li>
+<p><strong>Verifikasi Koneksi</strong></p>
+<ul>
+<li>Cek interface ZeroTier:<pre><code class="language-bash">ip addr show zt*
+</code></pre>
+</li>
+<li>Gunakan IP ZeroTier untuk SSH:<pre><code class="language-bash">ssh ubuntu@&lt;ip_zerotier&gt;
+</code></pre>
+</li>
+<li>Uji konektivitas antar node:<pre><code class="language-bash">ping &lt;ip_zerotier_peer&gt;
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Catatan Keamanan</strong></p>
+<ul>
+<li>Gunakan <strong>IP ZeroTier</strong> untuk remote SSH, bukan IP publik.</li>
+<li>Pastikan firewall (<code>ufw</code>) hanya membuka port yang diperlukan (22, 80, 443, 1880, 10002).</li>
+<li>ZeroTier menggunakan UDP port 9993; pastikan tidak diblokir di perangkat maupun firewall jaringan.</li>
+<li>Untuk self‑hosted controller, pastikan server controller terlindungi dengan TLS/HTTPS dan hanya dapat diakses oleh admin.</li>
+</ul>
+</li>
+<li>
+<p><strong>Troubleshooting</strong></p>
+<ul>
+<li>Jika join gagal:<pre><code class="language-bash">journalctl -u zerotier-one -f
+</code></pre>
+</li>
+<li>Jika node tidak muncul di controller:
+<ul>
+<li>Pastikan network ID benar.</li>
+<li>Pastikan perangkat dapat menjangkau server controller (cek UDP 9993).</li>
+</ul>
+</li>
+<li>Jika IP ZeroTier tidak muncul:<pre><code class="language-bash">sudo systemctl restart zerotier-one
+zerotier-cli listnetworks
+</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="6-instalasi-node%E2%80%91red">6. Instalasi Node‑RED</h2>
 <ol>
 <li>
 <p><strong>Update sistem</strong></p>
@@ -518,7 +507,7 @@ Buka browser ke alamat:<br>
 <code>http://&lt;ip&gt;:1880</code></p>
 </li>
 </ol>
-<h3 id="51-amankan-akses-node%E2%80%91red">5.1 Amankan Akses Node‑RED</h3>
+<h3 id="61-amankan-akses-node%E2%80%91red">6.1 Amankan Akses Node‑RED</h3>
 <p>Edit file <code>~/.node-red/settings.js</code>:</p>
 <pre><code class="language-js">adminAuth: {
     type: "credentials",
@@ -536,7 +525,7 @@ Buka browser ke alamat:<br>
 <p>Setelah itu, restart service agar perubahan aktif:</p>
 <pre><code class="language-bash">sudo systemctl restart nodered.service
 </code></pre>
-<h3 id="52-aktivasi-logging-untuk-monitoring-io-dan-deteksi-error-hardware">5.2 Aktivasi Logging untuk Monitoring I/O dan Deteksi Error Hardware</h3>
+<h3 id="62-aktivasi-logging-untuk-monitoring-io-dan-deteksi-error-hardware">6.2 Aktivasi Logging untuk Monitoring I/O dan Deteksi Error Hardware</h3>
 <p>Edit <code>~/.node-red/settings.js</code> untuk mengaktifkan logging detail. Logging ini berguna untuk:</p>
 <ul>
 <li><strong>Monitoring I/O</strong>: menangkap event GPIO, I²C expander (TCA9554), dan komunikasi serial.</li>
@@ -584,7 +573,7 @@ node-red-log
 </li>
 <li>Semua log tersimpan di journal systemd, sehingga tetap terintegrasi dengan mekanisme logrotate.</li>
 </ul>
-<h3 id="53-system-resource-monitoring-cpu-temperature-memory-usage-cpu-load-disk-usage-uptime-dengan-node%E2%80%91red">5.3 System Resource Monitoring (CPU Temperature, Memory Usage, CPU Load, Disk Usage, Uptime) dengan Node‑RED</h3>
+<h3 id="63-system-resource-monitoring-cpu-temperature-memory-usage-cpu-load-disk-usage-uptime-dengan-node%E2%80%91red">6.3 System Resource Monitoring (CPU Temperature, Memory Usage, CPU Load, Disk Usage, Uptime) dengan Node‑RED</h3>
 <p>Untuk memantau metrik sistem secara real‑time (CPU Temperature, Memory Usage, CPU Load, Disk Usage, Uptime), kita gunakan <strong>exec node</strong> di Node‑RED untuk menjalankan perintah Linux, lalu visualisasikan hasilnya di dashboard dan simpan ke file CSV untuk integrasi dengan Rapid SCADA (lihat 7.2).</p>
 <p><strong>Threshold alert yang disarankan:</strong></p>
 <ul>
@@ -593,8 +582,10 @@ node-red-log
 <li>Memory Usage &gt; 80%</li>
 <li>Disk Usage &gt; 80%</li>
 </ul>
-<h3 id="531-setup-visudo-untuk-vcgencmd">5.3.1 Setup <code>visudo</code> untuk <code>vcgencmd</code></h3>
-<p>Agar Node‑RED bisa membaca suhu CPU via <code>sudo vcgencmd</code> tanpa prompt password:</p>
+<ol>
+<li>
+<p><strong>Setup <code>visudo</code> untuk <code>vcgencmd</code></strong><br>
+Agar Node‑RED bisa membaca suhu CPU via <code>sudo vcgencmd</code> tanpa prompt password:</p>
 <pre><code class="language-bash">sudo visudo
 </code></pre>
 <p>Tambahkan di akhir:</p>
@@ -602,16 +593,20 @@ node-red-log
 </code></pre>
 <p>Simpan → keluar. Uji:</p>
 <pre><code class="language-bash">sudo vcgencmd measure_temp
-# contoh output: temp=45.2'C
+# contoh output: temp=45.2°C
 </code></pre>
-<h3 id="532-instal-node-tambahan">5.3.2 Instal Node Tambahan</h3>
-<p>Di editor Node‑RED (<code>http://&lt;ip&gt;:1880</code>), buka <strong>Menu → Manage palette → Install</strong>:</p>
+</li>
+<li>
+<p><strong>Instal Node Tambahan</strong><br>
+Di editor Node‑RED (<code>http://&lt;ip&gt;:1880</code>), buka <strong>Menu → Manage palette → Install</strong>:</p>
 <ul>
 <li><code>node-red-dashboard</code> (untuk UI gauge/chart)</li>
 </ul>
 <p>Restart Node‑RED setelah instalasi.</p>
-<h3 id="533-flow-lengkap">5.3.3 Flow Lengkap</h3>
-<p>Flow berikut melakukan polling setiap 10 detik, mengeksekusi perintah sistem, menggabungkan hasil, menuliskannya ke CSV, dan menampilkan di dashboard.</p>
+</li>
+<li>
+<p><strong>Flow Lengkap</strong><br>
+Flow berikut melakukan polling setiap 10 detik, mengeksekusi perintah sistem, menggabungkan hasil, menuliskannya ke CSV, dan menampilkan di dashboard.</p>
 <p><strong>Langkah Import:</strong></p>
 <ol>
 <li>Salin JSON di bawah.</li>
@@ -620,7 +615,9 @@ node-red-log
 </ol>
 <pre><code class="language-json">[{"id":"fe919f4f898a361a","type":"inject","z":"2aa78c88.04da44","name":"Poll 10s","props":[{"p":"payload","v":"","vt":"str"},{"p":"topic","v":"","vt":"str"}],"repeat":"10","once":true,"onceDelay":"5","x":180,"y":240,"wires":[["fca6b8400889d4f3","27f74b0ccf05dca3","231f57b96b131413","450425f381c32b46","01694ddd54ec6a73"]]},{"id":"f1188809e56ab2de","type":"exec","z":"2aa78c88.04da44","command":"nproc --all","addpay":"","append":"","timer":"","winHide":false,"name":"Get CPU Cores","x":400,"y":220,"wires":[["d204093578cae4b4"],[],[]]},{"id":"fca6b8400889d4f3","type":"exec","z":"2aa78c88.04da44","command":"bash -c 'if sudo command -v vcgencmd &gt;/dev/null 2&gt;&amp;1; then sudo vcgencmd measure_temp | grep -o \"[0-9]*\\.[0-9]*\"; else awk \"{printf(\\\"%.1f\\\", \\$1/1000)}\" /sys/class/thermal/thermal_zone0/temp; fi'","addpay":"","append":"","timer":"","winHide":false,"name":"CPU Temp","x":390,"y":100,"wires":[["23fd137e13f7dd24"],[],[]]},{"id":"23fd137e13f7dd24","type":"change","z":"2aa78c88.04da44","name":"Set Topic Temp","rules":[{"t":"set","p":"topic","pt":"msg","to":"Temperature","tot":"str"}],"x":620,"y":100,"wires":[["71d65c821a231f67"]]},{"id":"27f74b0ccf05dca3","type":"exec","z":"2aa78c88.04da44","command":"awk '{print $1}' /proc/loadavg","addpay":"","append":"","timer":"","winHide":false,"name":"CPU Load","x":390,"y":160,"wires":[["a75ecd76131c54e9"],[],[]]},{"id":"a75ecd76131c54e9","type":"change","z":"2aa78c88.04da44","name":"Set Topic Load","rules":[{"t":"set","p":"topic","pt":"msg","to":"Load","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"($number($trim(payload)) ? $number($trim(payload)) : 0) / ($flowContext(\"cpu_cores\") ? $flowContext(\"cpu_cores\") : 4) * 100.0 ~&gt; $round(2)\t","tot":"jsonata"}],"x":620,"y":160,"wires":[["71d65c821a231f67"]]},{"id":"231f57b96b131413","type":"exec","z":"2aa78c88.04da44","command":"free | awk '/Mem/ {printf(\"%.2f\", $3/$2 * 100.0)}'","addpay":"","append":"","timer":"","winHide":false,"name":"Memory Usage","x":400,"y":280,"wires":[["fe468f39b7e6bb81"],[],[]]},{"id":"fe468f39b7e6bb81","type":"change","z":"2aa78c88.04da44","name":"Set Topic Mem","rules":[{"t":"set","p":"topic","pt":"msg","to":"Memory","tot":"str"}],"x":620,"y":280,"wires":[["71d65c821a231f67"]]},{"id":"450425f381c32b46","type":"exec","z":"2aa78c88.04da44","command":"df -h / | awk 'NR==2 {print $5}' | tr -d '%' | awk '{print $1 + 0}'","addpay":"","append":"","timer":"","winHide":false,"name":"Disk Usage","x":390,"y":400,"wires":[["49baac92701386dd"],[],[]]},{"id":"49baac92701386dd","type":"change","z":"2aa78c88.04da44","name":"Set Topic Disk","rules":[{"t":"set","p":"topic","pt":"msg","to":"Disk","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"$trim(payload)","tot":"jsonata"}],"x":620,"y":400,"wires":[["71d65c821a231f67"]]},{"id":"01694ddd54ec6a73","type":"exec","z":"2aa78c88.04da44","command":"awk '{print $1}' /proc/uptime","addpay":"","append":"","timer":"","winHide":false,"name":"Uptime","x":380,"y":340,"wires":[["198a0c0ac2416c0c"],[],[]]},{"id":"198a0c0ac2416c0c","type":"change","z":"2aa78c88.04da44","name":"Set Topic Uptime","rules":[{"t":"set","p":"topic","pt":"msg","to":"Uptime","tot":"str"},{"t":"set","p":"payload","pt":"msg","to":"($number($trim(payload)) ? $number($trim(payload)) : 0) / 3600 ~&gt; $round(2)","tot":"jsonata"}],"x":630,"y":340,"wires":[["71d65c821a231f67"]]},{"id":"71d65c821a231f67","type":"join","z":"2aa78c88.04da44","name":"Join Metrics","mode":"manual","build":"object","property":"payload","timeout":"10","count":"5","x":890,"y":260,"wires":[["a7f8cf77487b9a83","891b1b27.c66998","30378886.4cc918","500cb64f.5bd7c8","70e60250.56125c","2280e8e0.31af58","f70a49af60753879","26b5ccd1c2d785e9"]]},{"id":"a7f8cf77487b9a83","type":"function","z":"2aa78c88.04da44","name":"Format CSV","func":"let ts = moment().utc().format('YYYY.MM.DD HH:mm:ss');\nlet p = msg.payload;\nlet row = `${ts},${p.Temperature},${p.Load},${p.Memory},${p.Uptime},${p.Disk}`;\nmsg.payload = row;\nreturn msg;","outputs":1,"timeout":"","noerr":0,"initialize":"","finalize":"","libs":[{"var":"moment","module":"moment"}],"x":1130,"y":360,"wires":[["375bd16453cc4dd0"]]},{"id":"375bd16453cc4dd0","type":"file","z":"2aa78c88.04da44","name":"Append CSV","filename":"/home/ubuntu/uno220_stat.csv","filenameType":"str","appendNewline":true,"createDir":true,"overwriteFile":"false","x":1330,"y":360,"wires":[[]]},{"id":"8f5767ef7b5ad18c","type":"change","z":"2aa78c88.04da44","name":"","rules":[{"t":"set","p":"payload","pt":"msg","to":"Timestamp,Temperature,Load,Memory,Uptime,Disk","tot":"str"}],"action":"","property":"","from":"","to":"","reg":false,"x":1140,"y":400,"wires":[["6aef7d561dd3b777"]]},{"id":"3668be62b36e7593","type":"inject","z":"2aa78c88.04da44","name":"Clear","props":[{"p":"payload"},{"p":"topic","vt":"str"}],"repeat":"60","crontab":"","once":true,"onceDelay":0.1,"topic":"","payload":"","payloadType":"date","x":950,"y":400,"wires":[["8f5767ef7b5ad18c"]]},{"id":"6aef7d561dd3b777","type":"file","z":"2aa78c88.04da44","name":"Clear CSV","filename":"/home/ubuntu/uno220_stat.csv","filenameType":"str","appendNewline":true,"createDir":false,"overwriteFile":"true","encoding":"none","x":1330,"y":400,"wires":[[]]},{"id":"891b1b27.c66998","type":"ui_gauge","z":"2aa78c88.04da44","name":"","group":"dafb9311.e6497","order":1,"width":6,"height":4,"gtype":"gage","title":"Temperature","label":"","format":"{{msg.payload.Temperature}}°C","min":0,"max":"100","colors":["#00b500","#e6e600","#ca3838"],"seg1":"","seg2":"","diff":false,"className":"","x":1130,"y":120,"wires":[]},{"id":"30378886.4cc918","type":"ui_template","z":"2aa78c88.04da44","group":"dafb9311.e6497","name":"CPU Load","order":3,"width":6,"height":2,"format":"&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n    &lt;b&gt;CPU Load:&lt;/b&gt;\n    &lt;div class=\"w3-light-grey w3-xlarge w3-border w3-round-medium\"&gt;\n        &lt;div class=\"w3-container w3-green w3-round-medium\" style=\"width:{{msg.payload.Load}}%;color: #000!important;\"&gt;{{msg.payload.Load}}%&lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;","storeOutMessages":true,"fwdInMessages":true,"resendOnRefresh":true,"templateScope":"local","className":"","x":1130,"y":160,"wires":[[]]},{"id":"500cb64f.5bd7c8","type":"ui_gauge","z":"2aa78c88.04da44","name":"","group":"d597c1ca.fe019","order":1,"width":6,"height":4,"gtype":"gage","title":"Memory Usage","label":"","format":"{{msg.payload.Memory}}%","min":0,"max":"100","colors":["#00b500","#e6e600","#ca3838"],"seg1":"","seg2":"","diff":false,"className":"","x":1140,"y":200,"wires":[]},{"id":"70e60250.56125c","type":"ui_text","z":"2aa78c88.04da44","group":"d597c1ca.fe019","order":2,"width":6,"height":1,"name":"","label":"Uptime","format":"{{msg.payload.Uptime}}hour(s)","layout":"row-center","className":"","style":false,"font":"","fontSize":"","color":"#000000","x":1120,"y":240,"wires":[]},{"id":"2280e8e0.31af58","type":"ui_template","z":"2aa78c88.04da44","group":"d597c1ca.fe019","name":"Disk Usage","order":3,"width":6,"height":2,"format":"&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n    &lt;b&gt;Disk Usage:&lt;/b&gt;\n    &lt;div class=\"w3-light-grey w3-xlarge w3-border w3-round-medium\"&gt;\n        &lt;div class=\"w3-container w3-green w3-round-medium\" style=\"width:{{msg.payload.Disk}}%;color: #000!important;\"&gt;{{msg.payload.Disk}}%&lt;/div&gt;\n    &lt;/div&gt;\n&lt;/div&gt;","storeOutMessages":true,"fwdInMessages":true,"resendOnRefresh":true,"templateScope":"local","className":"","x":1130,"y":320,"wires":[[]]},{"id":"d204093578cae4b4","type":"change","z":"2aa78c88.04da44","name":"Store Cores","rules":[{"t":"set","p":"cpu_cores","pt":"flow","to":"$number($trim(payload)) ? $number($trim(payload)) : 4","tot":"jsonata"}],"action":"","property":"","from":"","to":"","reg":false,"x":610,"y":220,"wires":[[]]},{"id":"ebf66d26260831f1","type":"inject","z":"2aa78c88.04da44","name":"Init 3s","props":[{"p":"payload"},{"p":"topic","vt":"str"}],"repeat":"","crontab":"","once":true,"onceDelay":"3","topic":"","payload":"","payloadType":"str","x":190,"y":180,"wires":[["f1188809e56ab2de"]]},{"id":"f70a49af60753879","type":"debug","z":"2aa78c88.04da44","name":"Debug","active":true,"tosidebar":true,"console":false,"tostatus":false,"complete":"payload","targetType":"msg","statusVal":"","statusType":"auto","x":1110,"y":80,"wires":[]},{"id":"26b5ccd1c2d785e9","type":"ui_template","z":"2aa78c88.04da44","group":"dafb9311.e6497","name":"Spacer","order":2,"width":0,"height":0,"format":"&lt;link rel=\"stylesheet\" href=\"https://www.w3schools.com/w3css/4/w3.css\"&gt;\n&lt;div&gt;\n&lt;/div&gt;","storeOutMessages":true,"fwdInMessages":true,"resendOnRefresh":true,"templateScope":"local","className":"","x":1120,"y":280,"wires":[[]]},{"id":"dafb9311.e6497","type":"ui_group","name":"Temperature Group","tab":"d7c34f92.385aa","order":1,"disp":false,"width":6,"collapse":false,"className":""},{"id":"d597c1ca.fe019","type":"ui_group","name":"Memory Group","tab":"d7c34f92.385aa","order":2,"disp":false,"width":6,"collapse":false,"className":""},{"id":"d7c34f92.385aa","type":"ui_tab","name":"UNO-220","icon":"dashboard","disabled":false,"hidden":false},{"id":"11c630d0f7478e8b","type":"global-config","env":[],"modules":{"node-red-dashboard":"3.6.6"}}]
 </code></pre>
-<h3 id="534-penjelasan-flow">5.3.4 Penjelasan Flow</h3>
+</li>
+<li>
+<p><strong>Penjelasan Flow</strong></p>
 <ul>
 <li><strong>Inject node</strong>: trigger setiap 10 detik.</li>
 <li><strong>Exec nodes</strong>: jalankan perintah Linux untuk ambil metrik.</li>
@@ -630,10 +627,14 @@ node-red-log
 <li><strong>Dashboard nodes</strong>: gauge untuk Temp, Load, Memory, Disk; text untuk Uptime.</li>
 </ul>
 <p><strong>Catatan:</strong> File CSV berfungsi sebagai buffer sementara, sedangkan trending historis sepenuhnya ditangani oleh Rapid SCADA.</p>
-<h3 id="535-akses-dashboard">5.3.5 Akses Dashboard</h3>
-<p>Buka:<br>
+</li>
+<li>
+<p><strong>Akses Dashboard</strong><br>
+Buka:<br>
 <code>http://&lt;ip&gt;:1880/ui</code></p>
-<h3 id="536-troubleshooting">5.3.6 Troubleshooting</h3>
+</li>
+<li>
+<p><strong>Troubleshooting</strong></p>
 <ul>
 <li>Jika <code>vcgencmd</code> tidak tersedia di Ubuntu, flow otomatis fallback ke <code>/sys/class/thermal/thermal_zone0/temp</code>.</li>
 <li>Jika <code>join</code> timeout, naikkan <code>timeout</code> ke 15 detik.</li>
@@ -641,23 +642,32 @@ node-red-log
 </code></pre>
 </li>
 </ul>
-<h3 id="54-indikator-heartbeat-led-pl1-dengan-node%E2%80%91red">5.4 Indikator Heartbeat LED PL1 dengan Node‑RED</h3>
+</li>
+</ol>
+<h3 id="64-indikator-heartbeat-led-pl1-dengan-node%E2%80%91red">6.4 Indikator Heartbeat LED PL1 dengan Node‑RED</h3>
 <p>Untuk memastikan Node‑RED service aktif sekaligus memverifikasi sistem operasi berjalan normal, LED PL1 pada UNO‑220 dapat digunakan sebagai indikator heartbeat dengan pola berkedip periodik.</p>
-<h4 id="541-flow-lengkap">5.4.1 Flow Lengkap</h4>
-<p>Flow berikut mengendalikan LED PL1 (GPIO12, pin 32) agar berkedip dengan siklus penuh: 2 detik ON dan 2 detik OFF. Langkah import sama seperti JSON monitoring pada seksi 5.3.</p>
+<ol>
+<li>
+<p><strong>Flow Lengkap</strong><br>
+Flow berikut mengendalikan LED PL1 (GPIO12, pin 32) agar berkedip dengan siklus penuh: 2 detik ON dan 2 detik OFF. Langkah import sama seperti JSON monitoring pada seksi 6.3.</p>
 <pre><code class="language-json">[{"id":"659d98c5338c2aa4","type":"inject","z":"2aa78c88.04da44","name":"Blink Trigger","props":[{"p":"payload"}],"repeat":"2","crontab":"","once":false,"onceDelay":0.1,"topic":"","x":200,"y":480,"wires":[["5a0f6bca78144bc7"]]},{"id":"5a0f6bca78144bc7","type":"delay","z":"2aa78c88.04da44","name":"1s Delay","pauseType":"rate","timeout":"1","timeoutUnits":"seconds","rate":"1","nbRateUnits":"1","rateUnits":"second","randomFirst":"1","randomLast":"5","randomUnits":"seconds","drop":false,"allowrate":false,"outputs":1,"x":400,"y":480,"wires":[["ca0e3b91a72ed37c"]]},{"id":"ca0e3b91a72ed37c","type":"change","z":"2aa78c88.04da44","name":"Toggle LED State (0/1)","rules":[{"t":"set","p":"payload","pt":"msg","to":"$number($not($flowContext(\"led_state\") ? $flowContext(\"led_state\") : 0))","tot":"jsonata"},{"t":"set","p":"led_state","pt":"flow","to":"payload","tot":"msg"}],"action":"","property":"","from":"","to":"","reg":false,"x":620,"y":480,"wires":[["c23f25c34982533f"]]},{"id":"c23f25c34982533f","type":"rpi-gpio out","z":"2aa78c88.04da44","name":"LED PL1 Output","pin":"12","set":"","level":"msg.payload","freq":"","out":"out","bcm":true,"x":860,"y":480,"wires":[]},{"id":"b1892e385a988550","type":"global-config","env":[],"modules":{"node-red-node-pi-gpio":"2.0.6"}}]
 </code></pre>
-<h4 id="542-penjelasan-flow">5.4.2 Penjelasan Flow</h4>
+</li>
+<li>
+<p><strong>Penjelasan Flow</strong></p>
 <ul>
 <li><strong>Inject node</strong>: memicu alur setiap 2 detik.</li>
 <li><strong>Delay node</strong>: menahan pesan 1 detik untuk menjaga pola stabil.</li>
 <li><strong>Change node</strong>: membalik nilai 0/1 dengan menyimpan status terakhir di flow context <code>led_state</code>.</li>
 <li><strong>rpi-gpio out</strong>: mengirim nilai 0/1 ke GPIO12 (pin 32), yang terhubung ke LED PL1.</li>
 </ul>
-<h4 id="543-hasil">5.4.3 Hasil</h4>
-<p>LED PL1 berkedip dengan siklus penuh: 2 detik ON dan 2 detik OFF, menandakan Node‑RED dan sistem operasi berjalan normal.<br>
-Pola blink dapat diubah (misalnya ON 200 ms, OFF 800 ms) dengan menyesuaikan konfigurasi inject/delay.</p>
-<h4 id="544-troubleshooting">5.4.4 Troubleshooting</h4>
+</li>
+<li>
+<p><strong>Hasil</strong><br>
+LED PL1 berkedip dengan siklus penuh: 2 detik ON dan 2 detik OFF, menandakan  Node‑RED dan sistem operasi berjalan normal. Pola blink dapat diubah (misalnya ON 200 ms, OFF 800 ms) dengan menyesuaikan konfigurasi inject/delay.</p>
+</li>
+<li>
+<p><strong>Troubleshooting</strong></p>
 <ul>
 <li><strong>LED tidak berkedip:</strong> Pastikan udev rules dan grup gpio aktif (lihat 4.5), lalu uji manual:
 <ul>
@@ -666,73 +676,11 @@ Pola blink dapat diubah (misalnya ON 200 ms, OFF 800 ms) dengan menyesuaikan kon
 </ul>
 </li>
 <li><strong>Izin Node‑RED GPIO:</strong> Pastikan paket python3‑rpi.gpio terpasang dan user service Node‑RED termasuk grup gpio.</li>
-<li><strong>Mapping pin:</strong> Verifikasi GPIO12 berada di gpiochip0 dan terhubung ke PL1:
-<ul>
+<li><strong>Mapping pin:</strong> Verifikasi GPIO12 berada di gpiochip0 dan terhubung ke PL1:</li>
 <li>gpioinfo | grep -E "gpiochip0|BCM12"</li>
 </ul>
 </li>
-</ul>
-<hr>
-<h2 id="6-instalasi-zerotier">6. Instalasi ZeroTier</h2>
-<p>ZeroTier digunakan untuk menyediakan konektivitas aman antar perangkat tanpa perlu membuka port publik. UNO‑220 akan bergabung ke jaringan virtual ZeroTier dan dapat diakses menggunakan alamat IP internal ZeroTier.</p>
-<h3 id="61-instalasi-paket">6.1 Instalasi Paket</h3>
-<pre><code class="language-bash">curl -s https://install.zerotier.com | sudo bash
-sudo systemctl enable zerotier-one
-sudo systemctl start zerotier-one
-</code></pre>
-<p>Verifikasi instalasi:</p>
-<pre><code class="language-bash">zerotier-cli info
-</code></pre>
-<p>Output normal: <code>200 info &lt;node_id&gt; &lt;version&gt; ONLINE</code></p>
-<h3 id="62-join-ke-network">6.2 Join ke Network</h3>
-<pre><code class="language-bash">sudo zerotier-cli join &lt;network_id&gt;
-</code></pre>
-<ul>
-<li><code>&lt;network_id&gt;</code> adalah ID jaringan yang sudah dibuat di controller (publik atau self‑hosted).</li>
-<li>Cek status:<pre><code class="language-bash">zerotier-cli listnetworks
-</code></pre>
-</li>
-</ul>
-<h3 id="63-otorisasi-node">6.3 Otorisasi Node</h3>
-<ul>
-<li><strong>Jika menggunakan controller publik (<code>my.zerotier.com</code>)</strong>: login ke dashboard, pilih network, lalu authorize <code>&lt;node_id&gt;</code>.</li>
-<li><strong>Jika menggunakan controller self‑hosted</strong>: lakukan otorisasi node melalui web UI atau API controller internal. Pastikan node muncul di daftar anggota network, lalu tandai sebagai authorized.</li>
-</ul>
-<h3 id="64-verifikasi-koneksi">6.4 Verifikasi Koneksi</h3>
-<ul>
-<li>Cek interface ZeroTier:<pre><code class="language-bash">ip addr show zt*
-</code></pre>
-</li>
-<li>Gunakan IP ZeroTier untuk SSH:<pre><code class="language-bash">ssh ubuntu@&lt;ip_zerotier&gt;
-</code></pre>
-</li>
-<li>Uji konektivitas antar node:<pre><code class="language-bash">ping &lt;ip_zerotier_peer&gt;
-</code></pre>
-</li>
-</ul>
-<h3 id="65-catatan-keamanan">6.5 Catatan Keamanan</h3>
-<ul>
-<li>Gunakan <strong>IP ZeroTier</strong> untuk remote SSH, bukan IP publik.</li>
-<li>Pastikan firewall (<code>ufw</code>) hanya membuka port yang diperlukan (22, 80, 443, 1880, 10002).</li>
-<li>ZeroTier menggunakan UDP port 9993; pastikan tidak diblokir di perangkat maupun firewall jaringan.</li>
-<li>Untuk self‑hosted controller, pastikan server controller terlindungi dengan TLS/HTTPS dan hanya dapat diakses oleh admin.</li>
-</ul>
-<h3 id="66-troubleshooting">6.6 Troubleshooting</h3>
-<ul>
-<li>Jika join gagal:<pre><code class="language-bash">journalctl -u zerotier-one -f
-</code></pre>
-</li>
-<li>Jika node tidak muncul di controller:
-<ul>
-<li>Pastikan network ID benar.</li>
-<li>Pastikan perangkat dapat menjangkau server controller (cek UDP 9993).</li>
-</ul>
-</li>
-<li>Jika IP ZeroTier tidak muncul:<pre><code class="language-bash">sudo systemctl restart zerotier-one
-zerotier-cli listnetworks
-</code></pre>
-</li>
-</ul>
+</ol>
 <hr>
 <h2 id="7-instalasi-rapid-scada-643-nginx">7. Instalasi Rapid SCADA 6.4.3 &amp; Nginx</h2>
 <p>Di era integrasi OT–IT, <strong>OPC UA telah menjadi de facto standar komunikasi industri modern</strong>, terutama saat sistem perlu terhubung dengan <strong>MES, ERP, maupun platform IIoT</strong>.</p>
@@ -828,10 +776,11 @@ sudo systemctl restart nginx
 <hr>
 <h2 id="8-instalasi-modbus-tcp-to-rtu-gateway">8. Instalasi Modbus TCP to RTU Gateway</h2>
 <p><code>mbusd</code> memungkinkan UNO‑220 menjembatani perangkat Modbus RTU (RS‑232/RS‑485) ke Modbus TCP server. Dengan ini, Node‑RED maupun Rapid SCADA bisa membaca data RTU melalui TCP port 502.</p>
-<h3 id="82-instalasi">8.2 Instalasi</h3>
+<ol>
+<li>
+<p><strong>Instalasi</strong></p>
 <pre><code class="language-bash">sudo apt update
 sudo apt install -y build-essential cmake git
-
 git clone https://github.com/3cky/mbusd.git
 cd mbusd
 mkdir build &amp;&amp; cd build
@@ -839,8 +788,10 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 make
 sudo make install
 </code></pre>
-<h3 id="83-konfigurasi">8.3 Konfigurasi</h3>
-<p>Buat file <code>/etc/mbusd/mbusd-ttyS0.conf</code>:</p>
+</li>
+<li>
+<p><strong>Konfigurasi</strong><br>
+Buat file <code>/etc/mbusd/mbusd-ttyS0.conf</code>:</p>
 <pre><code>device   = /dev/ttyS0
 speed    = 9600
 mode     = 8N1
@@ -855,28 +806,38 @@ timeout  = 60
 logfile  = /var/log/mbusd.log
 verbosity = 2
 </code></pre>
-<h3 id="84-jalankan-sebagai-service">8.4 Jalankan sebagai service</h3>
+</li>
+<li>
+<p><strong>Jalankan sebagai service</strong></p>
 <pre><code class="language-bash">sudo systemctl start mbusd@ttyS0.service
 sudo systemctl enable mbusd@ttyS0.service
 sudo systemctl status mbusd@ttyS0.service
 </code></pre>
-<h3 id="85-uji-koneksi">8.5 Uji koneksi</h3>
-<p>Dari host lain:</p>
+</li>
+<li>
+<p><strong>Uji koneksi</strong><br>
+Dari host lain:</p>
 <pre><code class="language-bash">modpoll -m tcp -t 3 -r 1 -c 10 &lt;ip_uno220&gt;
 </code></pre>
 <p>→ Harus mendapat respons register dari slave RTU.</p>
-<h3 id="86-integrasi">8.6 Integrasi</h3>
+</li>
+<li>
+<p><strong>Integrasi</strong></p>
 <ul>
 <li><strong>Node‑RED</strong>: gunakan node <code>node-red-contrib-modbus</code> → Modbus TCP client ke <code>tcp://&lt;ip_uno220&gt;:502</code>.</li>
 <li><strong>Rapid SCADA</strong>: tambahkan channel Modbus TCP pointing ke UNO‑220.</li>
 </ul>
-<h3 id="87-keamanan">8.7 Keamanan</h3>
+</li>
+<li>
+<p><strong>Keamanan</strong></p>
 <ul>
 <li>Batasi akses port 502 hanya dari jaringan ZeroTier:<pre><code class="language-bash">sudo ufw allow from &lt;zerotier_subnet&gt; to any port 502 proto tcp
 </code></pre>
 </li>
 <li>Jangan buka port 502 ke publik.</li>
 </ul>
+</li>
+</ol>
 <hr>
 <h2 id="9-instalasi-scada-grafana-proxy">9. Instalasi Scada Grafana Proxy</h2>
 <p><code>scada-grafana-proxy</code> adalah server proxy ringan berbasis Node.js yang:</p>
@@ -887,7 +848,9 @@ sudo systemctl status mbusd@ttyS0.service
 <li>Mendukung konfigurasi berbasis environment (<code>.env</code>).</li>
 <li>Menyediakan <strong>health check endpoint</strong> untuk monitoring.</li>
 </ul>
-<h3 id="92-instalasi">9.2 Instalasi</h3>
+<ol start="2">
+<li>
+<p><strong>Instalasi</strong></p>
 <pre><code class="language-bash"># Clone repo
 git clone https://github.com/kumajaya/scada-grafana-proxy.git
 cd scada-grafana-proxy
@@ -895,8 +858,10 @@ cd scada-grafana-proxy
 # Install dependensi
 npm install
 </code></pre>
-<h3 id="93-konfigurasi">9.3 Konfigurasi</h3>
-<p>Salin contoh environment:</p>
+</li>
+<li>
+<p><strong>Konfigurasi</strong><br>
+Salin contoh environment:</p>
 <pre><code class="language-bash">cp env-example .env
 nano .env
 </code></pre>
@@ -910,13 +875,17 @@ SCADA_PASSWORD=admin
 SCADA_ARCHIVEBIT_THRESHOLD=24
 SCADA5_BASE_URL=http://localhost/grafanadataprovider
 </code></pre>
-<h3 id="94-jalankan">9.4 Jalankan</h3>
+</li>
+<li>
+<p><strong>Jalankan</strong></p>
 <pre><code class="language-bash">npm start
 </code></pre>
 <p>Akses proxy di:<br>
 <code>http://&lt;ip_uno220&gt;:3000</code></p>
-<h3 id="95-systemd-service">9.5 Systemd Service</h3>
-<p>File <code>scada-grafana-proxy.service</code> sudah disediakan. Install:</p>
+</li>
+<li>
+<p><strong>Systemd Service</strong><br>
+File <code>scada-grafana-proxy.service</code> sudah disediakan. Install:</p>
 <pre><code class="language-bash">sudo cp scada-grafana-proxy.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable scada-grafana-proxy
@@ -928,24 +897,34 @@ sudo systemctl start scada-grafana-proxy
 <p>Uji health check:</p>
 <pre><code class="language-bash">curl -u admin:admin http://&lt;ip_uno220&gt;:3000/health
 </code></pre>
-<h3 id="96-integrasi-dengan-grafana">9.6 Integrasi dengan Grafana</h3>
-<ol>
+</li>
+<li>
+<p><strong>Integrasi dengan Grafana</strong></p>
+<ul>
 <li>Tambahkan <strong>Infinity Datasource</strong> di Grafana.</li>
 <li>Atur URL ke <code>http://&lt;ip_uno220&gt;:3000</code>.</li>
 <li>Gunakan Basic Auth sesuai <code>.env</code>.</li>
 <li>Query data Rapid SCADA langsung dari Grafana dashboard.</li>
-</ol>
-<h3 id="97-keamanan">9.7 Keamanan</h3>
+</ul>
+</li>
+<li>
+<p><strong>Keamanan</strong></p>
 <ul>
 <li>Gunakan <strong>UFW</strong> untuk membatasi akses port 3000 hanya dari host Grafana:<pre><code class="language-bash">sudo ufw allow from &lt;ip_grafana&gt; to any port 3000 proto tcp
 </code></pre>
 </li>
 <li>Jika Grafana berjalan di server terpisah, gunakan <strong>ZeroTier</strong> agar komunikasi tetap terenkripsi.</li>
 </ul>
+</li>
+</ol>
 <p>Dengan penambahan ini, UNO‑220 berevolusi dari sekadar gateway dan server SCADA menjadi <strong>penyedia data terintegrasi untuk Grafana maupun ERP</strong>. Membawa visibilitas real‑time melalui dashboard modern dan tinjauan histori kinerja secara komprehensif, sementara sistem ERP menerima aliran data SCADA yang sudah dinormalisasi. Alur ini tidak hanya memperkaya analitik dan pengambilan keputusan, tetapi juga memastikan integrasi berlangsung dengan cara yang <strong>aman, konsisten, dan mudah</strong>.</p>
 <hr>
 <h2 id="10-hardening-optimisasi">10. Hardening &amp; Optimisasi</h2>
 <h3 id="101-ssh-secure-shell">10.1 SSH (Secure Shell)</h3>
+<blockquote>
+<p><strong>BIG FAT WARNING: Risiko Penguncian Akses!</strong><br>
+Langkah ini meningkatkan keamanan dengan mengandalkan kunci SSH saja, tetapi berisiko tinggi: Kehilangan kunci pribadi dapat menyebabkan penguncian akses total tanpa password fallback. Pemulihan memerlukan akses fisik ke serial console.</p>
+</blockquote>
 <ol>
 <li>
 <p><strong>Generate Key di Host Admin</strong></p>
@@ -988,6 +967,10 @@ PasswordAuthentication no
 </li>
 </ol>
 <h3 id="102-firewall-ufw">10.2 Firewall (UFW)</h3>
+<blockquote>
+<p><strong>BIG FAT WARNING: Hindari Blokir Akses Esensial!</strong><br>
+Firewall ini membatasi lalu lintas masuk, tetapi berisiko tinggi: Port ZeroTier (9993/UDP) atau SSH (22) yang terblokir dapat menyebabkan kehilangan akses remote total. Pemulihan memerlukan akses fisik ke serial console.</p>
+</blockquote>
 <p>Konfigurasi dasar:</p>
 <pre><code class="language-bash">sudo ufw default deny incoming
 sudo ufw default allow outgoing
@@ -1004,6 +987,10 @@ sudo ufw enable
 </code></pre>
 <p>→ Hanya 22, 80, 443, 1880, 9993, 10002 yang aktif.</p>
 <h3 id="103-fail2ban-proteksi-ssh">10.3 Fail2Ban (Proteksi SSH)</h3>
+<blockquote>
+<p><strong>BIG FAT WARNING: Hindari Penguncian Akses Sendiri!</strong><br>
+Tool ini melindungi dari serangan brute-force pada SSH, tetapi berisiko: IP admin atau tim bisa terblokir sementara (default 10 menit) jika login gagal berulang. Ini dapat mengganggu akses remote di plant.</p>
+</blockquote>
 <ol>
 <li>Instalasi:<pre><code class="language-bash">sudo apt install fail2ban -y
 </code></pre>
@@ -1027,6 +1014,10 @@ Tambahkan <code>ignoreip = 127.0.0.1/8 &lt;your_ip&gt;</code> untuk whitelist.</
 </li>
 </ol>
 <h3 id="104-auto-security-updates">10.4 Auto Security Updates</h3>
+<blockquote>
+<p><strong>BIG FAT WARNING: Keseimbangan Keamanan vs Stabilitas!</strong><br>
+Hold kernel mencegah upgrade kernel otomatis yang memerlukan reboot, menjaga uptime, tetapi berisiko: Device rentan terhadap patch keamanan baru jika di-hold terlalu lama. Pantau manual untuk update kritis.</p>
+</blockquote>
 <ol>
 <li>Instalasi:<pre><code class="language-bash">sudo apt install unattended-upgrades -y
 </code></pre>
@@ -1040,6 +1031,9 @@ Pilih <strong>Yes</strong>.</li>
 </code></pre>
 </li>
 <li>Uji:<pre><code class="language-bash">sudo unattended-upgrades --dry-run
+</code></pre>
+</li>
+<li>Untuk mencegah upgrade kernel otomatis yang memerlukan reboot, jalankan:<pre><code class="language-bash">sudo apt-mark hold linux-image-* raspberrypi-kernel
 </code></pre>
 </li>
 </ol>
@@ -1062,7 +1056,88 @@ Isi:<pre><code>@daily /usr/sbin/hwclock -w &amp;&amp; logger "RTC updated from s
 <p>Matikan service yang tidak diperlukan:</p>
 <pre><code class="language-bash">sudo systemctl disable bluetooth avahi-daemon
 </code></pre>
-<h3 id="107-verifikasi-hardening">10.7 Verifikasi Hardening</h3>
+<h3 id="107-disable-usb-boot-optional-keamanan-fisik-untuk-lapangan-rentan">10.7 Disable USB Boot (Optional, Keamanan Fisik untuk Lapangan Rentan)</h3>
+<blockquote>
+<p><strong>BIG FAT WARNING: Lakukan dengan Hati-hati!</strong><br>
+Langkah ini meningkatkan keamanan fisik dengan membatasi jalur boot ke kartu SD saja, tetapi berisiko tinggi: Kesalahan konfigurasi EEPROM dapat menyebabkan kegagalan boot total. Pemulihan memerlukan akses fisik dan flashing ulang bootloader menggunakan Raspberry Pi Imager.</p>
+</blockquote>
+<p>Disarankan untuk selalu menyertakan SD card dalam urutan BOOT_ORDER. Hal ini untuk memastikan dapat melakukan recovery dengan mudah menggunakan image rescue di microSD, jika konfigurasi boot lain gagal.</p>
+<p>Untuk mencegah perangkat <strong>boot dari USB eksternal</strong> (risiko tampering di lapangan), lakukan konfigurasi EEPROM bootloader agar hanya mengizinkan boot dari microSD.</p>
+<ol>
+<li>
+<p><strong>Install tool EEPROM</strong></p>
+<pre><code class="language-bash">sudo apt install rpi-eeprom -y
+</code></pre>
+</li>
+<li>
+<p><strong>Edit konfigurasi EEPROM</strong></p>
+<pre><code class="language-bash">sudo rpi-eeprom-config --edit
+</code></pre>
+<p>Ubah atau tambahkan baris:</p>
+<pre><code class="language-ini">BOOT_ORDER=0xf41
+</code></pre>
+<ul>
+<li><code>0xF41</code> → SD → USB → ulangi (default modern Pi, aman karena SD tetap ada).</li>
+<li><code>0xF0</code>  → hanya SD card (paling ketat, tanpa fallback).</li>
+</ul>
+<p>Simpan dan keluar dari editor.</p>
+</li>
+<li>
+<p><strong>Update EEPROM &amp; reboot</strong></p>
+<pre><code class="language-bash">sudo rpi-eeprom-update -a
+sudo reboot
+</code></pre>
+</li>
+<li>
+<p><strong>Verifikasi konfigurasi</strong></p>
+<pre><code class="language-bash">sudo vcgencmd bootloader_config | grep BOOT_ORDER
+</code></pre>
+<p>Output harus menampilkan <code>0xF41</code> atau <code>0xF0</code>.</p>
+</li>
+</ol>
+<p><strong>Contoh nilai BOOT_ORDER umum:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Nilai</th>
+<th>Urutan Boot</th>
+<th>Catatan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0xF41</code></td>
+<td>SD → USB → ulangi</td>
+<td>Default modern Pi, aman</td>
+</tr>
+<tr>
+<td><code>0xF14</code></td>
+<td>USB → SD → ulangi</td>
+<td>Masih aman, SD tetap ada</td>
+</tr>
+<tr>
+<td><code>0xF461</code></td>
+<td>SD → NVMe → USB → ulangi</td>
+<td>Cocok untuk CM4/Pi 5 dengan SSD</td>
+</tr>
+<tr>
+<td><code>0xF21</code></td>
+<td>SD → Network (TFTP) → ulangi</td>
+<td>Aman untuk network boot, SD tetap ada</td>
+</tr>
+<tr>
+<td><code>0xF0</code></td>
+<td>SD only</td>
+<td>Paling ketat, tanpa fallback</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Catatan:</strong></p>
+<ul>
+<li>Gunakan microSD industrial‑grade, karena setelah USB boot dinonaktifkan, recovery hanya bisa dilakukan via <strong>Raspberry Pi Imager</strong> dengan flashing ulang bootloader image.</li>
+<li>Jika update EEPROM gagal, fallback ke metode resmi Raspberry Pi Imager untuk restore bootloader.</li>
+</ul>
+<h3 id="108-verifikasi-hardening">10.8 Verifikasi Hardening</h3>
 <ul>
 <li>SSH hanya menerima key‑based login:<pre><code class="language-bash">ssh ubuntu@&lt;ip_zerotier&gt;
 </code></pre>
@@ -1080,7 +1155,7 @@ Isi:<pre><code>@daily /usr/sbin/hwclock -w &amp;&amp; logger "RTC updated from s
 </code></pre>
 </li>
 </ul>
-<h3 id="108-troubleshooting">10.8 Troubleshooting</h3>
+<h3 id="109-troubleshooting">10.9 Troubleshooting</h3>
 <ul>
 <li><strong>Fail2Ban gagal start</strong> → cek log:<pre><code class="language-bash">sudo journalctl -u fail2ban
 </code></pre>
@@ -1390,48 +1465,50 @@ gpioset 0 12=0   # LED OFF
 <hr>
 <h2 id="14-timeline">14. Timeline</h2>
 <div class="mermaid" style="width:110%;">
-  timeline
-      title Timeline Deployment UNO-220 (Hari 1–3)
-      section Hari 1 - Dasar
-        2025-11-03 : Persiapan perangkat keras (UNO-220, microSD industrial, RTC, TPM, Expander)
-        2025-11-03 : Flash Ubuntu Server 25.10 ke microSD + enable SSH
-        2025-11-03 : Boot pertama, login SSH, ganti password, set timezone
-        2025-11-03 : Update sistem (apt update/upgrade, autoremove, clean)
-      section Hari 2 - Struktur
-        2025-11-04 : Kompilasi &amp; pasang overlay RTC, TPM, Expander
-        2025-11-04 : Edit config.txt, reboot, uji RTC/I2C/TPM
-        2025-11-04 : Setup GPIO rules + grup gpio, uji LED PL1 manual
-        2025-11-04 : Disable serial console untuk ttyS0 (Modbus RTU)
-        2025-11-04 : Konfigurasi EEPROM boot order (disable USB boot)
-      section Hari 3 - Tools
-        2025-11-05 : Instal Node-RED + konfigurasi logging
-        2025-11-05 : Monitoring sistem &amp; LED heartbeat
-        2025-11-05 : Instal mbusd (Modbus TCP&lt;-&gt;RTU gateway)
-        2025-11-05 : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy
+    ---
+    config:
+      theme: base
+    ---
+    timeline
+        title Timeline Deployment UNO-220 (Hari 1–2)
+        section Hari 1 - Dasar dan Strukturisasi
+          2025-11-03 : Persiapan perangkat keras dan verifikasi PoE
+            : Casing industrial UNO-220, microSD industrial, Raspberry Pi 4 Model B
+          2025-11-03 : Flash Ubuntu Server 25.10 ke microSD + enable SSH
+            : Boot pertama, login SSH, ganti password, set timezone
+          2025-11-03 : Update sistem + kompilasi &amp; pasang overlay RTC, TPM, Expander
+            : Edit config.txt, reboot, uji RTC/I2C/TPM
+          2025-11-03 : Disable serial console untuk ttyS0 (Modbus RTU)
+            : Instal mbusd (Modbus TCP - RTU gateway, eksklusif RS-485)
+        section Hari 2 - Tools dan Integrasi
+          2025-11-04 : Setup GPIO rules + grup gpio : Uji LED PL1 manual
+          2025-11-04 : Instal Node-RED + konfigurasi logging
+            : Setup monitoring sistem + LED heartbeat via Node-RED flow
+          2025-11-04 : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy + test curl localhost
+            : Setup trend monitoring sistem
+          2025-11-04 : Instal SCADA Grafana proxy + verif JSON endpoint
+            : Instal ZeroTier VPN overlay + test ping peer
 </div>
 <div class="mermaid" style="width:110%;">
-  ---
-  config:
-    theme: mc
-  ---
-  timeline
-      title Timeline Deployment UNO-220 (Hari 4–7)
-      section Hari 4 - Integrasi
-        2025-11-06 : Integrasi ZeroTier VPN overlay
-        2025-11-06 : Integrasi Grafana/ERP via proxy
-      section Hari 5 - Hardening
-        2025-11-07 : Setup SSH key-based login, disable password login
-        2025-11-07 : Konfigurasi UFW + Fail2Ban + auto updates
-        2025-11-07 : Setup cron RTC sync + disable service tidak terpakai
-      section Hari 6 - Backup &amp; Validasi
-        2025-11-08 : Buat script backup_routine.sh + cron
-        2025-11-08 : Uji recovery Node-RED/SCADA/ZeroTier
-        2025-11-08 : Jalankan checklist audit end-to-end
-      section Hari 7 - Deployment
-        2025-11-09 : Pasang fisik UNO-220 di panel lapangan
-        2025-11-09 : Hubungkan ke catu daya PoE+/DC, label unit &amp; IP ZeroTier
-        2025-11-09 : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana
-        2025-11-09 : Dokumentasi commissioning + serah terima
+    ---
+    config:
+      theme: base
+    ---
+    timeline
+        title Timeline Deployment UNO-220 (Hari 3–5)
+        section Hari 3 - Hardening
+          2025-11-05 : Setup SSH key-based login, disable password login
+          2025-11-05 : Konfigurasi UFW + Fail2Ban
+          2025-11-05 : Setup RTC sync + auto updates unattended-upgrades + hold kernel
+        section Hari 4 - Backup &amp; Validasi
+          2025-11-06 : Disable service tidak terpakai : EEPROM boot order
+          2025-11-06 : Buat script backup_routine.sh + cron : Uji rsync + logrotate
+          2025-11-06 : Uji recovery Node-RED/SCADA/ZeroTier : Checklist audit end-to-end
+        section Hari 5 - Deployment
+          2025-11-07 : Pasang fisik UNO-220 di panel lapangan
+            : Koneksi RS-485 + ethernet + power PoE/DC
+          2025-11-07 : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana full
+            : Dokumentasi dan handover checklist
 </div>
 <hr>
 <h2 id="15-penutup">15. Penutup</h2>

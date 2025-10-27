@@ -224,7 +224,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
       </div>
       
       <div class="force-inline post-authors">
-        <span class="reading-time">28 min read</span>
+        <span class="reading-time">29 min read</span>
       </div>
       
     </div>
@@ -260,7 +260,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 </aside>
 <!--kg-card-end: html-->
 <h2 id="1-pendahuluan">1. Pendahuluan</h2>
-<p>Dokumentasi ini menyajikan panduan menyeluruh untuk menyiapkan <strong>Advantech UNO-220-P4N2AE</strong> — sebuah industrial <strong>gateway kit</strong> (chassis + HAT I/O) yang dirancang untuk dipasangi Raspberry Pi 4 Model B — agar siap berfungsi sebagai <strong>edge device industri</strong>.</p>
+<p>Dokumentasi ini menyajikan panduan lengkap untuk menyiapkan <strong>Advantech UNO-220-P4N2AE</strong> — sebuah industrial <strong>gateway kit</strong> (chassis + HAT I/O) yang dirancang untuk dipasangi Raspberry Pi 4 Model B — agar siap berfungsi sebagai <strong>edge device industri</strong>.</p>
 <p>Panduan ini dirancang untuk memastikan UNO‑220 mampu:</p>
 <ul>
 <li>Beroperasi secara <strong>mandiri di lapangan</strong>, tanpa ketergantungan pada infrastruktur tambahan,</li>
@@ -330,37 +330,37 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 <tbody>
 <tr>
 <td><strong>Main Unit</strong></td>
-<td>Advantech UNO‑220 (Raspberry Pi 4 Model B, IP40, PoE support)</td>
+<td>Advantech UNO‑220 (kit untuk Raspberry Pi 4 Model B, IP40, varian P4N2AE mendukung PoE)</td>
 <td>Form factor industri, rugged, siap dipasang di panel; casing melindungi dari debu &amp; getaran.</td>
 </tr>
 <tr>
 <td><strong>Media Penyimpanan</strong></td>
-<td>MicroSD <strong>industrial‑grade</strong> ≥ 32 GB (Swissbit, Transcend Industrial, Apacer Industrial, Innodisk)</td>
-<td>Endurance tinggi (pSLC/SLC), tahan suhu ekstrem, mencegah korupsi data akibat siklus tulis intensif.</td>
+<td>MicroSD <strong>industrial‑grade</strong> ≥ 32 GB (Swissbit, Transcend, Apacer, Innodisk). Pilih model dengan endurance pSLC/SLC, PLP/ECC bila tersedia.</td>
+<td>Endurance tinggi, tahan suhu ekstrem, mencegah korupsi data akibat siklus tulis intensif.</td>
 </tr>
 <tr>
 <td><strong>Catu Daya</strong></td>
-<td>12–24 VDC atau PoE (varian UNO-220-P4N2AE mendukung PoE). Jika menggunakan PoE,<br /> gunakan sumber yang sesuai (802.3at/PoE+ bila beban total sistem memerlukan lebih daya).</td>
-<td>Perkiraan konsumsi untuk sistem Node-RED + SCADA sangat bergantung pada konfigurasi<br /> (Raspberry Pi 4 model, jumlah addon USB/serial, beban CPU).</td>
+<td>12–24 VDC atau PoE (802.3at/PoE+ bila beban tinggi). Rencanakan margin 20–30% di atas beban terukur.</td>
+<td>Konsumsi bergantung konfigurasi (model RPi4, addon USB/serial, beban CPU).</td>
 </tr>
 <tr>
 <td><strong>RTC</strong></td>
 <td>Epson RX‑8010SJ‑B (dengan battery backup)</td>
-<td>Menjamin timestamp akurat meski tanpa koneksi NTP; penting untuk audit log &amp; histori data.</td>
+<td>Menjamin timestamp akurat meski tanpa NTP; penting untuk audit log &amp; histori data.</td>
 </tr>
 <tr>
 <td><strong>I/O Expander</strong></td>
 <td>TI TCA9554 (alamat I²C 0x27)</td>
-<td>Menambah GPIO untuk kontrol/monitoring eksternal; kompatibel dengan Node‑RED &amp; SCADA.</td>
+<td>Menambah GPIO untuk kontrol/monitoring eksternal.</td>
 </tr>
 <tr>
 <td><strong>TPM</strong></td>
 <td>Infineon OPTIGA TPM SLB9670</td>
-<td>Mendukung secure boot, enkripsi, dan integritas sistem; mencegah tampering di lapangan.</td>
+<td>Mendukung secure boot, enkripsi, integritas sistem.</td>
 </tr>
 <tr>
 <td><strong>Jaringan</strong></td>
-<td>Ethernet LAN (1 GbE) untuk konfigurasi awal; <strong>ZeroTier</strong> untuk manajemen jarak jauh</td>
+<td>Ethernet LAN (1 GbE) untuk konfigurasi awal; <strong>ZeroTier</strong> untuk manajemen jarak jauh.</td>
 <td>Ethernet stabil untuk setup awal; ZeroTier memberi VPN overlay aman tanpa port publik.</td>
 </tr>
 </tbody>
@@ -369,10 +369,14 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 
 <h3 id="22-perangkat-lunak">2.2 Perangkat Lunak</h3>
 <ul>
-<li><strong>Ubuntu Server 25.10 (arm64, kernel 6.17+)</strong> → rilis interim, ini yang sudah tersedia saat artikel ditulis dan untuk produksi jangka panjang akan dilakukan upgrade ke <strong>Ubuntu 26.04 LTS</strong> (rilis 23 April 2026) atau gunakan <strong>Ubuntu 24.04 LTS</strong> yang sudah tersedia.</li>
+<li><strong>Ubuntu Server arm64 terbaru</strong> (contoh: 25.10 dengan kernel 6.17+ saat penulisan).<br />
+Untuk commissioning/testing gunakan rilis interim; untuk produksi gunakan rilis LTS (24.04 LTS yang tersedia, atau 26.04 LTS setelah rilis stabil pada 23 April 2026).</li>
 <li><strong>Tool flashing</strong>: Raspberry Pi Imager atau Balena Etcher → tulis image OS ke microSD.</li>
 <li><strong>Akses jaringan &amp; SSH dari komputer host</strong> → konfigurasi awal headless (tanpa monitor/keyboard).</li>
 </ul>
+<blockquote>
+<p><em>Referensi tambahan:</em> periksa juga <a href="https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi?ref=automation.samatorgroup.com#1-overview">panduan resmi Ubuntu untuk Raspberry Pi</a> untuk memastikan image, kernel, dan metode flashing sesuai dengan rilis terbaru.</p>
+</blockquote>
 <p><strong>Upgrade ke Ubuntu 26.04 LTS</strong><br />
 Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
 <ol>
@@ -389,6 +393,55 @@ Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
 </li>
 </ol>
 <p><strong>Catatan:</strong> Hindari opsi <code>-d</code> (development). Tunggu path resmi Canonical agar kernel &amp; driver ARM64 tetap kompatibel dengan UNO‑220.</p>
+<h3 id="23-struktur-deployment-timeline-5-hari">2.3 Struktur Deployment (Timeline 5 Hari)</h3>
+<p>Untuk memastikan proses commissioning berjalan konsisten dan dapat diaudit, berikut struktur deployment UNO‑220 selama 5 hari. Setiap langkah telah disusun agar modular, dapat direplikasi, dan mendukung validasi bertahap.</p>
+<div class="mermaid" style="width:110%;">
+    ---
+    config:
+      theme: neutral
+    ---
+    timeline
+        title Timeline Deployment UNO-220 (Hari 1–2)
+        section Hari 1 - Dasar dan Strukturisasi
+            2025-11-03 : Persiapan perangkat &amp; verifikasi PoE
+            : UNO-220 casing industrial, microSD pSLC/SLC, Raspberry Pi 4B
+            2025-11-03 : Flash Ubuntu Server 25.10 + aktifkan SSH
+            : Boot awal, login SSH, ubah password, set zona waktu
+            2025-11-03 : Update sistem + pasang overlay RTC, TPM, Expander
+            : Edit config.txt, reboot, uji RTC/I²C/TPM
+            2025-11-03 : Nonaktifkan serial console ttyS0 (untuk RTU)
+            : Instal ZeroTier + join network, uji ping antar node
+        section Hari 2 - Tools dan Integrasi
+            2025-11-04 : Setup GPIO rules + grup gpio
+            : Uji LED PL1 manual via gpioset
+            2025-11-04 : Instal Node-RED v4.x + konfigurasi logging
+            : Flow monitoring sistem + heartbeat LED PL1
+            2025-11-04 : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy
+            : Integrasi CSV monitoring + test curl localhost
+            2025-11-04 : Instal SCADA Grafana proxy + verifikasi endpoint JSON
+            : Instal mbusd sebagai gateway Modbus TCP–RTU via RS-485
+</div>
+<div class="mermaid" style="width:110%;">
+    ---
+    config:
+      theme: neutral
+    ---
+    timeline
+        title Timeline Deployment UNO-220 (Hari 3–5)
+        section Hari 3 - Hardening
+            2025-11-05 : Setup SSH key-based login, nonaktifkan login password
+            2025-11-05 : Konfigurasi UFW + Fail2Ban (whitelist IP ZeroTier)
+            2025-11-05 : Sinkronisasi RTC + aktifkan unattended-upgrades + hold kernel
+        section Hari 4 - Backup &amp; Validasi
+            2025-11-06 : Nonaktifkan service tidak terpakai : Atur EEPROM boot order
+            2025-11-06 : Buat backup_routine.sh + cron : Uji rsync ke USB/NAS + logrotate
+            2025-11-06 : Uji recovery Node-RED/SCADA/ZeroTier : Checklist audit end-to-end
+        section Hari 5 - Deployment
+            2025-11-07 : Pasang fisik UNO-220 di panel lapangan
+            : Koneksi RS-485, ethernet, dan power PoE/DC
+            2025-11-07 : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana full
+            : Dokumentasi akhir + handover checklist
+</div>
 <hr />
 
 <h2 id="3-instalasi-ubuntu-server-2510">3. Instalasi Ubuntu Server 25.10</h2>
@@ -534,6 +587,13 @@ sudo dtc -@ -I dts -O dtb dts/tpm-slb9670-overlay.dts -o /boot/firmware/current/
 <pre><code class="language-bash">ls /boot/firmware/current/overlays/ | grep -E 'i2c-rtc-mod|tpm-slb9670-mod'
 </code></pre>
 <h3 id="42-update-configtxt">4.2 Update config.txt</h3>
+<blockquote>
+<p><strong>Catatan:</strong> Editor teks <code>nano</code> digunakan untuk mengedit file konfigurasi di terminal.</p>
+<ul>
+<li>Gunakan <strong>panah arah</strong> untuk berpindah baris.</li>
+<li>Tekan <strong>Ctrl + O</strong> untuk menyimpan, lalu <strong>Enter</strong>, dan <strong>Ctrl + X</strong> untuk keluar.</li>
+</ul>
+</blockquote>
 <p>Edit <code>/boot/firmware/config.txt</code>:</p>
 <pre><code class="language-bash">sudo nano /boot/firmware/config.txt
 </code></pre>
@@ -673,7 +733,7 @@ sudo systemctl start zerotier-one
 <p><strong>Catatan Keamanan</strong></p>
 <ul>
 <li>Gunakan <strong>IP ZeroTier</strong> untuk remote SSH, bukan IP publik.</li>
-<li>Pastikan firewall (<code>ufw</code>) hanya membuka port yang diperlukan (22, 80, 443, 1880, 10002).</li>
+<li>Pastikan firewall <code>ufw</code> (lihat Bab 10) hanya membuka port yang diperlukan (22, 80, 443, 9993, 1880, 10002, 3000).</li>
 <li>ZeroTier menggunakan UDP port 9993; pastikan tidak diblokir di perangkat maupun firewall jaringan.</li>
 <li>Untuk self‑hosted controller, pastikan server controller terlindungi dengan TLS/HTTPS dan hanya dapat diakses oleh admin.</li>
 </ul>
@@ -922,8 +982,8 @@ dotnet --info   # pastikan versi 8.0.x tampil
 <ol>
 <li>Unduh dan ekstrak paket ZIP resmi:<pre><code class="language-bash">mkdir -p /home/ubuntu/scada
 cd /home/ubuntu/scada
-wget https://rapidscada.org/download/rapidscada_6.4.3_windows_en.zip
-unzip rapidscada_6.4.3_windows_en.zip -d scada
+wget https://rapidscada.org/download/https://rapidscada.org/download/rapidscada_6.4.3_linux_en.zip
+unzip rapidscada_6.4.3_linux_en.zip -d scada
 cd scada
 </code></pre>
 </li>
@@ -983,7 +1043,14 @@ sudo systemctl restart nginx
 </li>
 <li>Produksi: gunakan Let’s Encrypt (<code>sudo certbot --nginx</code>).</li>
 </ul>
-<h3 id="75-verifikasi">7.5 Verifikasi</h3>
+<h3 id="75-keamanan">7.5 Keamanan</h3>
+<ul>
+<li>Gunakan <strong>UFW</strong> untuk membatasi akses port ScadaAgent (10002) hanya dari jaringan ZeroTier agar remote programming tetap aman:<pre><code class="language-bash">sudo ufw allow from &lt;zerotier_subnet&gt; to any port 10002 proto tcp comment 'Rapid SCADA Agent'
+</code></pre>
+</li>
+<li>Jangan buka port 10002 ke publik (WAN).</li>
+</ul>
+<h3 id="76-verifikasi">7.6 Verifikasi</h3>
 <p>Cek status service:</p>
 <pre><code class="language-bash">systemctl status scadaserver6 scadacomm6 scadaweb6
 </code></pre>
@@ -1000,7 +1067,7 @@ sudo systemctl restart nginx
 <li>
 <p><strong>Instalasi</strong></p>
 <pre><code class="language-bash">sudo apt update
-sudo apt install -y build-essential cmake git
+sudo apt install -y build-essential git cmake
 git clone https://github.com/3cky/mbusd.git
 cd mbusd
 mkdir build &amp;&amp; cd build
@@ -1051,10 +1118,10 @@ Dari host lain:</p>
 <li>
 <p><strong>Keamanan</strong></p>
 <ul>
-<li>Batasi akses port 502 hanya dari jaringan ZeroTier:<pre><code class="language-bash">sudo ufw allow from &lt;zerotier_subnet&gt; to any port 502 proto tcp
+<li>Gunakan <strong>UFW</strong> untuk membatasi akses port Modbus TCP (502) hanya dari jaringan ZeroTier:<pre><code class="language-bash">sudo ufw allow from &lt;zerotier_subnet&gt; to any port 502 proto tcp comment 'Modbus TCP'
 </code></pre>
 </li>
-<li>Jangan buka port 502 ke publik.</li>
+<li>Jangan buka port 502 ke publik (WAN).</li>
 </ul>
 </li>
 </ol>
@@ -1131,7 +1198,7 @@ sudo systemctl start scada-grafana-proxy
 <li>
 <p><strong>Keamanan</strong></p>
 <ul>
-<li>Gunakan <strong>UFW</strong> untuk membatasi akses port 3000 hanya dari host Grafana:<pre><code class="language-bash">sudo ufw allow from &lt;ip_grafana&gt; to any port 3000 proto tcp
+<li>Gunakan <strong>UFW</strong> untuk membatasi akses port 3000 hanya dari host Grafana:<pre><code class="language-bash">sudo ufw allow from &lt;ip_grafana&gt; to any port 3000 proto tcp comment 'SCADA Grafana Proxy'
 </code></pre>
 </li>
 <li>Jika Grafana berjalan di server terpisah, gunakan <strong>ZeroTier</strong> agar komunikasi tetap terenkripsi.</li>
@@ -1144,8 +1211,9 @@ sudo systemctl start scada-grafana-proxy
 <h2 id="10-hardening-optimisasi">10. Hardening &amp; Optimisasi</h2>
 <h3 id="101-ssh-secure-shell">10.1 SSH (Secure Shell)</h3>
 <blockquote>
-<p><strong>BIG FAT WARNING: Risiko Penguncian Akses!</strong><br />
-Langkah ini meningkatkan keamanan dengan mengandalkan kunci SSH saja, tetapi berisiko tinggi: Kehilangan kunci pribadi dapat menyebabkan penguncian akses total tanpa password fallback. Pemulihan memerlukan akses fisik ke serial console.</p>
+<p><strong>PERINGATAN: Risiko Penguncian Akses Permanen</strong><br />
+Mengaktifkan autentikasi berbasis kunci SSH meningkatkan keamanan, tetapi juga meniadakan akses melalui password. Jika kunci privat hilang, perangkat tidak dapat diakses kembali tanpa koneksi fisik ke serial console.<br />
+Pastikan autentikasi menggunakan <code>PubkeyAuthentication</code> telah diuji dan berfungsi dengan baik <strong>sebelum</strong> menonaktifkan <code>PasswordAuthentication</code>.</p>
 </blockquote>
 <ol>
 <li>
@@ -1190,28 +1258,31 @@ PasswordAuthentication no
 </ol>
 <h3 id="102-firewall-ufw">10.2 Firewall (UFW)</h3>
 <blockquote>
-<p><strong>BIG FAT WARNING: Hindari Blokir Akses Esensial!</strong><br />
-Firewall ini membatasi lalu lintas masuk, tetapi berisiko tinggi: Port ZeroTier (9993/UDP) atau SSH (22) yang terblokir dapat menyebabkan kehilangan akses remote total. Pemulihan memerlukan akses fisik ke serial console.</p>
+<p><strong>PERINGATAN: Risiko Kehilangan Akses Remote</strong><br />
+Aturan firewall yang terlalu ketat dapat memblokir port penting seperti <strong>ZeroTier (9993/UDP)</strong> atau <strong>SSH (22/TCP)</strong>. Jika port ini tertutup, perangkat tidak dapat diakses dari jarak jauh, dan pemulihan hanya dapat dilakukan melalui <strong>serial console fisik</strong>.<br />
+Pastikan konfigurasi <code>ufw</code> telah diuji dengan hati-hati sebelum menerapkan aturan baru secara permanen.</p>
 </blockquote>
 <p>Konfigurasi dasar:</p>
 <pre><code class="language-bash">sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh/tcp      # Port 22
-sudo ufw allow 1880/tcp     # Node-RED
 sudo ufw allow 80/tcp       # Nginx HTTP
 sudo ufw allow 443/tcp      # Nginx HTTPS
-sudo ufw allow 9993/udp     # ZeroTier
-sudo ufw allow 10002/tcp    # SCADA Agent
+sudo ufw allow 9993/udp comment 'ZeroTier'
+sudo ufw allow 1880/tcp comment 'Node-RED'
+sudo ufw allow from &lt;zerotier_subnet&gt; to any port 10002 proto tcp comment 'Rapid SCADA Agent'
+sudo ufw allow from &lt;zerotier_subnet&gt; to any port 3000 proto tcp comment 'SCADA Grafana Proxy'
 sudo ufw enable
 </code></pre>
 <p>Verifikasi port terbuka:</p>
 <pre><code class="language-bash">sudo ss -tuln
 </code></pre>
-<p>→ Hanya 22, 80, 443, 1880, 9993, 10002 yang aktif.</p>
+<p>→ Hanya 22, 80, 443, 9993, 1880, 10002, 3000 yang aktif.</p>
 <h3 id="103-fail2ban-proteksi-ssh">10.3 Fail2Ban (Proteksi SSH)</h3>
 <blockquote>
-<p><strong>BIG FAT WARNING: Hindari Penguncian Akses Sendiri!</strong><br />
-Tool ini melindungi dari serangan brute-force pada SSH, tetapi berisiko: IP admin atau tim bisa terblokir sementara (default 10 menit) jika login gagal berulang. Ini dapat mengganggu akses remote di plant.</p>
+<p><strong>PERINGATAN: Hindari Penguncian Akses Sendiri</strong><br />
+Mekanisme ini melindungi perangkat dari serangan <em>brute-force</em> pada SSH, namun berisiko memblokir <strong>IP admin atau tim</strong> jika terjadi beberapa kali kegagalan login beruntun. Akibatnya, akses remote dapat terputus sementara (default 10 menit).<br />
+Pastikan alamat IP tepercaya dimasukkan ke daftar pengecualian sebelum fitur ini diaktifkan di lingkungan produksi.</p>
 </blockquote>
 <ol>
 <li>Instalasi:<pre><code class="language-bash">sudo apt install fail2ban -y
@@ -1237,8 +1308,9 @@ Tambahkan <code>ignoreip = 127.0.0.1/8 &lt;your_ip&gt;</code> untuk whitelist.</
 </ol>
 <h3 id="104-auto-security-updates">10.4 Auto Security Updates</h3>
 <blockquote>
-<p><strong>BIG FAT WARNING: Keseimbangan Keamanan vs Stabilitas!</strong><br />
-Hold kernel mencegah upgrade kernel otomatis yang memerlukan reboot, menjaga uptime, tetapi berisiko: Device rentan terhadap patch keamanan baru jika di-hold terlalu lama. Pantau manual untuk update kritis.</p>
+<p><strong>PERINGATAN: Keseimbangan antara Keamanan dan Stabilitas</strong><br />
+Menahan (<em>hold</em>) kernel mencegah pembaruan otomatis yang dapat memicu reboot tak terjadwal, menjaga <strong>uptime</strong> sistem industri tetap stabil. Namun, risiko muncul jika kernel tertahan terlalu lama: perangkat dapat kehilangan patch keamanan penting.<br />
+Lakukan pemantauan manual terhadap rilis kernel baru dan lakukan pembaruan terencana bila tersedia pembaruan kritis.</p>
 </blockquote>
 <ol>
 <li>Instalasi:<pre><code class="language-bash">sudo apt install unattended-upgrades -y
@@ -1280,8 +1352,9 @@ Isi:<pre><code>@daily /usr/sbin/hwclock -w &amp;&amp; logger "RTC updated from s
 </code></pre>
 <h3 id="107-disable-usb-boot-optional-keamanan-fisik-untuk-lapangan-rentan">10.7 Disable USB Boot (Optional, Keamanan Fisik untuk Lapangan Rentan)</h3>
 <blockquote>
-<p><strong>BIG FAT WARNING: Lakukan dengan Hati-hati!</strong><br />
-Langkah ini meningkatkan keamanan fisik dengan membatasi jalur boot ke kartu SD saja, tetapi berisiko tinggi: Kesalahan konfigurasi EEPROM dapat menyebabkan kegagalan boot total. Pemulihan memerlukan akses fisik dan flashing ulang bootloader menggunakan Raspberry Pi Imager.</p>
+<p><strong>PERINGATAN: Risiko Gagal Boot Permanen</strong><br />
+Langkah ini meningkatkan <strong>keamanan fisik</strong> dengan membatasi jalur boot hanya dari kartu SD. Namun, konfigurasi EEPROM yang salah dapat menyebabkan <strong>kegagalan boot total</strong>.<br />
+Pemulihan memerlukan <strong>akses fisik langsung</strong> dan <strong>flashing ulang bootloader</strong> menggunakan Raspberry Pi Imager.</p>
 </blockquote>
 <p>Disarankan untuk selalu menyertakan SD card dalam urutan BOOT_ORDER. Hal ini untuk memastikan dapat melakukan recovery dengan mudah menggunakan image rescue di microSD, jika konfigurasi boot lain gagal.</p>
 <p>Untuk mencegah perangkat <strong>boot dari USB eksternal</strong> (risiko tampering di lapangan), lakukan konfigurasi EEPROM bootloader agar hanya mengizinkan boot dari microSD.</p>
@@ -1607,7 +1680,7 @@ gpioset 0 12=0   # LED OFF
 <li>[ ] RTC terbaca dengan benar (<code>hwclock -r</code>)</li>
 <li>[ ] LED PL1 dapat dikendalikan (ON/OFF)</li>
 <li>[ ] Port serial berfungsi (<code>minicom</code>)</li>
-<li>[ ] Hanya port 22/80/443/1880/9993/10008 terbuka (<code>ss -tuln</code>)</li>
+<li>[ ] Hanya port 22/80/443/9993/1880/10002/3000 terbuka (<code>ss -tuln</code>)</li>
 <li>[ ] Fail2Ban aktif (<code>fail2ban-client status sshd</code>)</li>
 <li>[ ] Node‑RED logs capture I/O errors (<code>journalctl -u nodered</code>)</li>
 <li>[ ] Backup cron berjalan (cek <code>/var/log/backup.log</code>)</li>
@@ -1689,56 +1762,7 @@ gpioset 0 12=0   # LED OFF
 </ol>
 <hr />
 
-<h2 id="14-timeline">14. Timeline</h2>
-<div class="mermaid" style="width:110%;">
-    ---
-    config:
-      theme: base
-    ---
-    timeline
-        title Timeline Deployment UNO-220 (Hari 1–2)
-        section Hari 1 - Dasar dan Strukturisasi
-          2025-11-03 : Persiapan perangkat keras dan verifikasi PoE
-            : Casing industrial UNO-220, microSD industrial, Raspberry Pi 4 Model B
-          2025-11-03 : Flash Ubuntu Server 25.10 ke microSD + enable SSH
-            : Boot pertama, login SSH, ganti password, set timezone
-          2025-11-03 : Update sistem + kompilasi &amp; pasang overlay RTC, TPM, Expander
-            : Edit config.txt, reboot, uji RTC/I2C/TPM
-          2025-11-03 : Disable serial console untuk ttyS0 (Modbus RTU)
-            : Instal mbusd (Modbus TCP - RTU gateway, eksklusif RS-485)
-        section Hari 2 - Tools dan Integrasi
-          2025-11-04 : Setup GPIO rules + grup gpio : Uji LED PL1 manual
-          2025-11-04 : Instal Node-RED + konfigurasi logging
-            : Setup monitoring sistem + LED heartbeat via Node-RED flow
-          2025-11-04 : Instal Rapid SCADA 6.4.3 + Nginx reverse proxy + test curl localhost
-            : Setup trend monitoring sistem
-          2025-11-04 : Instal SCADA Grafana proxy + verif JSON endpoint
-            : Instal ZeroTier VPN overlay + test ping peer
-</div>
-<div class="mermaid" style="width:110%;">
-    ---
-    config:
-      theme: base
-    ---
-    timeline
-        title Timeline Deployment UNO-220 (Hari 3–5)
-        section Hari 3 - Hardening
-          2025-11-05 : Setup SSH key-based login, disable password login
-          2025-11-05 : Konfigurasi UFW + Fail2Ban
-          2025-11-05 : Setup RTC sync + auto updates unattended-upgrades + hold kernel
-        section Hari 4 - Backup &amp; Validasi
-          2025-11-06 : Disable service tidak terpakai : EEPROM boot order
-          2025-11-06 : Buat script backup_routine.sh + cron : Uji rsync + logrotate
-          2025-11-06 : Uji recovery Node-RED/SCADA/ZeroTier : Checklist audit end-to-end
-        section Hari 5 - Deployment
-          2025-11-07 : Pasang fisik UNO-220 di panel lapangan
-            : Koneksi RS-485 + ethernet + power PoE/DC
-          2025-11-07 : Uji dashboard Node-RED, SCADA, Modbus TCP, Grafana full
-            : Dokumentasi dan handover checklist
-</div>
-<hr />
-
-<h2 id="15-penutup">15. Penutup</h2>
+<h2 id="14-penutup">14. Penutup</h2>
 <p>UNO‑220 kini siap beroperasi sebagai <strong>edge device industri</strong> yang tangguh, dengan konfigurasi yang <strong>aman, modular, dan audit‑ready</strong>. Seluruh tahapan — mulai dari instalasi sistem operasi, aktivasi fitur perangkat keras, pengamanan layanan, hingga integrasi aplikasi — telah dirancang agar konsisten, mudah direplikasi, dan dapat diaudit.</p>
 <p>Komponen utama yang terintegrasi:</p>
 <ul>

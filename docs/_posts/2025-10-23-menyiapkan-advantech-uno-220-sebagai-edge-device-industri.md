@@ -189,8 +189,7 @@ Setelah rilis stabil tersedia (<code>sudo do-release-upgrade -c</code>):</p>
     timeline
         title Timeline Deployment UNO-220 (Hari 1–4)
         section Hari 1 - Dasar dan Strukturisasi
-            2025-11-03 : Persiapan perangkat &amp; verifikasi PoE
-            : UNO-220 casing industrial, microSD pSLC/SLC, Raspberry Pi 4B
+            2025-11-03 : Persiapan perangkat &amp; verifikasi PoE (UNO-220 casing industrial, microSD pSLC/SLC, Raspberry Pi 4B)
             : Flash Ubuntu Server 25.10 + aktifkan SSH
             : Boot awal, login SSH, ubah password, set zona waktu
             : Update sistem + pasang overlay RTC, TPM, Expander
@@ -298,7 +297,7 @@ Pilih sesuai lokasi operasional:</p>
 <table>
 <thead>
 <tr>
-<th>Wilayah Operasional</th>
+<th>Wilayah</th>
 <th>Zona Waktu</th>
 <th>Pilihan</th>
 </tr>
@@ -1539,11 +1538,11 @@ gpioset 0 12=0   # LED OFF
 <li><strong>Backup rutin + logrotate</strong> → memastikan recovery cepat dan manajemen log yang efisien.</li>
 </ul>
 <p>Dengan rancangan ini, UNO‑220 dapat dijadikan <strong>standar operasional deployment</strong> di seluruh fasilitas industri, menjamin <strong>konsistensi, keamanan, dan keandalan</strong>.</p>
-<p>Lebih jauh lagi, kombinasi <strong>Rapid SCADA (data concentrator) + OPC UA (standar komunikasi) + Node‑RED (logic) + Grafana (visualisasi)</strong> membentuk <strong>arsitektur edge yang future‑proof</strong>. Dengan pendekatan ini, UNO‑220 tidak hanya berfungsi sebagai gateway lokal, tetapi juga sebagai <strong>middleware OT–IT</strong> yang siap menghubungkan lapisan produksi dengan MES, ERP, maupun platform IIoT modern.</p>
+<p>Lebih jauh lagi, kombinasi <strong>Rapid SCADA</strong> (data concentrator) + <strong>OPC UA</strong> (standar komunikasi) + <strong>Node‑RED</strong> (logic) + <strong>Grafana</strong> (visualisasi) membentuk <strong>arsitektur edge yang future‑proof</strong>. Dengan pendekatan ini, UNO‑220 tidak hanya berfungsi sebagai gateway lokal, tetapi juga sebagai <strong>middleware OT–IT</strong> yang siap menghubungkan lapisan produksi dengan MES, ERP, maupun platform IIoT modern.</p>
 <blockquote>
 <p><strong>Catatan:</strong> Untuk menjaga keberlanjutan, lakukan validasi berkala (service status, backup, update keamanan) dan selalu cek versi terbaru software dari sumber resmi sebelum upgrade.</p>
 </blockquote>
-<p>Sebagai penutup, perlu dicatat bahwa peluang integrasi lain masih sangat terbuka, menjadikan Advantech UNO-220 sebagai fondasi yang fleksibel untuk evolusi sistem automasi industri. Misalnya, penambahan runtime <strong>Eclipse 4diac FORTE</strong> memungkinkan UNO-220 menjalankan <strong>soft logic non-critical</strong> berbasis IEC 61499 langsung di edge. Alternatif lain, <strong>CODESYS Runtime</strong> berbasis IEC 61131-3 juga dapat dijalankan di Raspberry Pi 4B (dengan lisensi resmi melalui CODESYS Store), sehingga UNO-220 dapat berperan sebagai <strong>SoftPLC komersial ringan</strong> untuk ladder logic atau structured text. Integrasi ini bisa dikombinasikan dengan elemen predictive maintenance via <strong>TensorFlow Lite</strong>, di mana output dari FORTE atau CODESYS difeed ke <strong>model AI untuk deteksi fault real-time</strong>, menciptakan hybrid edge device yang efisien dan compliant.</p>
+<p>Sebagai penutup, Advantech UNO‑220 dapat menjadi fondasi fleksibel bagi evolusi sistem automasi industri. Selain fungsi gateway, perangkat ini bisa diperluas dengan runtime <strong>Eclipse 4diac FORTE</strong> (IEC 61499) untuk soft logic non‑critical, <strong>CODESYS Runtime</strong> (IEC 61131‑3) sebagai SoftPLC komersial ringan, maupun <strong>OpenPLC Runtime</strong> (IEC 61131‑3) sebagai alternatif open source untuk edukasi dan prototyping. Integrasi ini dapat dipadukan dengan <strong>TensorFlow Lite</strong> untuk predictive maintenance, di mana output dari FORTE, CODESYS, atau OpenPLC diolah oleh model AI untuk deteksi fault real‑time, sehingga UNO‑220 berperan sebagai <strong>hybrid edge device</strong> yang efisien, modular, dan compliant.</p>
 
 <!--kg-card-begin: html-->
 <div class="scroll-button">

@@ -968,9 +968,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     wrapper.innerHTML = `
       <div class="file-info">
-        <div class="file-name">
-          <i class="fa-solid fa-file"></i> ${fileName}
-        </div>
+        <div class="file-name">${fileName}</div>
         ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
         <div class="file-meta">
           ${fileBase ? `<span>${fileBase}</span>` : ""}

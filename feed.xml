@@ -1,5 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-10-28T02:21:29+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
-</subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Menyiapkan Advantech UNO-220 sebagai Edge Device Industri</title><link href="https://kumajaya.github.io/automation-blog/edge-computing/2025/10/22/menyiapkan-advantech-uno-220-sebagai-edge-device-industri.html" rel="alternate" type="text/html" title="Menyiapkan Advantech UNO-220 sebagai Edge Device Industri" /><published>2025-10-22T17:31:39+00:00</published><updated>2025-10-22T17:31:39+00:00</updated><id>https://kumajaya.github.io/automation-blog/edge-computing/2025/10/22/menyiapkan-advantech-uno-220-sebagai-edge-device-industri</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/edge-computing/2025/10/22/menyiapkan-advantech-uno-220-sebagai-edge-device-industri.html"><![CDATA[<!--kg-card-begin: html-->
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-10-29T02:28:42+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
+</subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Mental Framework Troubleshooting: Menjaga Akurasi di Bawah Tekanan</title><link href="https://kumajaya.github.io/automation-blog/leadership-human-centered/2025/10/28/mental-framework-troubleshooting-menjaga-akurasi-di-bawah-tekanan.html" rel="alternate" type="text/html" title="Mental Framework Troubleshooting: Menjaga Akurasi di Bawah Tekanan" /><published>2025-10-28T18:43:41+00:00</published><updated>2025-10-28T18:43:41+00:00</updated><id>https://kumajaya.github.io/automation-blog/leadership-human-centered/2025/10/28/mental-framework-troubleshooting-menjaga-akurasi-di-bawah-tekanan</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/leadership-human-centered/2025/10/28/mental-framework-troubleshooting-menjaga-akurasi-di-bawah-tekanan.html"><![CDATA[<p><strong>Membangun Kerangka Mental untuk Troubleshooting yang Efektif</strong></p>
+<p><em>Ditulis oleh Ketut Kumajaya — 29 Oktober 2025</em></p>
+<p>Troubleshooting di dunia industri sering dianggap semata urusan teknis. Padahal, keberhasilan di lapangan justru sering ditentukan oleh <strong>kerangka mental troubleshooting</strong>—bagaimana teknisi berpikir, merespons tekanan, dan menjaga objektivitas di tengah situasi darurat.</p>
+<p>Masalah yang tampak kompleks bisa jadi berakar dari penyebab yang sederhana. Dalam kondisi alarm aktif, produksi terhenti, dan ekspektasi tinggi, perbedaan hasil sering kali muncul bukan dari tingkat kompetensi, tetapi dari kemampuan teknisi menjaga ketenangan, mempertahankan fokus, menegakkan logika, dan tetap berpikir sederhana—meski dihimpit <em>stress</em>, <em>fatigue</em>, dan <em>overthinking</em> yang kerap muncul saat dikejar <em>deadline</em>.</p>
+<hr />
+
+<h2 id="pilar-kerangka-mental-troubleshooting">Pilar Kerangka Mental Troubleshooting</h2>
+<p>Troubleshooting yang efektif dibangun di atas fondasi mental yang terstruktur. Berikut adalah enam pilar utama yang mencerminkan pola pikir troubleshooting yang terlatih:</p>
+<h3 id="1-tenang-dan-tertata">1. <strong>Tenang dan Tertata</strong></h3>
+<p>Ketenangan dan kemampuan berpikir sederhana adalah pelindung pertama dari kesalahan. Dalam kondisi <em>fatigue</em> atau tekanan organisasi, teknisi perlu menjaga ruang berpikir tetap jernih dan sistematis. Urutan berpikir yang tertata—dari dokumentasi, data, hingga tindakan fisik—mencegah bias dan mempercepat solusi. Sebaliknya, tindakan impulsif yang reaktif tanpa arah—bertindak sebelum berpikir—sering kali justru memperpanjang downtime. Dan jangan abaikan kebutuhan dasar: cukup makan dan minum adalah bagian dari menjaga kejernihan berpikir.</p>
+<h3 id="2-berbasis-data-bukan-dugaan">2. <strong>Berbasis Data, Bukan Dugaan</strong></h3>
+<p>Data adalah jangkar. Log sistem, histori alarm, tren DCS, dan wawancara operator harus dikumpulkan sebelum bertindak. Dalam kondisi <em>cognitive overload</em> (beban kognitif berlebih), data yang terstruktur menjadi penentu arah. Ini juga membantu menghindari <em>confirmation bias</em> (bias konfirmasi)—kecenderungan mencari bukti yang hanya mendukung dugaan awal, dan berujung pada <em>overthinking</em> yang justru menjauhkan solusi.</p>
+<h3 id="3-uji-sederhana-validasi-objektif">3. <strong>Uji Sederhana, Validasi Objektif</strong></h3>
+<p>Setiap hipotesis perlu diuji secara sederhana, lalu divalidasi. Langkah besar tanpa dasar justru memperpanjang downtime. Prinsip yang tak boleh diabaikan: <em>check the obvious first</em>—periksa hal-hal dasar sebelum masuk ke analisis kompleks.</p>
+<h3 id="4-waspada-terhadap-modifikasi-dan-riwayat-sistem">4. <strong>Waspada terhadap Modifikasi dan Riwayat Sistem</strong></h3>
+<p>Perubahan kecil bisa memicu gangguan besar. Riwayat modifikasi harus menjadi bagian dari analisis awal, terutama saat gejala tidak sesuai dengan pola umum.</p>
+<h3 id="5-kelola-tekanan-dan-suara-eksternal">5. <strong>Kelola Tekanan dan Suara Eksternal</strong></h3>
+<p>Tekanan boleh hadir, tapi arah troubleshooting tetap ditentukan oleh data dan urutan berpikir, bukan desakan emosional atau tuntutan organisasi. Semua masukan dianggap hipotesis awal, bukan kebenaran final. Saran seperti “coba reset dulu” tetap harus divalidasi lewat data sebelum tindakan diambil.</p>
+<h3 id="6-dokumentasi-dan-pembelajaran-berkelanjutan">6. <strong>Dokumentasi dan Pembelajaran Berkelanjutan</strong></h3>
+<p>Setiap kasus adalah sumber pembelajaran. Dokumentasi yang ringkas dan audit‑friendly mempercepat penyelesaian masalah berikutnya dan membangun budaya troubleshooting yang sistematis.</p>
+<hr />
+
+<h2 id="hambatan-yang-sering-muncul">Hambatan yang Sering Muncul</h2>
+<p>Beberapa faktor kerap menghalangi keberhasilan troubleshooting, antara lain:</p>
+<ul>
+<li><strong>Tekanan waktu</strong> yang membuat teknisi terburu‑buru, memicu <em>cognitive overload</em> saat memproses banyak informasi sekaligus</li>
+<li><strong>Asumsi berlebihan</strong> bahwa masalah “pasti sama” dengan kasus sebelumnya</li>
+<li><strong>Minimnya komunikasi</strong> dengan operator yang sebenarnya menyimpan informasi penting</li>
+<li><strong>Dokumentasi</strong> yang tidak lengkap, atau dibaca dengan kurang teliti, sering kali membuat pola kesalahan berulang tak terdeteksi</li>
+<li><strong>Fokus berlebihan</strong> pada aspek teknis, tanpa memperhatikan kondisi psikologis tim di lapangan</li>
+</ul>
+<p>Hambatan-hambatan ini sering diperparah oleh faktor eksternal—suara dari luar analisis yang tidak selalu sejalan dengan fakta lapangan.</p>
+<hr />
+
+<h2 id="mengelola-voice-lain-dalam-troubleshooting">Mengelola Voice Lain dalam Troubleshooting</h2>
+<p>Troubleshooting di lapangan jarang berlangsung dalam ruang hampa. Berbagai suara eksternal—baik dari operator, rekan teknisi, vendor, maupun atasan—sering kali ikut membentuk arah analisis. Mental framework ini diperlukan agar teknisi dapat menyaring, mengelola, dan menavigasi pengaruh ini secara objektif.</p>
+<ul>
+<li>
+<p><strong>Operator</strong><br />
+Sumber informasi pertama. Mereka melihat gejala langsung, mendengar suara mesin, merasakan perubahan kecil. Jika diwawancarai dengan tepat, suara operator bisa menjadi data awal yang sangat berharga.</p>
+</li>
+<li>
+<p><strong>Rekan teknisi yang tidak hadir di lapangan</strong><br />
+Masukan dari teknisi lain bisa memperkaya perspektif, terutama jika mereka pernah menghadapi kasus serupa. Namun, tanpa melihat kondisi nyata, asumsi dari luar bisa menimbulkan bias.</p>
+</li>
+<li>
+<p><strong>Atasan atau manajemen</strong><br />
+Fokus utama sering kali pada urgensi: “Berapa lama lagi normal?” Jika teknisi tidak memiliki kerangka berpikir yang kuat, arah troubleshooting bisa bergeser dari analisis sistematis menjadi tindakan impulsif. Jabatan bukan penentu kebenaran—arah analisis tetap harus dituntun oleh data dan urutan berpikir. Profesionalisme teknisi terletak pada kemampuannya menjaga logika tetap jernih, meski berada di bawah tekanan struktural.</p>
+</li>
+</ul>
+<p>Karena itu, teknisi perlu memiliki prinsip pengelolaan yang konsisten dan objektif: terima sebagai hipotesis, kontekstualisasi dengan lapangan, validasi via data—seperti yang ditegaskan dalam Pilar 5.</p>
+<hr />
+
+<h2 id="ilustrasi-lapangan-prioritasi-fokus-dan-urutan-diagnostik">Ilustrasi Lapangan: Prioritasi Fokus dan Urutan Diagnostik</h2>
+<p>Dalam penanganan gangguan sistem di lapangan, teknisi bisa menghadapi dua tantangan sekaligus: tekanan waktu dan ekspektasi organisasi. Ketika dalam perjalanan menuju lokasi, permintaan informasi awal dari atasan sering kali muncul sebelum teknisi memiliki akses terhadap data atau kondisi. Dalam situasi seperti ini, menjaga fokus terhadap tugas utama—misalnya keselamatan berkendara—menjadi prioritas, sementara analisis teknis ditunda hingga kondisi memungkinkan.</p>
+<p>Setibanya di lokasi, pendekatan sistematis diterapkan. Langkah awal tidak langsung diarahkan ke mesin, melainkan ke ruang kontrol untuk mengakses dokumentasi mesin, tren DCS, dan wawancara operator. Setelah gambaran awal terbentuk, barulah pemeriksaan fisik dilakukan di panel lokal.</p>
+<p>Strategi ini tidak hanya menjaga akurasi, tetapi juga menghindari bias dan tindakan impulsif yang sering muncul dalam situasi darurat.</p>
+<hr />
+
+<h2 id="ilustrasi-teknis-surging-akibat-modifikasi-kecil">Ilustrasi Teknis: Surging Akibat Modifikasi Kecil</h2>
+<p>Misalnya dalam kasus <em>surging</em> pada kompresor sentrifugal, modifikasi kecil pada sistem dapat memicu instabilitas besar berkepanjangan. Gejala yang muncul bisa menyesatkan jika teknisi langsung berasumsi tanpa memahami gangguan secara lengkap. Tekanan untuk segera menormalkan operasi sering membuat langkah terburu‑buru diambil, padahal akar masalah justru terletak pada detail kecil yang terabaikan, akhirnya gangguan terjadi berulang.</p>
+<p>Dengan pola pikir troubleshooting yang terlatih, downtime bisa dipangkas dari hari ke jam, dari jam ke menit—menghindari kerugian operasional yang tidak perlu.</p>
+<hr />
+
+<h2 id="penutup">Penutup</h2>
+<p>Akhirnya, troubleshooting bukan hanya tentang sistem, tetapi tentang manusia di dalam sistem itu sendiri. Troubleshooting bukan sekadar keterampilan teknis, melainkan juga seni mengelola diri. Dengan kerangka mental troubleshooting yang tepat, teknisi tidak hanya memperbaiki sistem, tetapi juga mewariskan budaya berpikir jernih yang akan menginspirasi seluruh tim. Inilah profesionalisme yang tahan tekanan—mentalitas yang benar-benar memenuhi <em>industrial standard</em>.</p>
+<p><em>Coba terapkan Pilar 1 di troubleshooting berikutnya—bagaimana pengalamannya?</em></p>
+<h3 id="tagline">Tagline</h3>
+<ul>
+<li><em>“Troubleshooting bukan adu cepat, tapi adu jernih.”</em></li>
+<li><em>“Urutan berpikir adalah pelindung pertama sebelum obeng menyentuh panel.”</em></li>
+<li><em>“Check the obvious first—karena solusi sering bersembunyi di hal yang sederhana.”</em></li>
+<li><em>“Modifikasi kecil bisa jadi pemicu besar—jangan abaikan histori.”</em></li>
+<li><em>“Stress boleh datang, tapi logika yang tetap jadi pimpinan.”</em></li>
+<li><em>“Troubleshooting hari ini adalah referensi besok.”</em></li>
+</ul>
+
+<!--kg-card-begin: html-->
+<div class="scroll-button">
+  <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102">
+      <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="18" y1="11" x2="12" y2="5" />
+      <line x1="6" y1="11" x2="12" y2="5" />
+    </svg>
+  </button>
+</div>
+<!--kg-card-end: html-->]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="leadership-human-centered" /><category term="Leadership Human Centered" /><category term="Field Experience" /><category term="Practical Engineering" /><summary type="html"><![CDATA[Troubleshooting bukan sekadar urusan teknis, tapi juga seni berpikir jernih di tengah tekanan sistem dan ekspektasi organisasi. Enam pilar mental framework ini membantu teknisi menjaga logika tetap tajam saat data, waktu, dan situasi menekan.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1604754742629-3e5728249d73?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fHRlY2huaWNpYW58ZW58MHx8fHwxNzYxNjY3MTk5fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1604754742629-3e5728249d73?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fHRlY2huaWNpYW58ZW58MHx8fHwxNzYxNjY3MTk5fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Menyiapkan Advantech UNO-220 sebagai Edge Device Industri</title><link href="https://kumajaya.github.io/automation-blog/edge-computing/2025/10/22/menyiapkan-advantech-uno-220-sebagai-edge-device-industri.html" rel="alternate" type="text/html" title="Menyiapkan Advantech UNO-220 sebagai Edge Device Industri" /><published>2025-10-22T17:31:39+00:00</published><updated>2025-10-22T17:31:39+00:00</updated><id>https://kumajaya.github.io/automation-blog/edge-computing/2025/10/22/menyiapkan-advantech-uno-220-sebagai-edge-device-industri</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/edge-computing/2025/10/22/menyiapkan-advantech-uno-220-sebagai-edge-device-industri.html"><![CDATA[<!--kg-card-begin: html-->
 <aside class="gh-sidebar">
   <button class="toc-toggle" aria-expanded="false" aria-controls="gh-toc">
     <span class="toc-toggle-icon">☰</span> Daftar Isi
@@ -3067,344 +3158,4 @@ Vendor DCS dapat menawarkan solusi, dengan tantangan menghadirkan integrasi yang
 <h3 id="penutup">Penutup</h3>
 <p>Arsitektur ini lahir dari pengalaman lapangan sebagai system integrator yang ditempa oleh praktik nyata, bukan teori kelas. Setiap komponen — Rapid SCADA, Node-RED, ZeroTier, proxy layer — disatukan agar stabil, aman, dan saling memahami.</p>
 <p>Sistem cukup sederhana untuk dipahami, tangguh, fleksibel, dan profesional.<br />
-Setiap unit produksi mandiri, fleksibel dari sisi perangkat keras dan OS, tetap menjadi bagian dari ekosistem data aman yang efisien.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="edge-computing" /><category term="Edge Computing" /><category term="Distributed Control System" /><category term="Field Experience" /><category term="Practical Engineering" /><summary type="html"><![CDATA[Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html" rel="alternate" type="text/html" title="K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis" /><published>2025-10-04T06:04:05+00:00</published><updated>2025-10-04T06:04:05+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html"><![CDATA[<p><em>Ditulis oleh Ketut P. Kumajaya | 4 Oktober 2025</em></p>
-<h3 id="latar-belakang">Latar Belakang</h3>
-<p>Interpolasi linear adalah metode sederhana namun krusial dalam otomasi proses. Banyak kurva performa peralatan—seperti garis surge centrifugal compressor, karakteristik valve, atau profil efisiensi pompa—tidak tersedia dalam bentuk persamaan matematis, melainkan tabel titik data.</p>
-<p>Function Block <code>K_LOOKUP_LINEAR</code> dirancang di Supcon DCS menggunakan Structured Text (ST) untuk melakukan interpolasi linear berbasis array dinamis. Berbeda dengan <code>K_LIN_INTERP14</code> yang statis dengan 14 titik, FB ini mendukung hingga 32 titik referensi, dilengkapi proteksi multi‑lapis dan flag audit agar siap digunakan lintas plant.</p>
-<p>Sebagai catatan, <code>K_LIN_INTERP14</code> telah diimplementasikan di salah satu plant untuk lookup kurva <strong>anti-surge</strong> dan terbukti stabil dalam operasi harian. Block ini sendiri merupakan implementasi bebas dari fungsi serupa yang tersedia di <strong>Yokogawa Centum VP</strong>, dan pengalaman lapangan inilah yang menjadi dasar pengembangan <code>K_LOOKUP_LINEAR</code> sebagai versi yang lebih fleksibel dan modular.</p>
-<hr />
-
-<h3 id="listing-function-block">Listing Function Block</h3>
-<pre><code class="language-pascal">(*=============================================================================
-  Function Block Name : K_LOOKUP_LINEAR
-  Author              : Ketut P. Kumajaya
-  Date Created        : 04/10/2025
-  Description         : Interpolasi linear dinamis berbasis array referensi
-                        dengan proteksi multi-lapis dan flag audit.
-  Inputs              : Enable     - Aktivasi interpolasi (BOOL)
-                        X          - Nilai input yang akan diinterpolasi (FLOAT)
-                        N          - Jumlah titik referensi aktif (INT, min 2)
-                        THRESHOLD  - Ambang deviasi audit (FLOAT)
-                        X_REF      - array32FLOAT (koordinat X referensi)
-                        Y_REF      - array32FLOAT (koordinat Y referensi)
-  Outputs             : Y          - Hasil interpolasi linear (FLOAT)
-                        X1_used    - Titik awal X interval aktif (FLOAT)
-                        Y1_used    - Titik awal Y interval aktif (FLOAT)
-                        X2_used    - Titik akhir X interval aktif (FLOAT)
-                        Y2_used    - Titik akhir Y interval aktif (FLOAT)
-                        Valid      - Flag validasi hasil interpolasi (BOOL)
-                        AuditFlag  - Flag audit deviasi/ketidakrapihan data (BOOL)
-                        DensityValid - Flag validasi monotoni X_REF (BOOL)
-  Artefak Pairing     : array32FLOAT - ARRAY [0..31] OF FLOAT
-  Proteksi Audit      : Clamp jika X di luar range; fallback pada interval
-                        degenerat; AuditFlag aktif jika deviasi ekstrem atau
-                        data tidak monoton; N dikunci dalam rentang aman.
-=============================================================================*)
-
-FUNCTION_BLOCK K_LOOKUP_LINEAR
-
-VAR_INPUT
-    Enable    : BOOL;
-    X         : FLOAT;
-    N         : INT;
-    THRESHOLD : FLOAT;
-    X_REF     : array32FLOAT;
-    Y_REF     : array32FLOAT;
-END_VAR
-
-VAR_OUTPUT
-    Y           : FLOAT;
-    X1_used     : FLOAT;
-    Y1_used     : FLOAT;
-    X2_used     : FLOAT;
-    Y2_used     : FLOAT;
-    Valid       : BOOL;
-    AuditFlag   : BOOL;
-    DensityValid: BOOL;
-END_VAR
-
-VAR
-    i       : INT;
-    n_eff   : INT;
-    slope   : FLOAT;
-    found   : BOOL;
-END_VAR
-
-(* --- Inisialisasi status --- *)
-Valid        := FALSE;
-AuditFlag    := FALSE;
-DensityValid := TRUE;
-found        := FALSE;
-
-IF NOT Enable THEN
-    RETURN;
-END_IF;
-
-(* --- Kunci N dalam rentang aman [2..32] --- *)
-n_eff := N;
-IF n_eff &lt; 2 THEN
-    n_eff := 2;
-ELSIF n_eff &gt; 32 THEN
-    n_eff := 32;
-END_IF;
-
-(* --- Validasi monotoni X_REF --- *)
-FOR i := 0 TO n_eff - 2 DO
-    IF X_REF[i] &gt; X_REF[i + 1] THEN
-        DensityValid := FALSE;
-    END_IF;
-END_FOR;
-
-(* --- Cari interval aktif --- *)
-FOR i := 0 TO n_eff - 2 DO
-    IF (X &gt;= X_REF[i]) AND (X &lt;= X_REF[i+1]) THEN
-        X1_used := X_REF[i];     Y1_used := Y_REF[i];
-        X2_used := X_REF[i+1];   Y2_used := Y_REF[i+1];
-        found := TRUE;
-        EXIT;
-    END_IF;
-END_FOR;
-
-(* --- Clamp jika X di luar range --- *)
-IF NOT found THEN
-    IF X &lt; X_REF[0] THEN
-        X1_used := X_REF[0];       Y1_used := Y_REF[0];
-        X2_used := X_REF[1];       Y2_used := Y_REF[1];
-    ELSIF X &gt; X_REF[n_eff - 1] THEN
-        X1_used := X_REF[n_eff - 2]; Y1_used := Y_REF[n_eff - 2];
-        X2_used := X_REF[n_eff - 1]; Y2_used := Y_REF[n_eff - 1];
-    ELSE
-        X1_used := X_REF[0];       Y1_used := Y_REF[0];
-        X2_used := X_REF[1];       Y2_used := Y_REF[1];
-    END_IF;
-END_IF;
-
-(* --- Hitung interpolasi linear --- *)
-IF (X2_used - X1_used) = 0.0 THEN
-    Y := Y1_used;
-    Valid := FALSE;
-ELSE
-    slope := (Y2_used - Y1_used) / (X2_used - X1_used);
-    Y := Y1_used + slope * (X - X1_used);
-    Valid := TRUE;
-END_IF;
-
-(* --- Flag audit --- *)
-IF (ABS(Y2_used - Y1_used) &gt; THRESHOLD) OR (NOT DensityValid) THEN
-    AuditFlag := TRUE;
-ELSE
-    AuditFlag := FALSE;
-END_IF;
-
-END_FUNCTION_BLOCK
-</code></pre>
-<hr />
-
-<h3 id="cara-penggunaan">Cara Penggunaan</h3>
-<ol>
-<li>Tentukan jumlah titik referensi aktual → set <code>N</code>.</li>
-<li>Isi <code>X_REF[0..N-1]</code> dan <code>Y_REF[0..N-1]</code> dengan data kurva.</li>
-<li>Biarkan <code>X_REF[N..31]</code> dan <code>Y_REF[N..31]</code> default (tidak dipakai).</li>
-<li>Set <code>THRESHOLD</code> sesuai toleransi deviasi audit.</li>
-<li>Aktifkan <code>Enable := TRUE</code>.</li>
-</ol>
-<hr />
-
-<h3 id="contoh-tabel-input">Contoh Tabel Input</h3>
-<table>
-<thead>
-<tr>
-<th>Index</th>
-<th>X_REF</th>
-<th>Y_REF</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>1</td>
-<td>10</td>
-<td>5</td>
-</tr>
-<tr>
-<td>2</td>
-<td>20</td>
-<td>15</td>
-</tr>
-<tr>
-<td>3</td>
-<td>30</td>
-<td>25</td>
-</tr>
-<tr>
-<td>4</td>
-<td>40</td>
-<td>35</td>
-</tr>
-<tr>
-<td>5</td>
-<td>50</td>
-<td>50</td>
-</tr>
-</tbody>
-</table>
-<p>Jika <code>N = 6</code> dan <code>X = 22</code>, maka interval aktif <code>[20,30]</code> → hasil interpolasi <code>Y ≈ 17</code>.</p>
-<hr />
-
-<h3 id="flowchart-pairing">Flowchart Pairing</h3>
-<div style="display: flex; flex-direction: column; align-items: center;">
-  <div class="mermaid" style="width:100%; max-width:none; font-size:14px;">
-    flowchart TD
-        A(["Start"]) --&gt; B{"Enable?"}
-        B -- "No" --&gt; Z(["Return"])
-        B -- "Yes" --&gt; C["Set n_eff = N (clamp 2..32)"]
-        C --&gt; D["Check monotoni X_REF"]
-        D --&gt; E{"X in interval?"}
-        E -- "Yes" --&gt; F["Set X1_used,Y1_used,X2_used,Y2_used"]
-        E -- "No" --&gt; G{"X &lt; X_REF[0]?"}
-        G -- "Yes" --&gt; H["Clamp ke interval awal"]
-        G -- "No" --&gt; I{"X &gt; X_REF[n_eff-1]?"}
-        I -- "Yes" --&gt; J["Clamp ke interval akhir"]
-        I -- "No" --&gt; K["Fallback konservatif"]
-        F --&gt; L{"Degenerate interval?"}
-        H --&gt; L
-        J --&gt; L
-        K --&gt; L
-        L -- "Yes" --&gt; M["Set Y=Y1_used, Valid=FALSE"]
-        L -- "No" --&gt; N["Hitung slope dan Y, Valid=TRUE"]
-        M --&gt; O{"Audit check"}
-        N --&gt; O{"Audit check"}
-        O -- "Deviasi &gt; THRESHOLD atau monotoni gagal" --&gt; P["AuditFlag=TRUE"]
-        O -- "Normal" --&gt; Q["AuditFlag=FALSE"]
-        P --&gt; Z(["End"])
-        Q --&gt; Z(["End"])
-  </div>
-</div>
-<hr />
-
-<h3 id="kesimpulan">Kesimpulan</h3>
-<p><code>K_LOOKUP_LINEAR</code> adalah artefak modular untuk interpolasi linear dinamis di Supcon DCS.<br />
-Dengan fleksibilitas jumlah titik, proteksi multi-lapis, dan flag audit, FB ini memperkuat transparansi serta efisiensi sistem kontrol.</p>
-<p>Mengapa hal ini penting bagi operasi plant?</p>
-<ul>
-<li><strong>Mengurangi duplikasi</strong>: tidak perlu lagi membuat FB statis dengan jumlah titik berbeda (misalnya 14, 20, dsb).</li>
-<li><strong>Seragam lintas plant</strong>: format array 32 titik menjadi standar implementasi yang mudah diaudit dan diajarkan.</li>
-<li><strong>Mempercepat commissioning</strong>: kurva peralatan baru dapat langsung dimasukkan tanpa modifikasi FB.</li>
-<li><strong>Lebih aman</strong>: proteksi multi-lapis memastikan output stabil meski data referensi tidak sempurna.</li>
-<li><strong>Audit-grade</strong>: adanya flag audit (<code>AuditFlag</code>, <code>DensityValid</code>) memberi transparansi penuh pada kualitas data dan hasil interpolasi.</li>
-</ul>
-<p>Sebagai ilustrasi nyata, lookup kurva <strong>anti-surge kompresor sentrifugal</strong> dengan 8–10 titik dapat langsung diakomodasi, tanpa harus menulis ulang FB baru seperti pada pendekatan statis <code>K_LIN_INTERP14</code>.</p>
-<p><strong>Catatan praktis:</strong> Untuk anti-surge, interpolasi linear adalah pilihan terbaik karena:</p>
-<ul>
-<li>Perhitungan cepat dan ringan, tidak membebani CPU.</li>
-<li>Mudah diverifikasi dan dipahami operator maupun engineer.</li>
-<li>Transisi antar titik berjalan cepat sehingga stabil untuk kontrol real-time.</li>
-<li>Cukup akurat untuk merepresentasikan performa kompresor di antara titik vendor.</li>
-</ul>
-<hr />
-
-<h3 id="appendix-%E2%80%94-referensi-klininterp14">Appendix — Referensi <code>K_LIN_INTERP14</code></h3>
-<ul>
-<li><code>K_LIN_INTERP14</code> adalah <strong>versi statis</strong> dengan 14 titik, cocok untuk kurva performa yang sudah baku.</li>
-<li><code>K_LOOKUP_LINEAR</code> adalah <strong>versi dinamis</strong> dengan jumlah titik fleksibel (2–32).</li>
-<li>Menyertakan keduanya dalam artikel membantu pembaca memahami <strong>evolusi desain FB</strong> dari statis → dinamis, sekaligus memberi referensi audit.</li>
-</ul>
-<details>
-<summary>K_LIN_INTERP14 Function Block (klik untuk membuka)</summary>
-<pre><code class="language-pascal">(*=============================================================================
-  Function Block Name : K_LIN_INTERP14
-  Author              : Ketut P. Kumajaya
-  Date Created        : 04/10/2025
-  Description         : Melakukan interpolasi linear berdasarkan 14 pasang titik
-                        (X0..X13, Y0..Y13). Umumnya digunakan untuk lookup
-                        kurva performa peralatan proses (misalnya garis surge
-                        centrifugal compressor).
-  Inputs              : X        - Nilai input yang akan diinterpolasi (FLOAT)
-                        X0..X13  - Koordinat X referensi (FLOAT)
-                        Y0..Y13  - Koordinat Y referensi (FLOAT)
-  Outputs             : Y        - Hasil interpolasi linear (FLOAT)
-                        X1_used  - Titik awal X interval aktif (FLOAT)
-                        Y1_used  - Titik awal Y interval aktif (FLOAT)
-                        X2_used  - Titik akhir X interval aktif (FLOAT)
-                        Y2_used  - Titik akhir Y interval aktif (FLOAT)
-  Artefak Pairing     : X_ARRAY  - ARRAY [0..13] OF FLOAT
-                        Y_ARRAY  - ARRAY [0..13] OF FLOAT
-  Proteksi Audit      : Jika X di luar range, output dikunci pada ujung tabel.
-                        Pembagian dengan nol dicegah dengan fallback ke nilai
-                        tetap agar algoritma selalu stabil.
-=============================================================================*)
-
-FUNCTION_BLOCK K_LIN_INTERP14
-
-VAR_INPUT
-    X   : FLOAT;
-    X0  : FLOAT;   Y0  : FLOAT;
-    X1  : FLOAT;   Y1  : FLOAT;
-    X2  : FLOAT;   Y2  : FLOAT;
-    X3  : FLOAT;   Y3  : FLOAT;
-    X4  : FLOAT;   Y4  : FLOAT;
-    X5  : FLOAT;   Y5  : FLOAT;
-    X6  : FLOAT;   Y6  : FLOAT;
-    X7  : FLOAT;   Y7  : FLOAT;
-    X8  : FLOAT;   Y8  : FLOAT;
-    X9  : FLOAT;   Y9  : FLOAT;
-    X10 : FLOAT;   Y10 : FLOAT;
-    X11 : FLOAT;   Y11 : FLOAT;
-    X12 : FLOAT;   Y12 : FLOAT;
-    X13 : FLOAT;   Y13 : FLOAT;
-END_VAR
-
-VAR_OUTPUT
-    X1_used : FLOAT;
-    Y1_used : FLOAT;
-    X2_used : FLOAT;
-    Y2_used : FLOAT;
-    Y       : FLOAT;
-END_VAR
-
-VAR
-    X_ARRAY : array14FLOAT; (* user defined data type *)
-    Y_ARRAY : array14FLOAT; (* user defined data type *)
-    i       : INT;
-    slope   : FLOAT;
-END_VAR
-
-(* --- Inisialisasi array --- *)
-X_ARRAY[0] := X0;   Y_ARRAY[0] := Y0;
-X_ARRAY[1] := X1;   Y_ARRAY[1] := Y1;
-...
-X_ARRAY[13] := X13; Y_ARRAY[13] := Y13;
-
-(* --- Cari interval aktif --- *)
-FOR i := 0 TO 12 DO
-    IF (X &gt;= X_ARRAY[i]) AND (X &lt;= X_ARRAY[i+1]) THEN
-        X1_used := X_ARRAY[i];   Y1_used := Y_ARRAY[i];
-        X2_used := X_ARRAY[i+1]; Y2_used := Y_ARRAY[i+1];
-        EXIT;
-    END_IF;
-END_FOR;
-
-(* --- Clamp jika X di luar range --- *)
-IF X &lt; X_ARRAY[0] THEN
-    X1_used := X_ARRAY[0];   Y1_used := Y_ARRAY[0];
-    X2_used := X_ARRAY[1];   Y2_used := Y_ARRAY[1];
-ELSIF X &gt; X_ARRAY[13] THEN
-    X1_used := X_ARRAY[12];  Y1_used := Y_ARRAY[12];
-    X2_used := X_ARRAY[13];  Y2_used := Y_ARRAY[13];
-END_IF;
-
-(* --- Hitung interpolasi linear --- *)
-IF (X2_used - X1_used) = 0 THEN
-    Y := Y1_used; (* fallback jika interval degenerat *)
-ELSE
-    slope := (Y2_used - Y1_used) / (X2_used - X1_used);
-    Y := Y1_used + slope * (X - X1_used);
-END_IF;
-
-END_FUNCTION_BLOCK
-</code></pre>
-</details>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Practical Engineering" /><category term="Field Experience" /><summary type="html"><![CDATA[`K_LOOKUP_LINEAR` adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+Setiap unit produksi mandiri, fleksibel dari sisi perangkat keras dan OS, tetap menjadi bagian dari ekosistem data aman yang efisien.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="edge-computing" /><category term="Edge Computing" /><category term="Distributed Control System" /><category term="Field Experience" /><category term="Practical Engineering" /><summary type="html"><![CDATA[Dengan perangkat sederhana dan software open source, sistem ini menghadirkan integrasi data industri yang aman, efisien, dan berkelanjutan.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1639117474926-9e22670f6bf8?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDE2fHx0cmVuZHxlbnwwfHx8fDE3NTk3MDU1ODB8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

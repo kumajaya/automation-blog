@@ -88,7 +88,7 @@
 }
 
 /* Hide Ghost-specific elements */
-.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .gh-sidebar {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -174,6 +174,53 @@ table td, table th { border: 1px solid #e0e0e0; }
 table tr:nth-child(even) { background-color: #f9f9f9; }
 table td:first-child, table th:first-child { padding-left: 0.75em !important; }
 table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+
+/* ⬆ Scroll Top Button + Progress Indicator */
+.scroll-top {
+  --ghost-accent-color: #222149;
+  position: fixed;
+  z-index: 50;
+  padding: 0;
+  right: 20px; bottom: 20px;
+  opacity: 0; visibility: hidden;
+  transform: translateY(15px);
+  height: 46px; width: 46px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: all .4s ease;
+  border: none;
+  box-shadow: inset 0 0 0 2px #ccc;
+  color: #ccc; background-color: #fff;
+}
+.scroll-top.is-active {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.scroll-top .icon-tabler-arrow-up {
+  position: absolute;
+  stroke-width: 2px;
+  stroke: #333;
+}
+.scroll-top svg path { fill: none; }
+.scroll-top svg.progress-circle path {
+  stroke: #333;
+  stroke-width: 4;
+  transition: all .4s ease;
+}
+.scroll-top:hover {
+  color: var(--ghost-accent-color);
+}
+.scroll-top:hover .progress-circle path,
+.scroll-top:hover .icon-tabler-arrow-up {
+  stroke: var(--ghost-accent-color);
+}
+@media print {
+  .scroll-button .btn-toggle-round {
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body><header class="site-header">
@@ -529,18 +576,10 @@ curl https://example.com
 <p>Dengan konfigurasi ini, gateway Ubuntu berfungsi sebagai penghubung antara jaringan ZeroTier dan subnet lokal, serta sebagai relay layanan seperti VNC. Struktur NAT dan UFW yang modular mendukung konektivitas eksplisit dan dokumentasi yang siap diadopsi lintas proyek industri.</p>
 
 <!--kg-card-begin: html-->
-<!--   Scroll Top   -->
 <div class="scroll-button">
   <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
-    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102">
-      <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" />
-    </svg>
-    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="18" y1="11" x2="12" y2="5" />
-      <line x1="6" y1="11" x2="12" y2="5" />
-    </svg>
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="18" y1="11" x2="12" y2="5"></line><line x1="6" y1="11" x2="12" y2="5"></line></svg>
   </button>
 </div>
 <!--kg-card-end: html-->
@@ -697,6 +736,53 @@ curl https://example.com
 
     document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
   });
+</script>
+
+<!-- Scroll Top Button & Progress Indicator: UX enhancement by Norbert Hunyadi -->
+<script defer>
+  const scrollTopBtn = document.querySelector('.js-scroll-top');   // Tombol scroll ke atas
+  const topSelector = document.querySelector('.post-content');     // Konten utama sebagai titik awal scroll
+
+  if (scrollTopBtn && topSelector) {
+    scrollTopBtn.onclick = () => {
+      const topPosition = topSelector.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: topPosition, behavior: 'smooth' });
+    };
+
+    const progressPath = document.querySelector('.scroll-top path');
+    const pathLength = progressPath.getTotalLength();
+    progressPath.style.transition = 'none';
+    progressPath.style.strokeDasharray = `${pathLength} ${pathLength}`;
+    progressPath.style.strokeDashoffset = pathLength;
+    progressPath.getBoundingClientRect();
+    progressPath.style.transition = 'stroke-dashoffset 10ms linear';
+
+    const updateProgress = () => {
+      const scroll = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+      );
+      const windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const topOffset = topSelector.offsetTop;
+      const height = docHeight - windowHeight - topOffset;
+      const progress = pathLength - ((scroll - topOffset) * pathLength / height);
+      progressPath.style.strokeDashoffset = progress;
+    };
+
+    updateProgress();
+
+    const offset = topSelector.offsetTop; // Trigger scroll-top button visibility
+
+    window.addEventListener('scroll', () => {
+      updateProgress();
+      const scrollPos = window.scrollY || document.documentElement.scrollTop;
+      scrollPos > offset
+        ? scrollTopBtn.classList.add('is-active')
+        : scrollTopBtn.classList.remove('is-active');
+    }, false);
+  }
 </script>
 
 <!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->

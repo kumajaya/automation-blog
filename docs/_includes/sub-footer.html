@@ -169,3 +169,49 @@
     });
   });
 </script>
+
+<!-- Native File Card Enhancement: Replace Ghost file cards with native download links -->
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".kg-file-card").forEach(card => {
+    const link = card.querySelector("a.kg-file-card-container");
+    const fileUrl = link?.getAttribute("href");
+    const fileName = card.querySelector(".kg-file-card-title")?.textContent?.trim() || "Download File";
+    const fileDesc = card.querySelector(".kg-file-card-caption")?.textContent?.trim() || "";
+    const fileMeta = card.querySelector(".kg-file-card-metadata");
+    const fileSize = fileMeta?.querySelector(".kg-file-card-filesize")?.textContent?.trim() || "";
+    const fileBase = fileMeta?.querySelector(".kg-file-card-filename")?.textContent?.trim() || "";
+
+    if (!fileUrl) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "native-file-wrapper";
+
+    const svgIcon = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+        <polyline points="8.25 14.25 12 18 15.75 14.25"></polyline>
+        <line x1="12" y1="6.75" x2="12" y2="18"></line>
+        <circle cx="12" cy="12" r="11.25"></circle>
+      </svg>
+    `;
+
+    wrapper.innerHTML = `
+      <div class="file-info">
+        <div class="file-name">${fileName}</div>
+        ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
+        <div class="file-meta">
+          ${fileBase ? `<span>${fileBase}</span>` : ""}
+          ${fileBase && fileSize ? `<span class="dot">•</span>` : ""}
+          ${fileSize ? `<span>${fileSize}</span>` : ""}
+        </div>
+      </div>
+      <a class="file-download" href="${fileUrl}" download aria-label="Download file">
+        ${svgIcon}
+      </a>
+    `;
+
+    card.replaceWith(wrapper);
+  });
+});
+</script>

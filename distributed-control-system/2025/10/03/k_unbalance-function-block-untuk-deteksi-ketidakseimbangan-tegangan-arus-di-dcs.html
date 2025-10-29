@@ -778,12 +778,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="file-name">
           <i class="fa-solid fa-file"></i> ${fileName}
         </div>
+        ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
         <div class="file-meta">
           ${fileBase ? `<span>${fileBase}</span>` : ""}
           ${fileBase && fileSize ? `<span class="dot">•</span>` : ""}
           ${fileSize ? `<span>${fileSize}</span>` : ""}
         </div>
-        ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
       </div>
       <a class="file-download" href="${fileUrl}" download>
         <i class="fa-solid fa-download"></i> Download

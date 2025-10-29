@@ -264,15 +264,18 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
   justify-content: center;
   width: 80px;
   height: 80px;
-  border-left: 1px solid rgba(0,0,0,0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.05);
+  background: #fff;
   color: inherit;
   text-decoration: none;
   flex-shrink: 0;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .file-download:hover {
   background: rgba(0,0,0,0.03);
+  transform: translateY(-1px);
 }
 
 .file-download svg {

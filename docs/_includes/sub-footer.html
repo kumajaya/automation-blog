@@ -74,6 +74,53 @@
   });
 </script>
 
+<!-- Scroll Top Button & Progress Indicator: UX enhancement by Norbert Hunyadi -->
+<script defer>
+  const scrollTopBtn = document.querySelector('.js-scroll-top');   // Tombol scroll ke atas
+  const topSelector = document.querySelector('.post-content');     // Konten utama sebagai titik awal scroll
+
+  if (scrollTopBtn && topSelector) {
+    scrollTopBtn.onclick = () => {
+      const topPosition = topSelector.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: topPosition, behavior: 'smooth' });
+    };
+
+    const progressPath = document.querySelector('.scroll-top path');
+    const pathLength = progressPath.getTotalLength();
+    progressPath.style.transition = 'none';
+    progressPath.style.strokeDasharray = `${pathLength} ${pathLength}`;
+    progressPath.style.strokeDashoffset = pathLength;
+    progressPath.getBoundingClientRect();
+    progressPath.style.transition = 'stroke-dashoffset 10ms linear';
+
+    const updateProgress = () => {
+      const scroll = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+      );
+      const windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const topOffset = topSelector.offsetTop;
+      const height = docHeight - windowHeight - topOffset;
+      const progress = pathLength - ((scroll - topOffset) * pathLength / height);
+      progressPath.style.strokeDashoffset = progress;
+    };
+
+    updateProgress();
+
+    const offset = topSelector.offsetTop; // Trigger scroll-top button visibility
+
+    window.addEventListener('scroll', () => {
+      updateProgress();
+      const scrollPos = window.scrollY || document.documentElement.scrollTop;
+      scrollPos > offset
+        ? scrollTopBtn.classList.add('is-active')
+        : scrollTopBtn.classList.remove('is-active');
+    }, false);
+  }
+</script>
+
 <!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
 <script defer>
   document.addEventListener("DOMContentLoaded", function () {

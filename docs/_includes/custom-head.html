@@ -65,7 +65,7 @@
 }
 
 /* Hide Ghost-specific elements */
-.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .scroll-button, .scroll-button svg, .gh-sidebar {
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .gh-sidebar {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -151,4 +151,51 @@ table td, table th { border: 1px solid #e0e0e0; }
 table tr:nth-child(even) { background-color: #f9f9f9; }
 table td:first-child, table th:first-child { padding-left: 0.75em !important; }
 table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+
+/* ⬆ Scroll Top Button + Progress Indicator */
+.scroll-top {
+  --ghost-accent-color: #222149;
+  position: fixed;
+  z-index: 50;
+  padding: 0;
+  right: 20px; bottom: 20px;
+  opacity: 0; visibility: hidden;
+  transform: translateY(15px);
+  height: 46px; width: 46px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: all .4s ease;
+  border: none;
+  box-shadow: inset 0 0 0 2px #ccc;
+  color: #ccc; background-color: #fff;
+}
+.scroll-top.is-active {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.scroll-top .icon-tabler-arrow-up {
+  position: absolute;
+  stroke-width: 2px;
+  stroke: #333;
+}
+.scroll-top svg path { fill: none; }
+.scroll-top svg.progress-circle path {
+  stroke: #333;
+  stroke-width: 4;
+  transition: all .4s ease;
+}
+.scroll-top:hover {
+  color: var(--ghost-accent-color);
+}
+.scroll-top:hover .progress-circle path,
+.scroll-top:hover .icon-tabler-arrow-up {
+  stroke: var(--ghost-accent-color);
+}
+@media print {
+  .scroll-button .btn-toggle-round {
+    display: none !important;
+  }
+}
 </style>

@@ -244,13 +244,24 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
   font-size: 1em;
   margin-bottom: 0.25em;
 }
+.native-file-wrapper .file-name i {
+  color: #555;
+  margin-right: 0.4em;
+}
+.native-file-wrapper .file-meta {
+  font-size: 0.85em;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.native-file-wrapper .file-meta .dot {
+  color: #aaa;
+}
 .native-file-wrapper .file-desc {
   font-size: 0.9em;
-  color: #555;
-}
-.native-file-wrapper .file-size {
-  font-size: 0.85em;
-  color: #777;
+  color: #444;
+  margin-top: 0.25em;
 }
 .native-file-wrapper .file-download {
   background: #007acc;
@@ -263,10 +274,12 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
   white-space: nowrap;
   transition: background 0.2s;
 }
+.native-file-wrapper .file-download i {
+  margin-right: 0.4em;
+}
 .native-file-wrapper .file-download:hover {
   background: #005fa3;
 }
-
 </style>
 </head>
 <body><header class="site-header">
@@ -802,7 +815,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileUrl = link?.getAttribute("href");
     const fileName = card.querySelector(".kg-file-card-title")?.textContent?.trim() || "Download File";
     const fileDesc = card.querySelector(".kg-file-card-caption")?.textContent?.trim() || "";
-    const fileSize = card.querySelector(".kg-file-card-metadata")?.textContent?.trim() || "";
+    const fileMeta = card.querySelector(".kg-file-card-metadata");
+    const fileSize = fileMeta?.querySelector(".kg-file-card-filesize")?.textContent?.trim() || "";
+    const fileBase = fileMeta?.querySelector(".kg-file-card-filename")?.textContent?.trim() || "";
 
     if (!fileUrl) return;
 
@@ -811,9 +826,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     wrapper.innerHTML = `
       <div class="file-info">
-        <div class="file-name"><i class="fa-solid fa-file-pdf"></i> ${fileName}</div>
+        <div class="file-name">
+          <i class="fa-solid fa-file"></i> ${fileName}
+        </div>
+        <div class="file-meta">
+          ${fileBase ? `<span>${fileBase}</span>` : ""}
+          ${fileBase && fileSize ? `<span class="dot">•</span>` : ""}
+          ${fileSize ? `<span>${fileSize}</span>` : ""}
+        </div>
         ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
-        ${fileSize ? `<div class="file-size">${fileSize}</div>` : ""}
       </div>
       <a class="file-download" href="${fileUrl}" download>
         <i class="fa-solid fa-download"></i> Download

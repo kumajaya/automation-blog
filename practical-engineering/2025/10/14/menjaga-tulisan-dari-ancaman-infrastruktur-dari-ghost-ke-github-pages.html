@@ -221,6 +221,52 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
     display: none !important;
   }
 }
+
+/* Native File Download Card Styling */
+.native-file-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  padding: 1em 1.25em;
+  margin: 1.5em 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.75em;
+  background: #fafafa;
+  font-family: system-ui, sans-serif;
+}
+.native-file-wrapper .file-info {
+  flex: 1;
+  min-width: 0;
+}
+.native-file-wrapper .file-name {
+  font-weight: 600;
+  font-size: 1em;
+  margin-bottom: 0.25em;
+}
+.native-file-wrapper .file-desc {
+  font-size: 0.9em;
+  color: #555;
+}
+.native-file-wrapper .file-size {
+  font-size: 0.85em;
+  color: #777;
+}
+.native-file-wrapper .file-download {
+  background: #007acc;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 600;
+  padding: 0.5em 0.9em;
+  border-radius: 0.5em;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.native-file-wrapper .file-download:hover {
+  background: #005fa3;
+}
+
 </style>
 </head>
 <body><header class="site-header">
@@ -612,6 +658,37 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
       card.replaceWith(wrapper);
     });
   });
+</script>
+
+<!-- Native File Card Enhancement: Replace Ghost file cards with native download links -->
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".kg-file-card").forEach(card => {
+    const link = card.querySelector("a.kg-file-card-container");
+    const fileUrl = link?.getAttribute("href");
+    const fileName = card.querySelector(".kg-file-card-title")?.textContent?.trim() || "Download File";
+    const fileDesc = card.querySelector(".kg-file-card-caption")?.textContent?.trim() || "";
+    const fileSize = card.querySelector(".kg-file-card-metadata")?.textContent?.trim() || "";
+
+    if (!fileUrl) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "native-file-wrapper";
+
+    wrapper.innerHTML = `
+      <div class="file-info">
+        <div class="file-name"><i class="fa-solid fa-file-pdf"></i> ${fileName}</div>
+        ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
+        ${fileSize ? `<div class="file-size">${fileSize}</div>` : ""}
+      </div>
+      <a class="file-download" href="${fileUrl}" download>
+        <i class="fa-solid fa-download"></i> Download
+      </a>
+    `;
+
+    card.replaceWith(wrapper);
+  });
+});
 </script>
 </body>
 

@@ -236,6 +236,8 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .file-name {
@@ -252,25 +254,31 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
   font-size: 0.85em;
 }
 
+.dot {
+  margin: 0 6px;
+}
+
 .file-download {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #f1f1f1;
-  color: #222;
+  width: 80px;
+  height: 80px;
+  border-left: 1px solid rgba(0,0,0,0.05);
+  color: inherit;
   text-decoration: none;
+  flex-shrink: 0;
   transition: background 0.2s ease;
 }
 
 .file-download:hover {
-  background: #e6e6e6;
+  background: rgba(0,0,0,0.03);
 }
 
-.dot {
-  margin: 0 6px;
+.file-download svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
 }
 </style>
 </head>

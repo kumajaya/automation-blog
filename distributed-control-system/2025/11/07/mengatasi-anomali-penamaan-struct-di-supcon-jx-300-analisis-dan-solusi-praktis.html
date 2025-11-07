@@ -3,21 +3,23 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>distributed-control-system | Technical &amp; Sustainability Digest</title>
+<title>Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis | Technical &amp; Sustainability Digest</title>
 <meta name="generator" content="Jekyll v4.3.4" />
-<meta property="og:title" content="distributed-control-system" />
-<meta name="author" content="Ketut Kumajaya" />
+<meta property="og:title" content="Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang." />
-<meta property="og:description" content="Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang." />
-<link rel="canonical" href="https://kumajaya.github.io/automation-blog/categories/distributed-control-system/" />
-<meta property="og:url" content="https://kumajaya.github.io/automation-blog/categories/distributed-control-system/" />
+<meta name="description" content="Anomali menarik pada Supcon JX-300: kompiler Structured Text salah menafsirkan field struct seperti V1..V16 sebagai array. Artikel ini menjelaskan penyebab teknisnya, solusi aman menggunakan Val1..Val16, dan insight ringan tentang cara berpikir legacy compiler di sistem kontrol industri." />
+<meta property="og:description" content="Anomali menarik pada Supcon JX-300: kompiler Structured Text salah menafsirkan field struct seperti V1..V16 sebagai array. Artikel ini menjelaskan penyebab teknisnya, solusi aman menggunakan Val1..Val16, dan insight ringan tentang cara berpikir legacy compiler di sistem kontrol industri." />
+<link rel="canonical" href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html" />
+<meta property="og:url" content="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html" />
 <meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
-<meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="distributed-control-system" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-11-07T01:45:48+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Ketut Kumajaya"},"description":"Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.","headline":"distributed-control-system","url":"https://kumajaya.github.io/automation-blog/categories/distributed-control-system/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-07T01:45:48+00:00","datePublished":"2025-11-07T01:45:48+00:00","description":"Anomali menarik pada Supcon JX-300: kompiler Structured Text salah menafsirkan field struct seperti V1..V16 sebagai array. Artikel ini menjelaskan penyebab teknisnya, solusi aman menggunakan Val1..Val16, dan insight ringan tentang cara berpikir legacy compiler di sistem kontrol industri.","headline":"Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis","image":"https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html"},"url":"https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link id="main-stylesheet" rel="stylesheet" href="/automation-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://kumajaya.github.io/automation-blog/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
 <script>
@@ -304,287 +306,167 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <h1>
-  
-    DISTRIBUTED CONTROL SYSTEM
-  
-</h1>
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
-<div class="posts-container">
-  
-    <div class="post-item">
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category">
       
-      <a href="/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis" loading="lazy" class="post-image">
+      <a href="/automation-blog/tags/distributed-control-system">
+        Distributed Control System
       </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html" class="post-title">
-          Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis
-        </a>
-        <div class="post-meta">
-          November 07, 2025
-           • Ketut Kumajaya
-          — Anomali menarik pada Supcon JX-300: kompiler Structured Text salah menafsirkan field struct seperti V1..V16 sebagai array. Artikel ini menjelaskan penyebab teknisnya, solusi aman menggunakan Val1..Val16, dan insight ringan tentang cara berpikir legacy compiler di sistem kontrol industri.
-
-        </div>
-      </div>
     </div>
-  
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1616962430739-97b42c426926?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEwfHxlcG9jaHxlbnwwfHx8fDE3NjIxMzg2Nzl8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="K_DateTime – Standar Epoch 2000 untuk Supcon DCS" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs.html" class="post-title">
-          K_DateTime – Standar Epoch 2000 untuk Supcon DCS
-        </a>
-        <div class="post-meta">
-          November 03, 2025
-           • Ketut Kumajaya
-          — Implementasi Function Block dan Function Supcon DCS untuk mengelola timestamp dengan epoch 2000, termasuk structKDateTime untuk mengembalikan seluruh komponen tanggal/jam.
+    
 
-        </div>
+    <h1 class="post-title p-name" itemprop="name headline">Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-11-07T01:45:48+00:00" itemprop="datePublished">
+        November 07, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span>
+          </span>
+        
       </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">3 min read</span>
+      </div>
+      
     </div>
-  
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/11/02/k_ftl-solusi-first-trip-logic-deterministik.html" class="post-image-link">
-        <img src="https://images.unsplash.com/flagged/photo-1578928534298-9747fc52ec97?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDJ8fHdpbm5lcnxlbnwwfHx8fDE3NjIwOTI0MzJ8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="K_FTL: Solusi First Trip Logic Deterministik" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/11/02/k_ftl-solusi-first-trip-logic-deterministik.html" class="post-title">
-          K_FTL: Solusi First Trip Logic Deterministik
-        </a>
-        <div class="post-meta">
-          November 02, 2025
-           • Ketut Kumajaya
-          — First Trip Logic (FTL) membantu menentukan mesin pertama yang mengalami trip di antara banyak unit yang berjalan paralel. Artikel ini membahas desain, implementasi, dan validasi logika FTL menggunakan Structured Text dan Python di lingkungan Jupyter Notebook.
+  </header>
 
-        </div>
-      </div>
-    </div>
   
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integration-of-4diac-forte-and-rapid-scada.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1652145595413-0a79398e5888?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGNvbnRyb2wlMjByb29tfGVufDB8fHx8MTc2MDg5MTA0OXww&ixlib=rb-4.1.0&q=80&w=2000" alt="Open DCS Framework: Integration of 4diac FORTE and Rapid SCADA" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integration-of-4diac-forte-and-rapid-scada.html" class="post-title">
-          Open DCS Framework: Integration of 4diac FORTE and Rapid SCADA
-        </a>
-        <div class="post-meta">
-          October 19, 2025
-           • Ketut Kumajaya
-          — Open DCS Framework: Integration of 4diac FORTE as distributed control logic with Rapid SCADA for supervision, visualization, and historization. An open, modular, and vendor lock-in–free alternative for the future of industrial automation.
+  <p class="post-excerpt" itemprop="description">
+    Anomali menarik pada Supcon JX-300: kompiler Structured Text salah menafsirkan field struct seperti V1..V16 sebagai array. Artikel ini menjelaskan penyebab teknisnya, solusi aman menggunakan Val1..Val16, dan insight ringan tentang cara berpikir legacy compiler di sistem kontrol industri.
 
-        </div>
-      </div>
-    </div>
+  </p>
   
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1652145595413-0a79398e5888?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGNvbnRyb2wlMjByb29tfGVufDB8fHx8MTc2MDg5MTA0OXww&ixlib=rb-4.1.0&q=80&w=2000" alt="Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/19/open-dcs-framework-integrasi-4diac-forte-dan-rapid-scada.html" class="post-title">
-          Open DCS Framework: Integrasi 4diac FORTE dan Rapid SCADA
-        </a>
-        <div class="post-meta">
-          October 19, 2025
-           • Ketut Kumajaya
-          — Open DCS Framework: Integrasi 4diac FORTE sebagai logika kontrol terdistribusi dengan Rapid SCADA untuk supervisi, visualisasi, dan historisasi. Alternatif terbuka, modular, dan bebas vendor lock-in untuk otomasi industri masa depan.
 
-        </div>
-      </div>
-    </div>
   
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/17/k_word2_to_float-k_word4_to_float-function-block-untuk-konversi-data-modbus-16-32-64-bit-ke-float.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1531668383211-64743e924c66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxjYWJsZXxlbnwwfHx8fDE3NjA3MTc0MzV8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="K_WORD2_TO_FLOAT &amp; K_WORD4_TO_FLOAT: Function Block untuk Konversi Data Modbus 16/32/64‑bit ke FLOAT" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/17/k_word2_to_float-k_word4_to_float-function-block-untuk-konversi-data-modbus-16-32-64-bit-ke-float.html" class="post-title">
-          K_WORD2_TO_FLOAT & K_WORD4_TO_FLOAT: Function Block untuk Konversi Data Modbus 16/32/64‑bit ke FLOAT
-        </a>
-        <div class="post-meta">
-          October 17, 2025
-           • Ketut Kumajaya
-          — Konversi register Modbus tidak sesederhana membaca angka. Perbedaan endianness, addressing, dan varian protokol kerap menimbulkan kebingungan di lapangan. Artikel ini memperkenalkan K_WORD2_TO_FLOAT dan K_WORD4_TO_FLOAT sebagai solusi praktis dan konsisten.
+  <figure class="post-feature-image">
+    <img src="https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&ixlib=rb-4.1.0&q=80&w=2000" alt="Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis" loading="lazy" class="post-feature-img">
+    
+    <figcaption class="post-feature-caption">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@ziemer?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Paulo Ziemer</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
 
-        </div>
-      </div>
-    </div>
+    </figcaption>
+    
+  </figure>
   
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/16/k_accdelta-function-block-untuk-perhitungan-delta-akumulator.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1604176857763-71877b24864e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1ldGVyfGVufDB8fHx8MTc2MDYxODMxOXww&ixlib=rb-4.1.0&q=80&w=2000" alt="K_ACCDELTA: Function Block untuk Perhitungan Delta Akumulator" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/16/k_accdelta-function-block-untuk-perhitungan-delta-akumulator.html" class="post-title">
-          K_ACCDELTA: Function Block untuk Perhitungan Delta Akumulator
-        </a>
-        <div class="post-meta">
-          October 16, 2025
-           • Ketut Kumajaya
-          — Dirancang untuk menghitung delta energi atau akumulator dengan sinkronisasi baseline antar meter, tanpa mengganggu logsheet yang berjalan.
 
-        </div>
-      </div>
-    </div>
-  
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/08/masalah-mod-dan-solusi-if-then-else-di-delta-horizon-16-bit.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1601397922721-4326ae07bbc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1hdGh8ZW58MHx8fHwxNzU5OTQzNjQ3fDA&ixlib=rb-4.1.0&q=80&w=2000" alt="Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/08/masalah-mod-dan-solusi-if-then-else-di-delta-horizon-16-bit.html" class="post-title">
-          Masalah MOD dan Solusi IF-THEN-ELSE di Delta Horizon 16-bit
-        </a>
-        <div class="post-meta">
-          October 08, 2025
-           • Ketut Kumajaya
-          — Pendekatan MOD sering dipakai untuk menghitung delta berbasis counter 16-bit di sistem DCS. Namun, metode ini rawan menghasilkan loncatan nilai saat terjadi anomali pembacaan.
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p>Dalam pengembangan sistem otomasi industri, khususnya pada platform <strong>Supcon JX-300</strong>, konsistensi dan keandalan kompilasi kode merupakan fondasi utama untuk memastikan operasional yang stabil. Sebagai bagian dari upaya meningkatkan efisiensi dalam pengembangan function block (FB), saya telah mengidentifikasi sebuah anomali kecil namun signifikan terkait penamaan field struktur data (<code>struct</code>). Temuan ini berasal dari pengembangan FB <strong>K_SOE16</strong> untuk logika Sequence of Event (SOE), yang memerlukan struktur data multipel kanal untuk timestamp dan indeks.</p>
+<p>Artikel ini menyajikan analisis teknis, dampak potensial, serta solusi praktis yang telah diverifikasi, dengan tujuan mendukung praktik pengembangan yang lebih berkelanjutan—di mana waktu pengembangan yang efisien berkontribusi pada pengurangan sumber daya komputasi dan mendukung inisiatif green engineering di sektor otomasi.</p>
+<h4 id="analisis-teknis-konflik-parser-pada-pola-penamaan-field">Analisis Teknis: Konflik Parser pada Pola Penamaan Field</h4>
+<p>Platform Supcon JX-300, yang dibangun di atas fondasi IEC 61131-3 dengan ekstensi proprietary, menggunakan parser Structured Text (ST) yang mewarisi elemen dari sistem ECS-3000 generasi sebelumnya. Parser ini memiliki prioritas lexical yang menyebabkan interpretasi pola nama field <strong>huruf diikuti angka langsung</strong> (misalnya, <code>V1</code>, <code>V2</code>, hingga <code>V16</code>) sebagai akses array subscript, bukan sebagai field struktur.</p>
+<ul>
+<li><strong>Mekanisme Konflik</strong>:
+<ul>
+<li>Saat kode mengakses <code>TsIn.V1</code>, parser menafsirkannya sebagai <code>(TsIn.V)[1]</code>—sebuah akses array <code>V</code> pada indeks 1.</li>
+<li>Akses ini berfungsi normal hingga <code>V15</code> (indeks 15), tetapi gagal pada <code>V16</code> (indeks 16, yang dianggap out-of-bound untuk array hipotetis).</li>
+<li>Akibatnya, kompiler menghasilkan error "Invalid access" atau "Out of bound" tanpa penjelasan rinci.</li>
+</ul>
+</li>
+</ul>
+<p>Fenomena ini muncul karena legacy rule di lexical analyzer, di mana pola <code>identifier[digit]</code> diprioritaskan sebagai array access untuk kompatibilitas dengan kode lama. Hal ini umum di compiler DCS berbasis PLC, di mana transisi dari bahasa discrete (seperti Ladder) ke ST membawa beban parser historis.</p>
+<p><strong>Contoh Kode yang Bermasalah</strong>:</p>
+<pre><code class="language-pascal">TYPE struct16ULONG :
+STRUCT
+    V1 : ULONG; -- Diinterpretasikan sebagai array V[1]
+    V2 : ULONG; -- OK hingga V15
+    ...
+    V16 : ULONG; -- Fail pada V16
+END_STRUCT
+END_TYPE
 
-        </div>
-      </div>
-    </div>
-  
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fG1hdGh8ZW58MHx8fHwxNzU5NTU1NjM4fDA&ixlib=rb-4.1.0&q=80&w=2000" alt="K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/04/k_lookup_linear-function-block-untuk-interpolasi-linear-dinamis.html" class="post-title">
-          K_LOOKUP_LINEAR: Function Block untuk Interpolasi Linear Dinamis
-        </a>
-        <div class="post-meta">
-          October 04, 2025
-           • Ketut Kumajaya
-          — `K_LOOKUP_LINEAR` adalah Function Block modular untuk interpolasi linear dinamis. Dengan dukungan hingga 32 titik, proteksi berlapis, dan flag audit. Implementasi ini memudahkan standardisasi lookup kurva, mempercepat commissioning, dan memastikan transparansi hasil perhitungan dalam operasi plant.
+-- Di FB:
+TsInt[0] := TsIn.V1; -- OK
+TsInt[15] := TsIn.V16; -- Fail
+</code></pre>
+<h4 id="dampak-pada-pengembangan-fb-dan-operasional">Dampak pada Pengembangan FB dan Operasional</h4>
+<p>Anomali ini dapat memperlambat siklus pengembangan di FB kompleks seperti SOE, di mana mapping loop CASE untuk 16 kanal menjadi tulang punggung. Dampak operasional termasuk:</p>
+<ul>
+<li><strong>Keterlambatan Deployment</strong>: Compile gagal di tahap akhir, memaksa debug manual.</li>
+<li><strong>Risiko Kesalahan Mapping</strong>: Field salah interpretasi bisa menyebabkan data kanal terbalik di HMI atau report, memengaruhi analisis post-event (e.g., kronologi trip salah urutan).</li>
+<li><strong>Aspek Sustainability</strong>: Waktu debug tambahan berkontribusi pada konsumsi energi komputasi lebih tinggi, bertentangan dengan prinsip green automation yang menekankan efisiensi proses dan pengurangan waste sumber daya.</li>
+</ul>
+<p>Dalam konteks industri, di mana SOE mendukung kepatuhan safety (e.g. IEC 61511), konsistensi kompilasi seperti ini krusial untuk menjaga integritas sistem.</p>
+<h4 id="solusi-dan-rekomendasi-implementasi">Solusi dan Rekomendasi Implementasi</h4>
+<p>Solusi utama adalah mengubah pola penamaan field menjadi <strong>prefix deskriptif + angka</strong>, seperti <code>Val1, Val2, ..., Val16</code>. Prefix "Val" (atau "TsVal" untuk timestamp) memecah pola huruf-digit murni, sehingga parser mengenalinya sebagai identifier field biasa.</p>
+<p><strong>Implementasi di UDT</strong>:</p>
+<pre><code class="language-pascal">TYPE struct16ULONG :
+STRUCT
+    Val1 : ULONG;
+    Val2 : ULONG;
+    ...
+    Val16 : ULONG;
+END_STRUCT
+END_TYPE
+</code></pre>
+<p><strong>Di FB Mapping Loop</strong>:</p>
+<pre><code class="language-pascal">FOR i := 0 TO 15 DO
+    CASE i OF
+        0: TsInt[i] := TsIn.Val1;
+        1: TsInt[i] := TsIn.Val2;
+        ...
+        15: TsInt[i] := TsIn.Val16;
+    END_CASE;
+END_FOR;
+</code></pre>
+<p><strong>Rekomendasi Tambahan</strong>:</p>
+<ol>
+<li><strong>Standarisasi di Library</strong>: Adopsi pola <code>ValN</code> secara konsisten untuk semua struct numerik (ULONG, UINT, INT) di library FB. Ini mengurangi variasi dan risiko error.</li>
+<li><strong>Alternatif Pola</strong>:
+<ul>
+<li>Underscore: <code>Ts_1, Ts_2</code> (pendek, aman dari subscript misread).</li>
+<li>Deskriptif: <code>TimestampCh1, TimestampCh2</code> (untuk readability tinggi di tim besar).</li>
+</ul>
+</li>
+<li><strong>Verifikasi</strong>: Selalu test di FB dummy dengan compile full project—periksa log parser untuk "lexical conflict".</li>
+<li><strong>Sustainability Angle</strong>: Pola ini tidak hanya fix teknis, tapi juga dukung sustainable development dengan mengurangi waktu debug (hemat energi server per iterasi).</li>
+</ol>
+<h4 id="kesimpulan">Kesimpulan</h4>
+<p>Anomali penamaan field di Supcon JX-300 adalah karakteristik parser legacy yang mewarisi prioritas array access dari ECS-3000, tapi mudah diatasi dengan pola nama yang tepat. Dengan implementasi <code>Val1..ValN</code>, FB seperti K_SOE16 bisa dikembangkan lebih cepat dan andal, mendukung operasional yang lebih efisien dan berkelanjutan—di mana setiap detik hemat debug berarti pengurangan jejak karbon dari server idle.</p>
+<p>Apakah Anda pernah mengalami isu serupa di platform DCS lain?</p>
+<blockquote>
+<p><em>Ingat, di dunia DCS dan otomasi: Kalau sesuatu berperilaku aneh tapi konsisten... ya, itu bukan bug—itu fitur. 😏</em></p>
+</blockquote>
+<p><em>Referensi: Supcon JX-300 Programming Guide, IEC 61131-3 ST Syntax Reference.</em></p>
 
-        </div>
-      </div>
-    </div>
-  
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/10/03/k_unbalance-function-block-untuk-deteksi-ketidakseimbangan-tegangan-arus-di-dcs.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1536623975707-c4b3b2af565d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDEyfHxiYWxhbmNlfGVufDB8fHx8MTc1OTQ4MTQ3Nnww&ixlib=rb-4.1.0&q=80&w=2000" alt="K_UNBALANCE: Function Block untuk Deteksi Ketidakseimbangan Tegangan/Arus di DCS" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/10/03/k_unbalance-function-block-untuk-deteksi-ketidakseimbangan-tegangan-arus-di-dcs.html" class="post-title">
-          K_UNBALANCE: Function Block untuk Deteksi Ketidakseimbangan Tegangan/Arus di DCS
-        </a>
-        <div class="post-meta">
-          October 03, 2025
-           • Ketut Kumajaya
-          — Dirancang untuk menghitung ketidakseimbangan tegangan atau arus dari tiga input dalam sistem DCS, khususnya pada power meter yang tidak menyediakan informasi unbalance.
 
-        </div>
-      </div>
-    </div>
-  
-    <div class="post-item">
-      
-      <a href="/automation-blog/distributed-control-system/2025/09/25/k_accumulator-solusi-presisi-dan-efisien-untuk-drift-akumulator-di-modbus-controller.html" class="post-image-link">
-        <img src="https://images.unsplash.com/photo-1633265486501-0cf524a07213?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDd8fHRpbWVyfGVufDB8fHx8MTc1ODc4NTc5NXww&ixlib=rb-4.1.0&q=80&w=2000" alt="K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller" loading="lazy" class="post-image">
-      </a>
-      
-      <div class="post-text">
-        <a href="/automation-blog/distributed-control-system/2025/09/25/k_accumulator-solusi-presisi-dan-efisien-untuk-drift-akumulator-di-modbus-controller.html" class="post-title">
-          K_ACCUM: Solusi Presisi dan Efisien untuk Drift Akumulator di Modbus Controller
-        </a>
-        <div class="post-meta">
-          September 25, 2025
-           • Ketut Kumajaya
-          — K_ACCUM adalah function block custom untuk mengatasi drift akumulasi dan keterbatasan alamat komunikasi antar controller. Dengan akumulasi tipe data LONG dengan nilai desimal dalam SFLOAT, solusi ini lebih presisi, hemat alamat, dan mudah ditangani.
+  </div>
 
-        </div>
-      </div>
-    </div>
-  
-</div>
+  <a class="u-url" href="/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html" hidden></a>
+  <meta itemprop="mainEntityOfPage" content="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html">
+</article>
 
 <style>
-h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
+.post-category {
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
 }
 
-.post-item {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 1rem;
+.post-feature-image {
+  margin-top: 1rem;
 }
 
-.post-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.post-image-link {
-  flex: 0 0 200px;
-  margin-right: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.post-image {
+.post-feature-img {
   width: 100%;
   height: auto;
-  object-fit: cover;
   border-radius: 6px;
 }
 
-.post-text {
-  flex: 1 1 0;
-  min-width: 0;
-}
-
-a.post-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.post-meta {
+.post-feature-caption {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: #6b7280;
   margin-top: 0.25rem;
-}
-
-@media (max-width: 640px) {
-  .post-item {
-    flex-direction: column;
-  }
-  .post-item a img {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-    width: 100%;
-  }
 }
 </style>
 

@@ -1,5 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-11-04T02:24:51+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
-</subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">K_DateTime – Standar Epoch 2000 untuk Supcon DCS</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs.html" rel="alternate" type="text/html" title="K_DateTime – Standar Epoch 2000 untuk Supcon DCS" /><published>2025-11-03T02:58:46+00:00</published><updated>2025-11-03T02:58:46+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs.html"><![CDATA[<h1 id="kdatetime-%E2%80%93-standar-epoch-2000-untuk-supcon-dcs">K_DateTime – Standar Epoch 2000 untuk Supcon DCS</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-11-07T02:24:38+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
+</subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html" rel="alternate" type="text/html" title="Mengatasi Anomali Penamaan Struct di Supcon JX-300: Analisis dan Solusi Praktis" /><published>2025-11-07T01:45:48+00:00</published><updated>2025-11-07T01:45:48+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/07/mengatasi-anomali-penamaan-struct-di-supcon-jx-300-analisis-dan-solusi-praktis.html"><![CDATA[<p>Dalam pengembangan sistem otomasi industri, khususnya pada platform <strong>Supcon JX-300</strong>, konsistensi dan keandalan kompilasi kode merupakan fondasi utama untuk memastikan operasional yang stabil. Sebagai bagian dari upaya meningkatkan efisiensi dalam pengembangan function block (FB), saya telah mengidentifikasi sebuah anomali kecil namun signifikan terkait penamaan field struktur data (<code>struct</code>). Temuan ini berasal dari pengembangan FB <strong>K_SOE16</strong> untuk logika Sequence of Event (SOE), yang memerlukan struktur data multipel kanal untuk timestamp dan indeks.</p>
+<p>Artikel ini menyajikan analisis teknis, dampak potensial, serta solusi praktis yang telah diverifikasi, dengan tujuan mendukung praktik pengembangan yang lebih berkelanjutan—di mana waktu pengembangan yang efisien berkontribusi pada pengurangan sumber daya komputasi dan mendukung inisiatif green engineering di sektor otomasi.</p>
+<h4 id="analisis-teknis-konflik-parser-pada-pola-penamaan-field">Analisis Teknis: Konflik Parser pada Pola Penamaan Field</h4>
+<p>Platform Supcon JX-300, yang dibangun di atas fondasi IEC 61131-3 dengan ekstensi proprietary, menggunakan parser Structured Text (ST) yang mewarisi elemen dari sistem ECS-3000 generasi sebelumnya. Parser ini memiliki prioritas lexical yang menyebabkan interpretasi pola nama field <strong>huruf diikuti angka langsung</strong> (misalnya, <code>V1</code>, <code>V2</code>, hingga <code>V16</code>) sebagai akses array subscript, bukan sebagai field struktur.</p>
+<ul>
+<li><strong>Mekanisme Konflik</strong>:
+<ul>
+<li>Saat kode mengakses <code>TsIn.V1</code>, parser menafsirkannya sebagai <code>(TsIn.V)[1]</code>—sebuah akses array <code>V</code> pada indeks 1.</li>
+<li>Akses ini berfungsi normal hingga <code>V15</code> (indeks 15), tetapi gagal pada <code>V16</code> (indeks 16, yang dianggap out-of-bound untuk array hipotetis).</li>
+<li>Akibatnya, kompiler menghasilkan error "Invalid access" atau "Out of bound" tanpa penjelasan rinci.</li>
+</ul>
+</li>
+</ul>
+<p>Fenomena ini muncul karena legacy rule di lexical analyzer, di mana pola <code>identifier[digit]</code> diprioritaskan sebagai array access untuk kompatibilitas dengan kode lama. Hal ini umum di compiler DCS berbasis PLC, di mana transisi dari bahasa discrete (seperti Ladder) ke ST membawa beban parser historis.</p>
+<p><strong>Contoh Kode yang Bermasalah</strong>:</p>
+<pre><code class="language-pascal">TYPE struct16ULONG :
+STRUCT
+    V1 : ULONG; -- Diinterpretasikan sebagai array V[1]
+    V2 : ULONG; -- OK hingga V15
+    ...
+    V16 : ULONG; -- Fail pada V16
+END_STRUCT
+END_TYPE
+
+-- Di FB:
+TsInt[0] := TsIn.V1; -- OK
+TsInt[15] := TsIn.V16; -- Fail
+</code></pre>
+<h4 id="dampak-pada-pengembangan-fb-dan-operasional">Dampak pada Pengembangan FB dan Operasional</h4>
+<p>Anomali ini dapat memperlambat siklus pengembangan di FB kompleks seperti SOE, di mana mapping loop CASE untuk 16 kanal menjadi tulang punggung. Dampak operasional termasuk:</p>
+<ul>
+<li><strong>Keterlambatan Deployment</strong>: Compile gagal di tahap akhir, memaksa debug manual.</li>
+<li><strong>Risiko Kesalahan Mapping</strong>: Field salah interpretasi bisa menyebabkan data kanal terbalik di HMI atau report, memengaruhi analisis post-event (e.g., kronologi trip salah urutan).</li>
+<li><strong>Aspek Sustainability</strong>: Waktu debug tambahan berkontribusi pada konsumsi energi komputasi lebih tinggi, bertentangan dengan prinsip green automation yang menekankan efisiensi proses dan pengurangan waste sumber daya.</li>
+</ul>
+<p>Dalam konteks industri, di mana SOE mendukung kepatuhan safety (e.g. IEC 61511), konsistensi kompilasi seperti ini krusial untuk menjaga integritas sistem.</p>
+<h4 id="solusi-dan-rekomendasi-implementasi">Solusi dan Rekomendasi Implementasi</h4>
+<p>Solusi utama adalah mengubah pola penamaan field menjadi <strong>prefix deskriptif + angka</strong>, seperti <code>Val1, Val2, ..., Val16</code>. Prefix "Val" (atau "TsVal" untuk timestamp) memecah pola huruf-digit murni, sehingga parser mengenalinya sebagai identifier field biasa.</p>
+<p><strong>Implementasi di UDT</strong>:</p>
+<pre><code class="language-pascal">TYPE struct16ULONG :
+STRUCT
+    Val1 : ULONG;
+    Val2 : ULONG;
+    ...
+    Val16 : ULONG;
+END_STRUCT
+END_TYPE
+</code></pre>
+<p><strong>Di FB Mapping Loop</strong>:</p>
+<pre><code class="language-pascal">FOR i := 0 TO 15 DO
+    CASE i OF
+        0: TsInt[i] := TsIn.Val1;
+        1: TsInt[i] := TsIn.Val2;
+        ...
+        15: TsInt[i] := TsIn.Val16;
+    END_CASE;
+END_FOR;
+</code></pre>
+<p><strong>Rekomendasi Tambahan</strong>:</p>
+<ol>
+<li><strong>Standarisasi di Library</strong>: Adopsi pola <code>ValN</code> secara konsisten untuk semua struct numerik (ULONG, UINT, INT) di library FB. Ini mengurangi variasi dan risiko error.</li>
+<li><strong>Alternatif Pola</strong>:
+<ul>
+<li>Underscore: <code>Ts_1, Ts_2</code> (pendek, aman dari subscript misread).</li>
+<li>Deskriptif: <code>TimestampCh1, TimestampCh2</code> (untuk readability tinggi di tim besar).</li>
+</ul>
+</li>
+<li><strong>Verifikasi</strong>: Selalu test di FB dummy dengan compile full project—periksa log parser untuk "lexical conflict".</li>
+<li><strong>Sustainability Angle</strong>: Pola ini tidak hanya fix teknis, tapi juga dukung sustainable development dengan mengurangi waktu debug (hemat energi server per iterasi).</li>
+</ol>
+<h4 id="kesimpulan">Kesimpulan</h4>
+<p>Anomali penamaan field di Supcon JX-300 adalah karakteristik parser legacy yang mewarisi prioritas array access dari ECS-3000, tapi mudah diatasi dengan pola nama yang tepat. Dengan implementasi <code>Val1..ValN</code>, FB seperti K_SOE16 bisa dikembangkan lebih cepat dan andal, mendukung operasional yang lebih efisien dan berkelanjutan—di mana setiap detik hemat debug berarti pengurangan jejak karbon dari server idle.</p>
+<p>Apakah Anda pernah mengalami isu serupa di platform DCS lain?</p>
+<blockquote>
+<p><em>Ingat, di dunia DCS dan otomasi: Kalau sesuatu berperilaku aneh tapi konsisten... ya, itu bukan bug—itu fitur. 😏</em></p>
+</blockquote>
+<p><em>Referensi: Supcon JX-300 Programming Guide, IEC 61131-3 ST Syntax Reference.</em></p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Field Experience" /><category term="Practical Engineering" /><summary type="html"><![CDATA[Anomali menarik pada Supcon JX-300: kompiler Structured Text salah menafsirkan field struct seperti V1..V16 sebagai array. Artikel ini menjelaskan penyebab teknisnya, solusi aman menggunakan Val1..Val16, dan insight ringan tentang cara berpikir legacy compiler di sistem kontrol industri.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1511954766786-1f88f53fb528?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDN8fGJ1Z3xlbnwwfHx8fDE3NjI0NzkwMDN8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">K_DateTime – Standar Epoch 2000 untuk Supcon DCS</title><link href="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs.html" rel="alternate" type="text/html" title="K_DateTime – Standar Epoch 2000 untuk Supcon DCS" /><published>2025-11-03T02:58:46+00:00</published><updated>2025-11-03T02:58:46+00:00</updated><id>https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/distributed-control-system/2025/11/03/k_datetime-standar-epoch-2000-untuk-supcon-dcs.html"><![CDATA[<h1 id="kdatetime-%E2%80%93-standar-epoch-2000-untuk-supcon-dcs">K_DateTime – Standar Epoch 2000 untuk Supcon DCS</h1>
 <p><em>Ditulis oleh Ketut Kumajaya — 3 November 2025</em></p>
 <h2 id="pendahuluan">Pendahuluan</h2>
 <p>Dalam sistem SCADA/DCS modern, pengelolaan timestamp sangat penting untuk pencatatan alarm, historikal, dan monitoring performa mesin. Secara umum, timestamp sering disimpan sebagai <strong>epoch</strong> (detik sejak suatu tanggal acuan).</p>
@@ -3927,68 +4003,4 @@ flowchart TD
 <hr />
 
 <h3 id="kesimpulan">Kesimpulan</h3>
-<p>Function Block <code>K_ACCDELTA</code> menghitung delta energi dengan proteksi nilai negatif dan mekanisme snapshot reset. Dengan desain yang minimalis dan modular, FB ini dapat digunakan baik untuk <strong>netting dua meter</strong> maupun <strong>single-meter delta</strong>, serta mendukung auditabilitas lintas plant. Reset dilakukan secara logis di DCS, memungkinkan pembaruan baseline kapan pun tanpa memengaruhi nilai akumulasi pada power meter.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Practical Engineering" /><category term="Field Experience" /><summary type="html"><![CDATA[Dirancang untuk menghitung delta energi atau akumulator dengan sinkronisasi baseline antar meter, tanpa mengganggu logsheet yang berjalan.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1604176857763-71877b24864e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1ldGVyfGVufDB8fHx8MTc2MDYxODMxOXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1604176857763-71877b24864e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1ldGVyfGVufDB8fHx8MTc2MDYxODMxOXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Menjaga Tulisan dari Ancaman Infrastruktur: Dari Ghost ke GitHub Pages</title><link href="https://kumajaya.github.io/automation-blog/practical-engineering/2025/10/14/menjaga-tulisan-dari-ancaman-infrastruktur-dari-ghost-ke-github-pages.html" rel="alternate" type="text/html" title="Menjaga Tulisan dari Ancaman Infrastruktur: Dari Ghost ke GitHub Pages" /><published>2025-10-14T11:36:06+00:00</published><updated>2025-10-14T11:36:06+00:00</updated><id>https://kumajaya.github.io/automation-blog/practical-engineering/2025/10/14/menjaga-tulisan-dari-ancaman-infrastruktur-dari-ghost-ke-github-pages</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/practical-engineering/2025/10/14/menjaga-tulisan-dari-ancaman-infrastruktur-dari-ghost-ke-github-pages.html"><![CDATA[<p><em>Ditulis oleh Ketut Kumajaya | 14 Oktober 2025</em></p>
-<h3 id="pendahuluan">Pendahuluan</h3>
-<p>Menulis blog itu sederhana. Tapi di balik kesederhanaannya, selalu ada satu kekhawatiran: bagaimana kalau <em>backbone</em> infrastruktur yang kita pakai tidak cukup kuat—dan suatu hari semua tulisan itu hilang begitu saja?</p>
-<p>Saya masih punya akun WordPress lama. Masih aman, masih bisa diakses, tapi mulai terasa tidak nyaman karena gangguan iklan. Setelah itu, saya beralih ke blog pribadi dengan server berbayar yang saya kelola sendiri. Namun muncul kekhawatiran baru: bagaimana kalau suatu saat saya tidak lagi mampu membayar biaya server? Maka seluruh tulisan bisa hilang begitu saja.</p>
-<p>Sekarang saya menulis di beberapa tempat—di blog pribadi, dan juga di blog dengan infrastruktur server yang disediakan tim IT korporasi. Tapi kekhawatiran itu tetap ada: bahwa suatu saat tulisan-tulisan itu bisa lenyap.</p>
-<h4 id="pengetahuan-yang-hilang-usaha-yang-terulang">Pengetahuan yang Hilang, Usaha yang Terulang</h4>
-<p>Jika itu terjadi, sekecil apa pun pengetahuan yang sudah terdokumentasi, tidak bisa lagi diwariskan. Orang lain akan mengulang usaha besar untuk hal yang sebenarnya sudah pernah terselesaikan.</p>
-<p>Bagi saya, menulis bukan sekadar menyimpan kode atau konfigurasi, tetapi juga menyertakan narasi yang menjelaskan konteksnya. Program DCS, misalnya, akan jauh lebih mudah dipahami jika ada cerita di balik logikanya—kenapa dibuat seperti itu, dan bagaimana proses berpikirnya.</p>
-<h4 id="mencari-jalan-agar-pengetahuan-tetap-hidup">Mencari Jalan agar Pengetahuan Tetap Hidup</h4>
-<p>Dari kekhawatiran bahwa pengetahuan bisa hilang, saya mulai mencari pendekatan lain: menulis tetap di platform yang nyaman, di server mana pun, tetapi hasilnya disinkronkan ke layanan yang umurnya mungkin akan lebih panjang dari saya sendiri.</p>
-<p>Saya tidak ingin generasi berikutnya masih harus belajar dari nol tentang <em>basic cryogenic</em>, <em>orifice flowmeter rescaling</em>, atau <em>performance curve analysis</em>, padahal semua itu sudah pernah kita lewati.</p>
-<p>Karena itu, saya mulai melihat dokumentasi bukan hanya sebagai catatan kerja, tapi sebagai warisan yang harus dijaga keberlanjutannya.</p>
-<hr />
-
-<h3 id="github-tempat-menyimpan-warisan">GitHub: Tempat Menyimpan Warisan</h3>
-<p>Sebagai pengguna GitHub sejak lama, banyak kode saya masih aman di sana—meskipun sempat muncul berbagai spekulasi setelah GitHub diakuisisi oleh Microsoft. Namun sejauh pengamatan saya, Microsoft bukan ancaman bagi proyek <em>open source</em>; justru kontribusinya semakin besar. Banyak aplikasi Microsoft kini bersifat <em>open source</em> dan berjalan lintas platform—baik di Windows maupun Linux (misalnya: VS Code atau .NET).</p>
-<p>Kekuatan GitHub bukan hanya pada kemampuannya menyimpan kode, tetapi pada sistem <em>version control</em> di baliknya—<em>git</em>, ciptaan Linus Torvalds, sang pembuat Linux. Di mana pun saya menulis dokumen, pada dasarnya saya bisa menyinkronkannya ke GitHub secara otomatis. Setiap perubahan tercatat, setiap versi tersimpan.</p>
-<p>Rasanya seperti memiliki <strong>arsip evolusi pengetahuan</strong> yang tidak akan pernah hilang.</p>
-<hr />
-
-<h3 id="praktiknya-blog-dan-mirroring">Praktiknya: Blog dan Mirroring</h3>
-<p>Sekarang, ringkasannya seperti ini:</p>
-<ul>
-<li>Hal-hal umum dan tidak terlalu spesifik saya tulis di <a href="https://automation.samatorgroup.com/blog/" target="_blank">automation.samatorgroup.com/blog</a>.</li>
-<li>Isinya saya <em>mirror</em> ke <a href="https://kumajaya.github.io/automation-blog/?ref=automation.samatorgroup.com" target="_blank">kumajaya.github.io/automation-blog</a> agar terjamin bisa diwariskan bahkan setelah saya tidak ada.</li>
-</ul>
-<p>Sinkronisasi diperiksa setiap hari secara otomatis oleh GitHub: jika ada perbedaan, sistem akan melakukan regenerasi konten. Dengan begitu, saya tetap bisa menulis di platform yang nyaman seperti Ghost, tetapi yakin bahwa hasilnya aman karena di-<em>mirror</em> setiap waktu. Otomasi terpenuhi—inovasi juga berjalan.</p>
-<p>Saya selalu merasa <em>automation</em> itu lebih mudah diwujudkan karena hasilnya nyata, bisa diukur. Namun <em>innovation</em> sering kali lebih rumit—karena bagi saya, inovasi tidak harus selalu berbentuk alat atau sistem baru; kadang cukup dengan cara berpikir atau cara bekerja yang berubah.</p>
-<p>Walau begitu, saya harus akui—tambahan kata <em>innovation</em> di nama departemen saya memang membawa beban tersendiri.</p>
-<p>Semua teknik yang saya gunakan bersifat <em>open source</em>, dan bisa digunakan ulang siapa pun yang ingin melakukan hal serupa—karena pada akhirnya, pengetahuan baru akan benar-benar hidup jika bisa diwariskan dan digunakan kembali.</p>
-<figure style="display: flex; flex-direction: column; align-items: center; margin: 20px 0;">
-  <div class="mermaid" style="width:85%; max-width:800px; font-size:16px;">
-    %%{init: {'themeVariables': { 'fontSize': '14px', 'primaryColor': '#e8f0fe', 'edgeLabelBackground':'#fff'}}}%%
-    flowchart TB
-        A["Ghost Blog<br />(automation.samatorgroup.com/blog)"]
-        B["GitHub Pages<br />(kumajaya.github.io/automation-blog)"]
-        A --&gt; E["Dokumentasi Internal<br />(Server Korporasi)"]
-        E --&gt;|"Mirror otomatis"| B
-        F["Cron Job &amp;<br />GitHub Action"] --&gt;|"Periksa &amp;<br />Regenerasi Harian"| B
-        B --&gt; C["Pembaca Masa Depan"]
-        A --&gt; D["Pembaca Masa Kini"]
-        %% Definisi kelas
-        classDef source fill:#1f77b4,stroke:#0d3d66,stroke-width:2px,color:#fff;
-        classDef repo fill:#2ca02c,stroke:#145214,stroke-width:2px,color:#fff;
-        classDef consumer fill:#ff7f0e,stroke:#a34b00,stroke-width:2px,color:#fff;
-        classDef process fill:#9467bd,stroke:#4b2c6f,stroke-width:2px,color:#fff;
-        %% Pemetaan node ke kelas
-        class A source;
-        class E source;
-        class B repo;
-        class C consumer;
-        class D consumer;
-        class F process;
-  </div>
-  <figcaption style="text-align:center; font-size:13px; color:#555;">
-    Dari Ghost ke GitHub: Menjaga Pengetahuan Tetap Hidup
-  </figcaption>
-</figure>
-<hr />
-
-<h3 id="penutup-dokumentasi-sebagai-kolaborasi">Penutup: Dokumentasi sebagai Kolaborasi</h3>
-<p>GitHub sebenarnya juga menyediakan layanan komersial. Jika para pengambil keputusan memahami potensi <em>git</em>, pendekatan ini sangat relevan untuk dokumentasi dengan <em>versioning control</em> yang ketat. Kita bisa bekerja bersama, mengembangkan ide yang sama, sambil tetap tahu siapa mengubah apa, kapan, dan kenapa.</p>
-<p>Kode saya terbuka, bisa digunakan siapa saja, tanpa batasan. Namun, tentu saja tidak semua hal bisa dibuka—misalnya <em>API_KEY</em> blog pribadi, yang hanya saya miliki. Ghost tidak akan memberikan izin akses tanpa otorisasi, dan memang seharusnya begitu.</p>
-<p>Karena pada akhirnya, sebagian pengetahuan memang harus dibuka agar bisa diwariskan, sementara sebagian yang lain tetap dijaga sebagai bentuk tanggung jawab.</p>
-<p>Penasaran? Silakan kunjungi repo mirroring saya di <a href="https://github.com/kumajaya/automation-blog/tree/main?ref=automation.samatorgroup.com" target="_blank">GitHub</a>—mungkin Anda bisa fork, tambah kontribusi, atau adaptasi untuk proyek sendiri. Mari jaga warisan ini bersama!</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="practical-engineering" /><category term="Practical Engineering" /><category term="Team Collaboration" /><category term="Open Source" /><summary type="html"><![CDATA[Dari Ghost ke GitHub, dari tulisan menjadi arsip pengetahuan. Sebuah perjalanan mencari cara agar dokumentasi teknis bertahan melampaui umur server dan penulisnya.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1647696945040-56de84f73f5c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fGJvb2tzaGVsZiUyMGtub3dsZWRnZXxlbnwwfHx8fDE3NjA0MjE5Nzd8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1647696945040-56de84f73f5c?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fGJvb2tzaGVsZiUyMGtub3dsZWRnZXxlbnwwfHx8fDE3NjA0MjE5Nzd8MA&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+<p>Function Block <code>K_ACCDELTA</code> menghitung delta energi dengan proteksi nilai negatif dan mekanisme snapshot reset. Dengan desain yang minimalis dan modular, FB ini dapat digunakan baik untuk <strong>netting dua meter</strong> maupun <strong>single-meter delta</strong>, serta mendukung auditabilitas lintas plant. Reset dilakukan secara logis di DCS, memungkinkan pembaruan baseline kapan pun tanpa memengaruhi nilai akumulasi pada power meter.</p>]]></content><author><name>[&quot;Ketut Kumajaya&quot;]</name></author><category term="distributed-control-system" /><category term="Distributed Control System" /><category term="Practical Engineering" /><category term="Field Experience" /><summary type="html"><![CDATA[Dirancang untuk menghitung delta energi atau akumulator dengan sinkronisasi baseline antar meter, tanpa mengganggu logsheet yang berjalan.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://images.unsplash.com/photo-1604176857763-71877b24864e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1ldGVyfGVufDB8fHx8MTc2MDYxODMxOXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" /><media:content medium="image" url="https://images.unsplash.com/photo-1604176857763-71877b24864e?crop=entropy&amp;cs=tinysrgb&amp;fit=max&amp;fm=jpg&amp;ixid=M3wxMTc3M3wwfDF8c2VhcmNofDZ8fG1ldGVyfGVufDB8fHx8MTc2MDYxODMxOXww&amp;ixlib=rb-4.1.0&amp;q=80&amp;w=2000" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

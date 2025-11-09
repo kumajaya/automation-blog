@@ -1,11 +1,11 @@
 ---
-ghost_uuid: "49302e47-ff7d-4ad2-9823-9aa7a7358e9a"
-title: "Membangun Manajemen Sequence of Event (SOE) di Supcon JX-300XP"
-date: "2025-11-08T02:44:41.000+07:00"
-slug: "membangun-manajemen-sequence-of-event-soe-di-supcon-jx-300xp"
+ghost_uuid: "3d84821f-c93d-4b53-ada7-30e0d32b3a89"
+title: "Building Sequence of Event (SOE) Management in Supcon JX-300XP"
+date: "2025-11-08T23:56:44.000+07:00"
+slug: "building-sequence-of-event-soe-management-in-supcon-jx-300xp"
 layout: "post"
 excerpt: |
-  Implementasi Sequence of Event (SOE) di Supcon DCS dengan rangkaian 7 function block modular. Menjamin kronologi trip tercatat presisi, mudah diaudit, dan ramah operasional.
+  Implementation of Sequence of Event (SOE) in Supcon DCS using a chain of 7 modular function blocks. Ensures precise trip chronology recording, easy auditing, and operator-friendly operations.
 image: "https://images.unsplash.com/photo-1621571029036-1573d2b1dc5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fHNlcXVlbmNlfGVufDB8fHx8MTc2MjU0MzYxNnww&ixlib=rb-4.1.0&q=80&w=2000"
 image_alt: ""
 image_caption: "<span style=\"white-space: pre-wrap;\">Photo by </span><a href=\"https://unsplash.com/@bradyn?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Bradyn Trollip</span></a><span style=\"white-space: pre-wrap;\"> / </span><a href=\"https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit\"><span style=\"white-space: pre-wrap;\">Unsplash</span></a>"
@@ -30,22 +30,22 @@ og_image: ""
 twitter_title: ""
 twitter_description: ""
 twitter_image: ""
-url: "https://automation.samatorgroup.com/blog/membangun-manajemen-sequence-of-event-soe-di-supcon-jx-300xp/"
-comment_id: "690e45fc28ca3e0592722a72"
+url: "https://automation.samatorgroup.com/blog/building-sequence-of-event-soe-management-in-supcon-jx-300xp/"
+comment_id: "690f6f2b28ca3e0592722b15"
 reading_time: 17
 access: true
 comments: false
 ---
 
 {% raw %}
-<p><strong>Modular • Audit-Grade • Human-Friendly</strong><br>
-<em>Oleh: Ketut Kumajaya • 08 November 2025</em></p>
+<p><strong>Modular • Audit-Grade • Operator-Friendly</strong><br>
+<em>By: Ketut Kumajaya • November 08, 2025</em></p>
 <blockquote>
-<p><strong>TL;DR</strong> — 7 Function Block rancangan sendiri untuk SOE 32-channel di JX-300XP: konversi waktu ke epoch (sejak 2000), bit-packing DWORD, first-out akurat, delta detik, sorting kronologi. Sudah lolos simulasi incremental, decremental, random (delay 2 detik), dan concurrent all-trip delta=0 detik.</p>
+<p><strong>TL;DR</strong> — 7 Custom Function Blocks for 32-channel SOE in JX-300XP: time conversion to epoch (since 2000), DWORD bit-packing, accurate first-out detection, second deltas, chronological sorting. Passed simulations for incremental, decremental, random (2-second delay), and concurrent all-trip with 0-second delta.</p>
 </blockquote>
-<h2 id="pendahuluan">Pendahuluan</h2>
-<p>Sequence of Event (SOE) adalah fitur penting dalam sistem DCS untuk mencatat urutan kejadian kritis seperti trip, alarm, dan aksi operator. Dengan presisi waktu tinggi, SOE membantu investigasi gangguan, analisis respon sistem, dan menyediakan jejak audit yang transparan.</p>
-<p>Artikel ini menyajikan <strong>K_SOE32 Suite</strong> — implementasi SOE di Supcon DCS menggunakan rangkaian function block modular yang terdokumentasi secara audit‑grade.</p>
+<h2 id="introduction">Introduction</h2>
+<p>Sequence of Event (SOE) is a critical feature in DCS systems for recording the sequence of critical incidents such as trips, alarms, and operator actions. With high time precision, SOE aids in incident investigations, system response analysis, and provides a transparent audit trail.</p>
+<p>This article presents the <strong>K_SOE32 Suite</strong> — an implementation of SOE in Supcon DCS using a chain of modular function blocks documented to audit-grade standards.</p>
 <figure style="text-align:center;">
   <div class="mermaid" style="max-width:85%; margin:auto; font-size:0.85rem;">
     flowchart TD
@@ -91,30 +91,30 @@ comments: false
         style PACKING fill:#E8F5E9,stroke:#43A047,stroke-width:2px
   </div>
   <figcaption style="margin-top:0.5em; color:#555; font-size:1.5rem;">
-    Alur manajemen Sequence of Event (SOE) di Supcon JX-300XP
+    Sequence of Event (SOE) Management Flow in Supcon JX-300XP
   </figcaption>
 </figure>
 <hr>
 <h2 id="1-kepoch">1. K_Epoch</h2>
-<p><strong>Tujuan:</strong><br>
-Mengonversi waktu sistem Supcon menjadi epoch detik sejak 1 Januari 2000 UTC, dengan handling leap year dan validasi ketat.</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+Convert Supcon system time to epoch seconds since January 1, 2000 UTC, with leap year handling and strict validation.</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Jika Enable=FALSE, set Epoch=0 dan RETURN.</li>
-<li>Init MonthDays manual (31 Jan, 28 Feb, dll.).</li>
-<li>Ambil waktu: Year = CENTURY()*100 + YEAR(), Month=MONTH(), dll.</li>
-<li>Validasi range (Year ≥2000, Month 1-12, dll.) → Epoch=0 jika invalid.</li>
-<li>Hitung DaysSince2000: FOR i:=2000 TO Year-1 (+365/366 leap), + hari bulan 1 TO Month-1, +1 jika Month&gt;2 leap.</li>
-<li>Adjust Feb leap (j=1), validasi Day → Epoch=0 jika invalid.</li>
+<li>If Enable=FALSE, set Epoch=0 and RETURN.</li>
+<li>Manual init MonthDays (31 Jan, 28 Feb, etc.).</li>
+<li>Fetch time: Year = CENTURY()*100 + YEAR(), Month=MONTH(), etc.</li>
+<li>Validate range (Year ≥2000, Month 1-12, etc.) → Epoch=0 if invalid.</li>
+<li>Calculate DaysSince2000: FOR i:=2000 TO Year-1 (+365/366 leap), + days from months 1 TO Month-1, +1 if Month&gt;2 leap.</li>
+<li>Feb leap adjust (j=1), validate Day → Epoch=0 if invalid.</li>
 <li>DaysSince2000 += Day-1.</li>
 <li>Epoch = DaysSince2000<em>86400 + Hour</em>3600 + Minute*60 + Second.</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Konsistensi UTC sejak 2000 dengan proteksi error (output 0).</li>
-<li>Leap year akurat untuk SOE—verifikasi mudah via K_EpochToTime.</li>
+<li>UTC consistency since 2000 with error protection (output 0).</li>
+<li>Accurate leap year for SOE—easy verification via K_EpochToTime.</li>
 </ul>
-<h3 id="test-case-kepoch-simulasi-logic-100">Test Case K_Epoch (Simulasi Logic 100 %)</h3>
+<h3 id="kepoch-test-cases-100-logic-simulation">K_Epoch Test Cases (100% Logic Simulation)</h3>
 <table>
 <thead>
 <tr>
@@ -195,112 +195,112 @@ Mengonversi waktu sistem Supcon menjadi epoch detik sejak 1 Januari 2000 UTC, de
 </table>
 <hr>
 <h2 id="2-k16bitstoword">2. K_16BitsToWord</h2>
-<p><strong>Tujuan:</strong><br>
-Packing 16 input BOOL scalar menjadi WORD bitmask (0x0000–0xFFFF) untuk snapshot kanal sebelum merging ke DWORD di SOE.</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+Packing 16 scalar BOOL inputs into a WORD bitmask (0x0000–0xFFFF) for digital channel snapshot before merging to DWORD in SOE.</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Salin IN1..IN16 ke array internal Inputs[0..15] (IN1=Inputs[0]).</li>
+<li>Copy IN1..IN16 to internal array Inputs[0..15] (IN1=Inputs[0]).</li>
 <li>Init OUT1 = 0.</li>
-<li>Loop FOR i:=0 TO 15: Jika Inputs[i]=TRUE, OUT1 = OR_WORD(OUT1, SHL_WORD(1, i)).</li>
-<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); input dari R_TRIG external pre-processing untuk rising edge.</li>
+<li>Loop FOR i:=0 TO 15: If Inputs[i]=TRUE, OUT1 = OR_WORD(OUT1, SHL_WORD(1, i)).</li>
+<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); inputs from external R_TRIG pre-processing for rising edge.</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Snapshot 16 kanal kompak, mudah packing ke DWORD SOE.</li>
-<li>Mapping jelas (IN1=Bit0, IN16=Bit15)—verifikasi bit set langsung dari HMI, traceability cepat di edge detection.</li>
+<li>Compact snapshot of 16 channels, easy packing to DWORD SOE.</li>
+<li>Clear mapping (IN1=Bit0, IN16=Bit15)—direct bit set verification from HMI, fast traceability in edge detection.</li>
 </ul>
 <hr>
 <h2 id="3-k2wordtodword">3. K_2WordToDWord</h2>
-<p><strong>Tujuan:</strong><br>
-Gabungkan dua WORD (HiInput &amp; LoInput) menjadi satu DWORD untuk packing data panjang.</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+Combine two WORDs (Hi, Lo) into one DWORD.</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Konversi HiInput &amp; LoInput ke ULONG (WORD_TO_UINT → UINT_TO_ULONG).</li>
-<li>Geser HiInput kiri 16 bit: tempHi = SHL_DWORD(ULONG_TO_DWORD(tempHi), 16).</li>
-<li>Gabungkan dengan OR: Output = OR_DWORD(tempHi shifted, tempLo).</li>
-<li>Output DWORD = Hi&lt;&lt;16 | Lo (MSB Hi, LSB Lo).</li>
+<li>Convert to ULONG.</li>
+<li>Shift Hi left by 16 bits.</li>
+<li>Combine with Lo using OR.</li>
+<li>Output = Hi&lt;&lt;16 + Lo.</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Packing kompak 32-bit dari dua 16-bit, tanpa konversi langsung WORD-DWORD.</li>
-<li>Operasi bitwise transparan—mudah trace (e.g., verifikasi alignment Hi/Lo tanpa disassembly).</li>
+<li>Facilitates recording long data (timestamps, IDs).</li>
+<li>Transparent and easy to trace.</li>
 </ul>
 <hr>
 <h2 id="4-ksoe32">4. K_SOE32</h2>
-<p><strong>Tujuan:</strong><br>
-Ini adalah inti SOE: Menangani 32 kanal digital, me-latching trip, menyimpan timestamp, dan mendeteksi first-out secara otomatis.</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+This is the SOE core: Handles 32 digital channels, latches trips, stores timestamps, and detects first-out automatically.</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Restore state dari input persisten (latch &amp; timestamp global, disambungkan dari output siklus sebelumnya untuk kontinuitas data).<br>
-Empat output yang di-loop back menjadi 4 input persisten melalui variabel eksternal:
+<li>Restore state from persistent input (global latch &amp; timestamp, connected from previous cycle output for data continuity).<br>
+Four outputs looped back as 4 persistent inputs via external variables:
 <ul>
-<li>TripIn/TripOut (INT): Kanal first trip (-1 if none) untuk validasi rebuild.</li>
-<li>LockIn/LockOut (BOOL): Status trip aktif untuk kondisi awal siklus.</li>
-<li>TripsIn/TripsOut (DWORD): Bitmask latched channels untuk restore dan update state.</li>
-<li>TsIn/TsOut (struct32ULONG): Array timestamp[0..31] untuk simpan epoch per kanal dan cek status latched.</li>
+<li>TripIn/TripOut (INT): First trip channel (-1 if none) for rebuild validation.</li>
+<li>LockIn/LockOut (BOOL): Active trip status for initial cycle condition.</li>
+<li>TripsIn/TripsOut (DWORD): Bitmask of latched channels for restore and update state.</li>
+<li>TsIn/TsOut (struct32ULONG): Timestamp array[0..31] to store epoch per channel and check latched status.</li>
 </ul>
 </li>
-<li>Rebuild first trip jika LockOut=TRUE dan TripOut invalid (e.g., -1 atau tidak match latched bit, dari kanal terendah yang latched via FOR loop).</li>
-<li>Reset manual (via pulse Reset=TRUE) → kosongkan semua latch (set Latched=FALSE, TripsOut=0, TripOut=-1, TsInt=0, LockOut=FALSE).</li>
-<li>Loop kanal (FOR i:=0 TO 31): Deteksi rising edge (Run bit i set AND NOT Latched[i]), simpan TsInt[i]=Ts saat ini jika belum latched dan Ts&gt;0 (skip glitch), set TripOut=i jika TripOut=-1. Update TripsOut dari Latched bits; LockOut = LockOut OR (TripsOut &lt;&gt; 0).</li>
-<li>Map TsInt ke TsOut struct (via CASE Val1-Val32).</li>
-<li>TripTs = TsInt[TripOut] jika TripOut &gt;=0, else 0.</li>
+<li>Rebuild first trip if LockOut=TRUE and TripOut invalid (e.g., -1 or does not match latched bit, from lowest latched channel via FOR loop).</li>
+<li>Manual reset (via pulse Reset=TRUE) → clear all latches (set Latched=FALSE, TripsOut=0, TripOut=-1, TsInt=0, LockOut=FALSE).</li>
+<li>Loop channels (FOR i:=0 TO 31): Detect rising edge (Run bit i set AND NOT Latched[i]), store TsInt[i]=Ts current if not latched and Ts&gt;0 (skip glitch), set TripOut=i if TripOut=-1. Update TripsOut from Latched bits; LockOut = LockOut OR (TripsOut &lt;&gt; 0).</li>
+<li>Map TsInt to TsOut struct (via CASE Val1-Val32).</li>
+<li>TripTs = TsInt[TripOut] if TripOut &gt;=0, else 0.</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Setiap trip dicatat dengan timestamp unik (ULONG epoch), cegah loss data post-restart berkat persistent loop-back eksplisit.</li>
-<li>TripOut dan TripTs langsung tunjuk kanal pertama &amp; waktunya—contoh: "Trip dimulai di kanal 5 pukul 14:23:45", memudahkan diagnosa cepat dan audit transparan tanpa rekonstruksi manual.</li>
+<li>Each trip recorded with unique timestamp (ULONG epoch), preventing data loss post-restart thanks to explicit persistent loop-back.</li>
+<li>TripOut and TripTs directly indicate first channel &amp; time—e.g., "Trip started on channel 5 at 14:23:45", enabling quick diagnosis and transparent audits without manual reconstruction.</li>
 </ul>
 <hr>
 <h2 id="5-ksoe32sort">5. K_SOE32Sort</h2>
-<p><strong>Tujuan:</strong><br>
-Mengurutkan timestamp naik, menghasilkan urutan kanal dan waktu.</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+Sort timestamps ascending, generate channel and time sequence.</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Copy struct ke array.</li>
-<li>Filter timestamp valid.</li>
-<li>Bubble sort → urutkan berdasarkan waktu, tie‑break dengan indeks.</li>
-<li>Map hasil ke Seq (indeks) dan TsOut (timestamp).</li>
+<li>Copy struct to array.</li>
+<li>Filter valid timestamps.</li>
+<li>Bubble sort → order by time, tie-break by index.</li>
+<li>Map results to Seq (indices) and TsOut (timestamps).</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Kronologi kejadian bisa ditelusuri dengan presisi.</li>
-<li>Urutan jelas, tidak perlu manual interpretasi.</li>
+<li>Incident chronology traceable with precision.</li>
+<li>Clear sequence, no manual interpretation needed.</li>
 </ul>
 <hr>
 <h2 id="6-ksoe32delta">6. K_SOE32Delta</h2>
-<p><strong>Tujuan:</strong><br>
-Menghitung selisih waktu tiap kanal terhadap base (first non‑zero Ts).</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+Calculate time differences for each channel against base (first non-zero Ts).</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Copy struct ke array.</li>
-<li>Cari base timestamp pertama.</li>
-<li>Loop kanal: jika Ts ≥ base, Diff = Ts–base, else 0.</li>
-<li>Map hasil ke struct Diff.</li>
+<li>Copy struct to array.</li>
+<li>Find base as first non-zero timestamp.</li>
+<li>Loop channels: If Ts ≥ base, Diff = Ts–base, else 0.</li>
+<li>Map results to Diff struct.</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Delta detik menunjukkan kecepatan respon sistem.</li>
-<li>Angka sederhana lebih mudah dipahami.</li>
+<li>Second deltas show system response speed.</li>
+<li>Simple numbers easier to understand.</li>
 </ul>
 <hr>
 <h2 id="7-kepochtotime">7. K_EpochToTime</h2>
-<p><strong>Tujuan:</strong><br>
-Konversi epoch 2000 ke format waktu manusiawi.</p>
-<p><strong>Alur Logika:</strong></p>
+<p><strong>Purpose:</strong><br>
+Convert 2000 epoch to human-readable time format.</p>
+<p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Validasi epoch.</li>
-<li>Pisahkan hari dan sisa detik.</li>
-<li>Hitung jam, menit, detik.</li>
-<li>Loop tahun dan bulan dengan leap year adjustment.</li>
-<li>Sisa hari → Day.</li>
+<li>Validate epoch.</li>
+<li>Separate days and remaining seconds.</li>
+<li>Calculate hours, minutes, seconds.</li>
+<li>Loop years and months with leap year adjustment.</li>
+<li>Remaining days → Day.</li>
 </ul>
-<p><strong>Nilai Audit/Operator:</strong></p>
+<p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Epoch panjang bisa dikonversi ke format kalender.</li>
-<li>Laporan SOE langsung terbaca.</li>
+<li>Long epochs convertible to calendar format.</li>
+<li>SOE reports directly readable.</li>
 </ul>
-<h3 id="test-case-kepochtotime-simulasi-logic-100">Test Case K_EpochToTime (Simulasi Logic 100 %)</h3>
+<h3 id="kepochtotime-test-cases-100-logic-simulation">K_EpochToTime Test Cases (100% Logic Simulation)</h3>
 <table>
 <thead>
 <tr>
@@ -332,56 +332,56 @@ Konversi epoch 2000 ke format waktu manusiawi.</p>
 </tbody>
 </table>
 <hr>
-<h2 id="rangkaian-function-block-soe">Rangkaian Function Block SOE</h2>
+<h2 id="soe-function-block-chain">SOE Function Block Chain</h2>
 <table>
 <thead>
 <tr>
 <th>Block</th>
-<th>Fungsi Utama</th>
-<th>Nilai Audit/Operator</th>
+<th>Main Function</th>
+<th>Audit/Operator Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>K_Epoch</td>
-<td>Bangun epoch detik sejak 2000</td>
-<td>Konsistensi waktu</td>
+<td>Build epoch seconds since 2000</td>
+<td>Time consistency</td>
 </tr>
 <tr>
 <td>K_EpochToTime</td>
-<td>Epoch → waktu manusiawi</td>
-<td>Laporan audit</td>
+<td>Epoch → human-readable time</td>
+<td>Audit reports</td>
 </tr>
 <tr>
 <td>K_16BitsToWord</td>
-<td>Packing 16 BOOL → WORD</td>
-<td>Snapshot kanal</td>
+<td>Pack 16 BOOL → WORD</td>
+<td>Channel snapshot</td>
 </tr>
 <tr>
 <td>K_2WordToDWord</td>
-<td>Gabung 2 WORD → DWORD</td>
-<td>Data panjang</td>
+<td>Combine 2 WORD → DWORD</td>
+<td>Long data</td>
 </tr>
 <tr>
 <td>K_SOE32</td>
-<td>Inti SOE, latching 32 kanal</td>
-<td>Kronologi trip</td>
+<td>SOE core, latch 32 channels</td>
+<td>Trip chronology</td>
 </tr>
 <tr>
 <td>K_SOE32Sort</td>
-<td>Urutkan timestamp</td>
-<td>Transparansi urutan</td>
+<td>Sort timestamps</td>
+<td>Sequence transparency</td>
 </tr>
 <tr>
 <td>K_SOE32Delta</td>
-<td>Hitung delta detik</td>
-<td>Analisis respon</td>
+<td>Calculate second deltas</td>
+<td>Response analysis</td>
 </tr>
 </tbody>
 </table>
 <hr>
-<h2 id="test-case-table-simulasi-real-logic-08-nov-2025">Test Case Table (Simulasi Real Logic 08-Nov-2025)</h2>
-<p>Semua simulasi menggunakan delay 2 detik antar trip (kecuali concurrent). Logic 100 % replika FB asli (epoch relatif, tie-break indeks rendah).</p>
+<h2 id="test-case-table-real-logic-simulation-08-nov-2025">Test Case Table (Real Logic Simulation 08-Nov-2025)</h2>
+<p>All simulations use 2-second delays between trips (except concurrent). 100% replica of original FB logic (relative epoch, low-index tie-break).</p>
 <table>
 <thead>
 <tr>
@@ -389,51 +389,51 @@ Konversi epoch 2000 ke format waktu manusiawi.</p>
 <th>FirstOut (Channel)</th>
 <th>Delta Base</th>
 <th>Delta Max</th>
-<th>Sorted Urutan (contoh)</th>
+<th>Sorted Sequence (example)</th>
 <th>Pass</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Incremental (Ch1 → Ch32, delay 2 detik)</td>
+<td>Incremental (Ch1 → Ch32, 2-second delay)</td>
 <td>1</td>
-<td>0 detik</td>
-<td>62 detik</td>
+<td>0 seconds</td>
+<td>62 seconds</td>
 <td>1 (0s), 2 (2s), 3 (4s), ..., 32 (62s)</td>
 <td>✓</td>
 </tr>
 <tr>
-<td>Decremental (Ch32 → Ch1, delay 2 detik)</td>
+<td>Decremental (Ch32 → Ch1, 2-second delay)</td>
 <td>32</td>
-<td>0 detik</td>
-<td>62 detik</td>
+<td>0 seconds</td>
+<td>62 seconds</td>
 <td>32 (0s), 31 (2s), 30 (4s), ..., 1 (62s)</td>
 <td>✓</td>
 </tr>
 <tr>
-<td>Random (acak, delay 2 detik)</td>
+<td>Random (random, 2-second delay)</td>
 <td>27</td>
-<td>0 detik</td>
-<td>62 detik</td>
+<td>0 seconds</td>
+<td>62 seconds</td>
 <td>27 (0s), 6 (2s), 11 (4s), 16 (6s), 26 (8s), 12 (10s), 23 (12s), 7 (14s), 20 (16s), 13 (18s)...</td>
 <td>✓</td>
 </tr>
 <tr>
-<td>Concurrent (semua Ch1-32 di scan sama)</td>
+<td>Concurrent (all Ch1-32 in same scan)</td>
 <td>1</td>
-<td>0 detik</td>
-<td>0 detik</td>
-<td>1, 2, 3, 4, 5, 6, 7, 8, 9, 10... (tie-break indeks)</td>
+<td>0 seconds</td>
+<td>0 seconds</td>
+<td>1, 2, 3, 4, 5, 6, 7, 8, 9, 10... (index tie-break)</td>
 <td>✓</td>
 </tr>
 </tbody>
 </table>
-<p><em>(Random seed 42 untuk reproducible — urutan trip acak: 27, 6, 11, 16, 26, 12, 23, 7, 20, 13, 17, 10, 29, 15, 25, 21, 31, 2, 14, 19, 3, 18, 22, 4, 30, 5, 28, 32, 9, 24, 1, 8)</em></p>
+<p><em>(Random seed 42 for reproducibility — random trip order: 27, 6, 11, 16, 26, 12, 23, 7, 20, 13, 17, 10, 29, 15, 25, 21, 31, 2, 14, 19, 3, 18, 22, 4, 30, 5, 28, 32, 9, 24, 1, 8)</em></p>
 <hr>
-<h2 id="penutup">Penutup</h2>
-<p>Dengan rangkaian function block ini, SOE di Supcon DCS dapat dibangun secara modular, audit‑grade, dan human‑friendly. Dokumentasi header yang konsisten memastikan setiap blok dapat diaudit, diajarkan, dan diadaptasi. Seluruh FB ini dapat dipakai ulang lintas plant dengan hanya mengganti mapping I/O, tanpa perlu ubah logika internal.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>With this chain of function blocks, SOE in Supcon DCS can be built modularly, to audit-grade standards, and operator-friendly. Consistent header documentation ensures each block can be audited, taught, and adapted. All FBs are reusable across plants by simply changing I/O mappings, without altering internal logic.</p>
 <hr>
-<h2 id="%F0%9F%93%8E-lampiran-function-block-lengkap">📎 Lampiran Function Block Lengkap</h2>
+<h2 id="%F0%9F%93%8E-complete-function-block-appendix">📎 Complete Function Block Appendix</h2>
 <details>
 <summary>K_Epoch</summary>
 <pre><code class="language-pascal">(*

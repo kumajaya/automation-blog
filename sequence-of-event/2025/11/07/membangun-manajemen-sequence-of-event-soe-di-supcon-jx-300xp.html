@@ -334,7 +334,7 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
       </div>
       
       <div class="force-inline post-authors">
-        <span class="reading-time">17 min read</span>
+        <span class="reading-time">18 min read</span>
       </div>
       
     </div>
@@ -424,14 +424,20 @@ table th { background-color: #222149; color: #fff !important; font-weight: bold;
 Mengonversi waktu sistem Supcon menjadi epoch detik sejak 1 Januari 2000 UTC, dengan handling leap year dan validasi ketat.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li>Jika Enable=FALSE, set Epoch=0 dan RETURN.</li>
-<li>Init MonthDays manual (31 Jan, 28 Feb, dll.).</li>
-<li>Ambil waktu: Year = CENTURY()*100 + YEAR(), Month=MONTH(), dll.</li>
-<li>Validasi range (Year ≥2000, Month 1-12, dll.) → Epoch=0 jika invalid.</li>
-<li>Hitung DaysSince2000: FOR i:=2000 TO Year-1 (+365/366 leap), + hari bulan 1 TO Month-1, +1 jika Month&gt;2 leap.</li>
-<li>Adjust Feb leap (j=1), validasi Day → Epoch=0 jika invalid.</li>
-<li>DaysSince2000 += Day-1.</li>
-<li>Epoch = DaysSince2000<em>86400 + Hour</em>3600 + Minute*60 + Second.</li>
+<li>Jika <code>Enable=FALSE</code>, set <code>Epoch=0</code> dan RETURN.</li>
+<li>Init <code>MonthDays</code> manual (31 Jan, 28 Feb, dll.).</li>
+<li>Ambil waktu: <code>Year = CENTURY()*100 + YEAR()</code>, <code>Month=MONTH()</code>, dll.</li>
+<li>Validasi range (Year ≥2000, Month 1–12, dll.) → <code>Epoch=0</code> jika invalid.</li>
+<li>Hitung <code>DaysSince2000</code>:
+<ul>
+<li>FOR i:=2000 TO Year–1 (+365/366 leap).</li>
+<li>+hari bulan 1 TO Month–1.</li>
+<li>+1 jika Month&gt;2 leap.</li>
+</ul>
+</li>
+<li>Adjust Feb leap (j=1), validasi Day → <code>Epoch=0</code> jika invalid.</li>
+<li><code>DaysSince2000 += Day–1</code>.</li>
+<li><code>Epoch = DaysSince2000*86400 + Hour*3600 + Minute*60 + Second</code>.</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
@@ -524,10 +530,10 @@ Mengonversi waktu sistem Supcon menjadi epoch detik sejak 1 Januari 2000 UTC, de
 Packing 16 input BOOL scalar menjadi WORD bitmask (0x0000–0xFFFF) untuk snapshot kanal sebelum merging ke DWORD di SOE.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li>Salin IN1..IN16 ke array internal Inputs[0..15] (IN1=Inputs[0]).</li>
-<li>Init OUT1 = 0.</li>
-<li>Loop FOR i:=0 TO 15: Jika Inputs[i]=TRUE, OUT1 = OR_WORD(OUT1, SHL_WORD(1, i)).</li>
-<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); input dari R_TRIG external pre-processing untuk rising edge.</li>
+<li>Salin <code>IN1..IN16</code> ke array internal <code>Inputs[0..15]</code> (IN1=Inputs[0]).</li>
+<li>Init <code>OUT1 = 0</code>.</li>
+<li>Loop <code>FOR i:=0 TO 15</code>: jika <code>Inputs[i]=TRUE</code>, <code>OUT1 = OR_WORD(OUT1, SHL_WORD(1,i))</code>.</li>
+<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); input dari R_TRIG external pre‑processing untuk rising edge.</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
@@ -541,94 +547,115 @@ Packing 16 input BOOL scalar menjadi WORD bitmask (0x0000–0xFFFF) untuk snapsh
 Gabungkan dua WORD (HiInput &amp; LoInput) menjadi satu DWORD untuk packing data panjang.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li>Konversi HiInput &amp; LoInput ke ULONG (WORD_TO_UINT → UINT_TO_ULONG).</li>
-<li>Geser HiInput kiri 16 bit: tempHi = SHL_DWORD(ULONG_TO_DWORD(tempHi), 16).</li>
-<li>Gabungkan dengan OR: Output = OR_DWORD(tempHi shifted, tempLo).</li>
+<li>Konversi HiInput &amp; LoInput ke ULONG (<code>WORD_TO_UINT → UINT_TO_ULONG</code>).</li>
+<li>Geser HiInput kiri 16 bit: <code>tempHi = SHL_DWORD(ULONG_TO_DWORD(tempHi), 16)</code>.</li>
+<li>Gabungkan dengan OR: <code>Output = OR_DWORD(tempHi shifted, tempLo)</code>.</li>
 <li>Output DWORD = Hi&lt;&lt;16 | Lo (MSB Hi, LSB Lo).</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
-<li>Packing kompak 32-bit dari dua 16-bit, tanpa konversi langsung WORD-DWORD.</li>
+<li>Packing kompak 32‑bit dari dua 16‑bit, tanpa konversi langsung WORD‑DWORD.</li>
 <li>Operasi bitwise transparan—mudah trace (e.g., verifikasi alignment Hi/Lo tanpa disassembly).</li>
 </ul>
 <hr />
 
 <h2 id="4-ksoe32">4. K_SOE32</h2>
 <p><strong>Tujuan:</strong><br />
-Ini adalah inti SOE: Menangani 32 kanal digital, me-latching trip, menyimpan timestamp, dan mendeteksi first-out secara otomatis.</p>
+Ini adalah inti SOE: Menangani 32 kanal digital, me‑latching trip, menyimpan timestamp, dan mendeteksi first‑out secara otomatis.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
 <li>Restore state dari input persisten (latch &amp; timestamp global, disambungkan dari output siklus sebelumnya untuk kontinuitas data).<br />
-Empat output yang di-loop back menjadi 4 input persisten melalui variabel eksternal:
+Empat output yang di‑loop back menjadi 4 input persisten melalui variabel eksternal:
 <ul>
-<li>TripIn/TripOut (INT): Kanal first trip (-1 if none) untuk validasi rebuild.</li>
+<li>TripIn/TripOut (INT): Kanal first trip (–1 if none) untuk validasi rebuild.</li>
 <li>LockIn/LockOut (BOOL): Status trip aktif untuk kondisi awal siklus.</li>
 <li>TripsIn/TripsOut (DWORD): Bitmask latched channels untuk restore dan update state.</li>
 <li>TsIn/TsOut (struct32ULONG): Array timestamp[0..31] untuk simpan epoch per kanal dan cek status latched.</li>
 </ul>
 </li>
-<li>Rebuild first trip jika LockOut=TRUE dan TripOut invalid (e.g., -1 atau tidak match latched bit, dari kanal terendah yang latched via FOR loop).</li>
-<li>Reset manual (via pulse Reset=TRUE) → kosongkan semua latch (set Latched=FALSE, TripsOut=0, TripOut=-1, TsInt=0, LockOut=FALSE).</li>
-<li>Loop kanal (FOR i:=0 TO 31): Deteksi rising edge (Run bit i set AND NOT Latched[i]), simpan TsInt[i]=Ts saat ini jika belum latched dan Ts&gt;0 (skip glitch), set TripOut=i jika TripOut=-1. Update TripsOut dari Latched bits; LockOut = LockOut OR (TripsOut &lt;&gt; 0).</li>
-<li>Map TsInt ke TsOut struct (via CASE Val1-Val32).</li>
-<li>TripTs = TsInt[TripOut] jika TripOut &gt;=0, else 0.</li>
+<li>Rebuild first trip jika LockOut=TRUE dan TripOut invalid (e.g., –1 atau tidak match latched bit, dari kanal terendah yang latched via FOR loop).</li>
+<li>Reset manual (via pulse Reset=TRUE) → kosongkan semua latch (set Latched=FALSE, TripsOut=0, TripOut=–1, TsInt=0, LockOut=FALSE).</li>
+<li>Loop kanal (FOR i:=0 TO 31): Deteksi rising edge (Run bit i set AND NOT Latched[i]), simpan TsInt[i]=Ts saat ini jika belum latched dan Ts&gt;0 (skip glitch), set TripOut=i jika TripOut=–1. Update TripsOut dari Latched bits; LockOut = LockOut OR (TripsOut &lt;&gt; 0).</li>
+<li>Map TsInt ke TsOut struct (via CASE Val1–Val32).</li>
+<li>TripTs = TsInt[TripOut] jika TripOut ≥0, else 0.</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
-<li>Setiap trip dicatat dengan timestamp unik (ULONG epoch), cegah loss data post-restart berkat persistent loop-back eksplisit.</li>
-<li>TripOut dan TripTs langsung tunjuk kanal pertama &amp; waktunya—contoh: "Trip dimulai di kanal 5 pukul 14:23:45", memudahkan diagnosa cepat dan audit transparan tanpa rekonstruksi manual.</li>
+<li>Setiap trip dicatat dengan timestamp unik (ULONG epoch), cegah loss data post‑restart berkat persistent loop‑back eksplisit.</li>
+<li>TripOut dan TripTs langsung tunjuk kanal pertama &amp; waktunya—contoh: “Trip dimulai di kanal 5 pukul 14:23:45”, memudahkan diagnosa cepat dan audit transparan tanpa rekonstruksi manual.</li>
 </ul>
 <hr />
 
 <h2 id="5-ksoe32sort">5. K_SOE32Sort</h2>
 <p><strong>Tujuan:</strong><br />
-Mengurutkan timestamp naik, menghasilkan urutan kanal dan waktu.</p>
+Mengurutkan 32 timestamp hasil latching SOE secara naik, menghasilkan urutan kanal dan waktu kronologis yang konsisten.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li>Copy struct ke array.</li>
-<li>Filter timestamp valid.</li>
-<li>Bubble sort → urutkan berdasarkan waktu, tie‑break dengan indeks.</li>
-<li>Map hasil ke Seq (indeks) dan TsOut (timestamp).</li>
+<li><strong>Restore input:</strong> copy <code>TsIn.Val1..Val32</code> ke array kerja <code>TsArr</code>.</li>
+<li><strong>Filter valid:</strong> bangun daftar indeks <code>Order</code> hanya untuk timestamp <code>&gt;0</code>. Slot kosong diisi <code>-1</code>.</li>
+<li><strong>Sorting:</strong>
+<ul>
+<li>Terapkan bubble sort pada array <code>Order</code>.</li>
+<li>Kriteria utama: nilai timestamp.</li>
+<li>Tie‑breaker: nomor kanal (lebih kecil didahulukan).</li>
+</ul>
+</li>
+<li><strong>Mapping output:</strong>
+<ul>
+<li>Urutan indeks → <code>Seq.Val1..Val32</code>.</li>
+<li>Timestamp terurut → <code>TsOut.Val1..Val32</code> (slot kosong = 0).</li>
+</ul>
+</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
-<li>Kronologi kejadian bisa ditelusuri dengan presisi.</li>
-<li>Urutan jelas, tidak perlu manual interpretasi.</li>
+<li>Kronologi kejadian dapat ditelusuri dengan presisi tanpa interpretasi manual.</li>
+<li>Tie‑breaker kanal mencegah ambiguitas saat dua event terjadi bersamaan.</li>
+<li>Output rapi: operator langsung melihat urutan kanal dan waktu, auditor mudah memverifikasi kronologi.</li>
 </ul>
 <hr />
 
 <h2 id="6-ksoe32delta">6. K_SOE32Delta</h2>
 <p><strong>Tujuan:</strong><br />
-Menghitung selisih waktu tiap kanal terhadap base (first non‑zero Ts).</p>
+Menghitung selisih waktu (delta detik) tiap kanal terhadap base timestamp (event pertama yang valid), untuk menilai kecepatan respon sistem.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li>Copy struct ke array.</li>
-<li>Cari base timestamp pertama.</li>
-<li>Loop kanal: jika Ts ≥ base, Diff = Ts–base, else 0.</li>
-<li>Map hasil ke struct Diff.</li>
+<li><strong>Restore input:</strong> copy <code>TsIn.Val1..Val32</code> ke array kerja <code>TsArr</code>.</li>
+<li><strong>Cari base:</strong> loop array, ambil timestamp pertama <code>&gt;0</code> sebagai <code>base</code>. Jika tidak ada, <code>base=0</code>.</li>
+<li><strong>Hitung delta:</strong>
+<ul>
+<li>Jika <code>base&gt;0</code> dan <code>TsArr[i] ≥ base</code>, maka <code>Diff[i] = TsArr[i] – base</code>.</li>
+<li>Jika tidak valid, <code>Diff[i] = 0</code>.</li>
+</ul>
+</li>
+<li><strong>Mapping output:</strong> hasil delta → <code>Diff.Val1..Val32</code>.</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
-<li>Delta detik menunjukkan kecepatan respon sistem.</li>
-<li>Angka sederhana lebih mudah dipahami.</li>
+<li>Delta detik memberikan angka konkret jarak waktu antar event.</li>
+<li>Operator dapat langsung membaca “Channel X trip N detik setelah Channel Y” tanpa kalkulasi manual.</li>
+<li>Auditor dapat membandingkan delta dengan standar respon proteksi/interlock, meningkatkan transparansi audit.</li>
 </ul>
 <hr />
 
 <h2 id="7-kepochtotime">7. K_EpochToTime</h2>
 <p><strong>Tujuan:</strong><br />
-Konversi epoch 2000 ke format waktu manusiawi.</p>
+Konversi epoch detik sejak 1 Januari 2000 (ULONG) menjadi format waktu manusiawi (Y‑M‑D H:M:S) di Supcon, dengan adjust leap year untuk rekonstruksi tanggal akurat.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li>Validasi epoch.</li>
-<li>Pisahkan hari dan sisa detik.</li>
-<li>Hitung jam, menit, detik.</li>
-<li>Loop tahun dan bulan dengan leap year adjustment.</li>
-<li>Sisa hari → Day.</li>
+<li>Jika Enable=FALSE atau Epoch &gt; 4294967295 (max ULONG), set semua output (Year..Second)=0 dan RETURN.</li>
+<li>Init MonthDays manual (31 Jan, 28 Feb, dll.).</li>
+<li>Pisah Days = Epoch / 86400, RemSec = Epoch MOD 86400.</li>
+<li>Hitung Hour = RemSec / 3600, Minute = (RemSec MOD 3600) / 60, Second = RemSec MOD 60 (casting LONG_TO_INT aman).</li>
+<li>Hitung tahun: Year=2000, WHILE Days ≥ 365/366 (leap if MOD 4=0 dan (MOD 100&lt;&gt;0 OR MOD 400=0)), kurangi Days, Year +=1.</li>
+<li>Hitung bulan: FOR i:=0 TO 11, j=MonthDays[i], adjust Feb j=29 jika leap, kurangi Days jika ≥j, Month=i+1.</li>
+<li>Day = Days +1.</li>
+<li>Output Year, Month, Day, Hour, Minute, Second (e.g., 2025‑11‑08 00:00:00).</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
-<li>Epoch panjang bisa dikonversi ke format kalender.</li>
-<li>Laporan SOE langsung terbaca.</li>
+<li>Epoch panjang jadi format kalender readable untuk laporan SOE.</li>
+<li>Leap year reversal akurat—verifikasi timestamp langsung tanpa tool eksternal, tingkatkan transparansi audit.</li>
 </ul>
 <h3 id="test-case-kepochtotime-simulasi-logic-100">Test Case K_EpochToTime (Simulasi Logic 100 %)</h3>
 <table>

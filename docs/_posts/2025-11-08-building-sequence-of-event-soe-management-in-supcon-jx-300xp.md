@@ -38,87 +38,87 @@ comments: false
 ---
 
 {% raw %}
-<p><strong>Modular • Audit-Grade • Operator-Friendly</strong><br>
+<p><strong>Modular • Audit-Grade • Human-Friendly</strong><br>
 <em>By: Ketut Kumajaya • November 08, 2025</em></p>
 <blockquote>
-<p><strong>TL;DR</strong> — 7 Custom Function Blocks for 32-channel SOE in JX-300XP: time conversion to epoch (since 2000), DWORD bit-packing, accurate first-out detection, second deltas, chronological sorting. Passed simulations for incremental, decremental, random (2-second delay), and concurrent all-trip with 0-second delta.</p>
+<p><strong>TL;DR</strong> — 7 Custom Function Blocks for 32-channel SOE in JX-300XP: time conversion to second epoch since January 1, 2000, DWORD bit-packing, accurate first-out detection, second deltas, chronological sorting. Passed simulations for incremental, decremental, random (2-second delay), and concurrent all-trip with 0-second delta.</p>
 </blockquote>
 <h2 id="introduction">Introduction</h2>
 <p>Sequence of Event (SOE) is a critical feature in DCS systems for recording the sequence of critical incidents such as trips, alarms, and operator actions. With high time precision, SOE aids in incident investigations, system response analysis, and provides a transparent audit trail.</p>
-<p>This article presents the <strong>K_SOE32 Suite</strong> — an implementation of SOE in Supcon DCS using a chain of modular function blocks documented to audit-grade standards.</p>
+<p>This article presents the <strong>K_SOE32 Suite</strong> — an implementation of SOE in Supcon DCS using a chain of modular function blocks documented to audit-grade standards. This suite is designed to be reusable across plants with comprehensive documentation, facilitating adaptation across projects.</p>
 <figure style="text-align:center;">
   <div class="mermaid" style="max-width:85%; margin:auto; font-size:0.85rem;">
-    flowchart TD
-     subgraph ED2["Edge Detection Group 2"]
-            RT2["R_TRIG 17-32"]
-            DI2["DI 17-32 Raw"]
-            P2["K_16BitsToWord"]
-     end
-     subgraph ED1["Edge Detection Group 1"]
-            RT1["R_TRIG 1-16"]
-            DI1["DI 1-16 Raw"]
-            P1["K_16BitsToWord"]
-     end
-     subgraph PACKING["Packing Digital Input"]
-            ED1
-            ED2
-            MERGE["K_2WordToDWord"]
-     end
-        DI1 --&gt; RT1
-        RT1 --&gt; P1
-        DI2 --&gt; RT2
-        RT2 --&gt; P2
-        P1 --&gt; MERGE
+flowchart TD
+    subgraph ED2["Edge Detection Group 2"]
+        DI2["DI 17-32 Raw"] --&gt; RT2["R_TRIG 17-32"]
+        RT2 --&gt; P2["K_16BitsToWord"]
+    end
+    subgraph ED1["Edge Detection Group 1"]
+        DI1["DI 1-16 Raw"] --&gt; RT1["R_TRIG 1-16"]
+        RT1 --&gt; P1["K_16BitsToWord"]
+    end
+    subgraph PACKING["Packing Digital Input"]
+        ED1
+        ED2
+        P1 --&gt; MERGE["K_2WordToDWord"]
         P2 --&gt; MERGE
-        MERGE --&gt; SOE["K_SOE32"]
-        TIME["System Time"] --&gt; EP["K_Epoch"]
-        EP --&gt; SOE
-        RESET["Reset"] --&gt; SOE
-        SOE --&gt; EPT["K_EpochToTime"] &amp; SORT["K_SOE32Sort"]
-        SORT --&gt; DELTA["K_SOE32Delta"] &amp; HMI[/"HMI • SCADA • Report"/]
-        EPT --&gt; HMI
-        DELTA --&gt; HMI
-        style ED1 fill:#F1F8E9,stroke:#689F38,stroke-width:1px
-        style ED2 fill:#F1F8E9,stroke:#689F38,stroke-width:1px
-        style TIME fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px
-        style EP fill:#BBDEFB,stroke:#1976D2,stroke-width:2px
-        style SOE fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
-        style RESET fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px
-        style EPT fill:#BBDEFB,stroke:#1976D2,stroke-width:2px
-        style SORT fill:#FFE0B2,stroke:#FB8C00,stroke-width:2px
-        style DELTA fill:#FFE082,stroke:#F57F17,stroke-width:2px
-        style HMI fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
-        style PACKING fill:#E8F5E9,stroke:#43A047,stroke-width:2px
+    end
+    TIME["System Time"] --&gt; EP["K_Epoch"]
+    MERGE --&gt; SOE["K_SOE32"]
+    EP --&gt; SOE
+    RESET["Reset"] --&gt; TP["TP Pulse"] --&gt; SOE
+    SOE --&gt; EPT["K_EpochToTime"]
+    SOE --&gt; SORT["K_SOE32Sort"]
+    SORT --&gt; DELTA["K_SOE32Delta"]
+    SORT --&gt; HMI[/"HMI • SCADA • Report"/]
+    EPT --&gt; HMI
+    DELTA --&gt; HMI
+    %% ClassDef for Efficient Styling (Variasi Warna)
+    classDef edge1 fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px
+    classDef edge2 fill:#C8E6C9,stroke:#2E7D32,stroke-width:1px
+    classDef time fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px
+    classDef system fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
+    classDef sort fill:#FFE0B2,stroke:#FB8C00,stroke-width:2px
+    classDef hmi fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
+    classDef pack fill:#E8F5E9,stroke:#43A047,stroke-width:2px
+    %% Assign Classes
+    class ED1,ED2 edge1
+    class PACKING pack
+    class P1,P2,MERGE edge2
+    class EP,EPT time
+    class DI1,DI2,RT1,RT2,TIME,RESET,TP system
+    class SOE,SORT,DELTA sort
+    class HMI hmi
   </div>
-  <figcaption style="margin-top:0.5em; color:#555; font-size:1.5rem;">
+  <figcaption style="margin-top:0.5em; color:#555; font-size:14px;">
     Sequence of Event (SOE) Management Flow in Supcon JX-300XP
   </figcaption>
 </figure>
 <hr>
 <h2 id="1-kepoch">1. K_Epoch</h2>
 <p><strong>Purpose:</strong><br>
-Convert Supcon system time into epoch seconds since January 1, 2000 UTC, with leap year handling and strict validation.</p>
+Convert Supcon system time to epoch seconds since January 1, 2000 UTC, with leap year handling and strict validation.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
 <li>If <code>Enable=FALSE</code>, set <code>Epoch=0</code> and RETURN.</li>
-<li>Initialize <code>MonthDays</code> manually (31 Jan, 28 Feb, etc.).</li>
-<li>Retrieve time: <code>Year = CENTURY()*100 + YEAR()</code>, <code>Month=MONTH()</code>, etc.</li>
-<li>Validate ranges (Year ≥2000, Month 1–12, etc.) → <code>Epoch=0</code> if invalid.</li>
-<li>Compute <code>DaysSince2000</code>:
+<li>Init <code>MonthDays</code> manual (31 Jan, 28 Feb, etc.).</li>
+<li>Fetch time: <code>Year = CENTURY()*100 + YEAR()</code>, <code>Month=MONTH()</code>, etc.</li>
+<li>Validate range (Year ≥2000, Month 1–12, etc.) → <code>Epoch=0</code> if invalid.</li>
+<li>Calculate <code>DaysSince2000</code> (total complete days since Jan 1, 2000):
 <ul>
-<li>FOR i:=2000 TO Year–1 (+365/366 leap).</li>
-<li>+days for months 1 TO Month–1.</li>
-<li>+1 if Month&gt;2 and leap year.</li>
+<li>Full years: FOR i:=2000 TO Year–1, add 365 (or 366 if leap year: MOD 4=0 and (MOD 100&lt;&gt;0 OR MOD 400=0)).</li>
+<li>Full months this year: Add days from months 1 TO Month–1 from <code>MonthDays[i-1]</code>.</li>
+<li>Leap day: +1 if Month&gt;2 and Year leap (Feb already passed).</li>
 </ul>
 </li>
-<li>Adjust February leap (j=1), validate Day → <code>Epoch=0</code> if invalid.</li>
+<li>Feb leap adjust (j=1), validate Day → <code>Epoch=0</code> if invalid.</li>
 <li><code>DaysSince2000 += Day–1</code>.</li>
 <li><code>Epoch = DaysSince2000*86400 + Hour*3600 + Minute*60 + Second</code>.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Ensures UTC consistency since 2000 with error protection (output 0).</li>
-<li>Accurate leap year handling for SOE—easy verification via K_EpochToTime.</li>
+<li>UTC consistency since 2000 with error protection (output 0).</li>
+<li>Accurate leap year for SOE—easy verification via K_EpochToTime.</li>
 </ul>
 <h3 id="kepoch-test-cases-100-logic-simulation">K_Epoch Test Cases (100% Logic Simulation)</h3>
 <table>
@@ -202,18 +202,18 @@ Convert Supcon system time into epoch seconds since January 1, 2000 UTC, with le
 <hr>
 <h2 id="2-k16bitstoword">2. K_16BitsToWord</h2>
 <p><strong>Purpose:</strong><br>
-Pack 16 scalar BOOL inputs into a WORD bitmask (0x0000–0xFFFF) for channel snapshots before merging into a DWORD in SOE.</p>
+Packing 16 scalar BOOL inputs into a WORD bitmask (0x0000–0xFFFF) for digital channel snapshot before merging to DWORD in SOE.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Copy <code>IN1..IN16</code> into internal array <code>Inputs[0..15]</code> (IN1=Inputs[0]).</li>
-<li>Initialize <code>OUT1 = 0</code>.</li>
-<li>Loop <code>FOR i:=0 TO 15</code>: if <code>Inputs[i]=TRUE</code>, <code>OUT1 = OR_WORD(OUT1, SHL_WORD(1,i))</code>.</li>
-<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); inputs typically pre‑processed by external R_TRIG for rising edge detection.</li>
+<li>Copy <code>IN1..IN16</code> to internal array <code>Inputs[0..15]</code> (IN1=Inputs[0]).</li>
+<li>Init <code>OUT1 = 0</code>.</li>
+<li>Loop <code>FOR i:=0 TO 15</code>: If <code>Inputs[i]=TRUE</code>, <code>OUT1 = OR_WORD(OUT1, SHL_WORD(1,i))</code>.</li>
+<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); inputs from R_TRIG external pre-processing for rising edge.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Compact snapshot of 16 channels, easy packing into SOE DWORD.</li>
-<li>Clear mapping (IN1=Bit0, IN16=Bit15)—operators can verify bit states directly from HMI, ensuring quick traceability.</li>
+<li>Compact snapshot of 16 channels, easy packing to DWORD SOE.</li>
+<li>Clear mapping (IN1=Bit0, IN16=Bit15)—direct bit set verification from HMI, fast traceability in edge detection.</li>
 </ul>
 <hr>
 <h2 id="3-k2wordtodword">3. K_2WordToDWord</h2>
@@ -222,105 +222,106 @@ Combine two WORDs (HiInput &amp; LoInput) into one DWORD for long data packing.<
 <p><strong>Logic Flow:</strong></p>
 <ul>
 <li>Convert HiInput &amp; LoInput to ULONG (<code>WORD_TO_UINT → UINT_TO_ULONG</code>).</li>
-<li>Shift HiInput left 16 bits: <code>tempHi = SHL_DWORD(ULONG_TO_DWORD(tempHi), 16)</code>.</li>
+<li>Shift HiInput left by 16 bits: <code>tempHi = SHL_DWORD(ULONG_TO_DWORD(tempHi), 16)</code>.</li>
 <li>Combine with OR: <code>Output = OR_DWORD(tempHi shifted, tempLo)</code>.</li>
 <li>Output DWORD = Hi&lt;&lt;16 | Lo (MSB Hi, LSB Lo).</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Compact 32‑bit packing from two 16‑bit inputs, without direct WORD→DWORD conversion.</li>
-<li>Transparent bitwise operation—easy to trace alignment of Hi/Lo without disassembly.</li>
+<li>Compact 32-bit packing from two 16-bit, without direct WORD-DWORD conversion.</li>
+<li>Transparent bitwise operation—easy trace (e.g., verify Hi/Lo alignment without disassembly).</li>
 </ul>
 <hr>
 <h2 id="4-ksoe32">4. K_SOE32</h2>
 <p><strong>Purpose:</strong><br>
-Core SOE block: handles 32 digital channels, latches trips, stores timestamps, and automatically detects first‑out.</p>
+This is the SOE core: Handles 32 digital channels, latches trips, stores timestamps, and detects first-out automatically.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Restore state from persistent inputs (latch &amp; timestamp global, looped back from previous cycle outputs for data continuity).<br>
-Four outputs looped back as four persistent inputs via external variables:
+<li>Restore state from persistent input (global latch &amp; timestamp, connected from previous cycle output for data continuity).<br>
+Four outputs looped back as 4 persistent inputs via external variables:
 <ul>
-<li>TripIn/TripOut (INT): First trip channel (–1 if none) for rebuild validation.</li>
-<li>LockIn/LockOut (BOOL): Active trip status for initial cycle condition.</li>
-<li>TripsIn/TripsOut (DWORD): Bitmask of latched channels for restore and update.</li>
-<li>TsIn/TsOut (struct32ULONG): Array timestamp[0..31] to store epoch per channel and check latched status.</li>
+<li><code>TripIn</code>/<code>TripOut</code> (INT): First trip channel (-1 if none) for rebuild validation.</li>
+<li><code>LockIn</code>/<code>LockOut</code> (BOOL): Active trip status for initial cycle condition.</li>
+<li><code>TripsIn</code>/<code>TripsOut</code> (DWORD): Bitmask of latched channels for restore and update state.</li>
+<li><code>TsIn</code>/<code>TsOut</code> (struct32ULONG): Array timestamp[0..31] to store epoch per channel and check latched status.</li>
 </ul>
 </li>
-<li>Rebuild first trip if LockOut=TRUE and TripOut invalid (e.g., –1 or mismatch with latched bit, from lowest latched channel via FOR loop).</li>
-<li>Manual reset (pulse Reset=TRUE) → clear all latches (Latched=FALSE, TripsOut=0, TripOut=–1, TsInt=0, LockOut=FALSE).</li>
-<li>Channel loop (FOR i:=0 TO 31): detect rising edge (Run bit i set AND NOT Latched[i]), store TsInt[i]=current Ts if not latched and Ts&gt;0 (skip glitch), set TripOut=i if TripOut=–1. Update TripsOut from Latched bits; LockOut = LockOut OR (TripsOut &lt;&gt; 0).</li>
-<li>Map TsInt to TsOut struct (via CASE Val1–Val32).</li>
-<li>TripTs = TsInt[TripOut] if TripOut ≥0, else 0.</li>
+<li>Rebuild first trip if <code>LockOut=TRUE</code> and <code>TripOut</code> invalid (e.g., -1 or does not match latched bit, from lowest latched channel via <code>FOR</code> loop).</li>
+<li>Manual reset (via pulse <code>Reset=TRUE</code>) → clear all latches (set <code>Latched=FALSE</code>, <code>TripsOut=0</code>, <code>TripOut=-1</code>, <code>TsInt=0</code>, <code>LockOut=FALSE</code>).</li>
+<li>Loop channels (<code>FOR i:=0 TO 31</code>): Detect rising edge (<code>Run</code> bit i set AND NOT <code>Latched[i]</code>, where <code>Run</code> is DWORD from R_TRIG external pre-processing before K_16BitsToWord), store <code>TsInt[i]=Ts</code> current if not latched and <code>Ts&gt;0</code> (skip glitch), set <code>TripOut=i</code> if <code>TripOut=-1</code>. Update <code>TripsOut</code> from <code>Latched</code> bits; <code>LockOut = LockOut OR (TripsOut &lt;&gt; 0)</code>.</li>
+<li>Map <code>TsInt</code> to <code>TsOut</code> struct (via <code>CASE</code> Val1-Val32).</li>
+<li><code>TripTs = TsInt[TripOut]</code> if <code>TripOut &gt;=0</code>, else 0.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Each trip recorded with a unique epoch timestamp, preventing data loss after restart thanks to explicit persistent loop‑back.</li>
-<li>TripOut and TripTs directly indicate the first channel &amp; its time—e.g., “Trip started on channel 5 at 14:23:45”—enabling fast diagnosis and transparent audit without manual reconstruction.</li>
+<li>Each trip recorded with unique timestamp (ULONG epoch), prevent data loss post-restart thanks to explicit persistent loop-back.</li>
+<li><code>TripOut</code> and <code>TripTs</code> directly indicate first channel &amp; time—e.g., "Trip started on channel 5 at 14:23:45", enabling quick diagnosis and transparent audits without manual reconstruction.</li>
 </ul>
 <hr>
 <h2 id="5-ksoe32sort">5. K_SOE32Sort</h2>
 <p><strong>Purpose:</strong><br>
-Sort 32 latched timestamps in ascending order, producing a consistent chronological sequence of channels and times.</p>
+Sort 32 latched SOE timestamps ascending, generating consistent channel and time sequence.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Copy all values <code>TsIn.Val1..Val32</code> into working array <code>TsArr</code>.</li>
-<li>Build index list <code>Order</code> only for timestamps <code>&gt;0</code>. Empty slots filled with <code>–1</code>.</li>
-<li>Apply bubble sort on array <code>Order</code>:
+<li>Copy all <code>TsIn.Val1..Val32</code> to working array <code>TsArr</code>.</li>
+<li>Build index list <code>Order</code> only for timestamps <code>&gt;0</code>. Empty slots filled with -1.</li>
+<li>Apply bubble sort on <code>Order</code> array:
 <ul>
-<li>Primary criterion: timestamp value.</li>
-<li>Tie‑breaker: channel index (smaller first).</li>
+<li>Primary key: timestamp value.</li>
+<li>Tie-breaker: channel number (lower prioritized).</li>
 </ul>
 </li>
-<li>Sorted indices mapped to struct <code>Seq.Val1..Val32</code>.</li>
-<li>Sorted timestamps mapped to struct <code>TsOut.Val1..Val32</code>. Empty slots set to zero.</li>
+<li>Map sorted indices to <code>Seq.Val1..Val32</code> struct.</li>
+<li>Map sorted timestamps to <code>TsOut.Val1..Val32</code> struct. Empty slots filled with zero.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Event chronology can be traced precisely without manual interpretation.</li>
-<li>Tie‑breaker prevents ambiguity when two events occur simultaneously.</li>
-<li>Outputs are clean: operators see channel order and time directly, auditors can verify chronology easily.</li>
+<li>Chronology traceable with precision without manual interpretation.</li>
+<li>Channel tie-breaker prevents ambiguity for concurrent events.</li>
+<li>Clean output: Operators directly see channel and time sequence, auditors easily verify chronology.</li>
 </ul>
 <hr>
 <h2 id="6-ksoe32delta">6. K_SOE32Delta</h2>
 <p><strong>Purpose:</strong><br>
-Calculate time differences (delta seconds) of each channel relative to the base timestamp (first valid event), to measure system response speed.</p>
+Calculate time differences (delta seconds) for each channel against base timestamp (first valid event), to assess system response speed.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li>Copy all values <code>TsIn.Val1..Val32</code> into working array <code>TsArr</code>.</li>
-<li>Find the first timestamp <code>&gt;0</code> as <code>base</code>. If none, <code>base=0</code>.</li>
+<li>Copy all <code>TsIn.Val1..Val32</code> to working array <code>TsArr</code>.</li>
+<li>Find base timestamp first <code>&gt;0</code>. If none, <code>base=0</code>.</li>
 <li>Loop each channel:
 <ul>
 <li>If <code>base&gt;0</code> and <code>TsArr[i] ≥ base</code>, then <code>Diff[i] = TsArr[i] – base</code>.</li>
 <li>If invalid, <code>Diff[i] = 0</code>.</li>
 </ul>
 </li>
-<li>Results mapped to struct <code>Diff.Val1..Val32</code>.</li>
+<li>Map deltas to <code>Diff.Val1..Val32</code> struct.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Delta seconds provide concrete measurement of time gaps between events.</li>
+<li>Delta seconds provide concrete time gaps between events.</li>
 <li>Operators can directly read “Channel X tripped N seconds after Channel Y” without manual calculation.</li>
-<li>Auditors can compare deltas against protection/interlock standards, enhancing transparency.</li>
+<li>Auditors can compare deltas to protection/interlock standards, enhancing audit transparency.</li>
 </ul>
 <hr>
 <h2 id="7-kepochtotime">7. K_EpochToTime</h2>
-<p><strong>Purpose:</strong><br>
-Convert epoch seconds since January 1, 2000 (ULONG) into human‑readable time format (Y‑M‑D H:M:S) in Supcon, with leap year adjustment for accurate date reconstruction.</p>
+<p><strong>7. K_EpochToTime</strong><br>
+<strong>Purpose:</strong><br>
+Convert epoch seconds since January 1, 2000 (ULONG) to human-readable time format (Y-M-D H:M:S) in Supcon, with leap year adjustment for accurate date reconstruction.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li>If <code>Enable=FALSE</code> or <code>Epoch &gt; 4294967295</code> (max ULONG), set all outputs (Year..Second)=0 and RETURN.</li>
-<li>Initialize <code>MonthDays</code> manually (31 Jan, 28 Feb, etc.).</li>
-<li>Split <code>Days = Epoch / 86400</code>, <code>RemSec = Epoch MOD 86400</code>.</li>
-<li>Compute <code>Hour = RemSec / 3600</code>, <code>Minute = (RemSec MOD 3600)/60</code>, <code>Second = RemSec MOD 60</code> (safe casting LONG_TO_INT).</li>
-<li>Compute year: Year=2000, WHILE Days ≥ 365/366 (leap if MOD 4=0 and (MOD 100&lt;&gt;0 OR MOD 400=0)), subtract Days, Year +=1.</li>
-<li>Compute month: FOR i:=0 TO 11, j=MonthDays[i], adjust Feb j=29 if leap, subtract Days if ≥j, Month=i+1.</li>
-<li>Day = Days+1.</li>
-<li>Output Year, Month, Day, Hour, Minute, Second (e.g., 2025‑11‑08 00:00:00).</li>
+<li>If <code>Enable=FALSE</code> or <code>Epoch &gt; 4294967295</code> (max ULONG), set all outputs (<code>Year</code>..<code>Second</code>)=0 and RETURN.</li>
+<li>Init <code>MonthDays</code> manual (31 Jan, 28 Feb, etc.).</li>
+<li>Separate <code>Days = Epoch / 86400</code>, <code>RemSec = Epoch MOD 86400</code>.</li>
+<li>Calculate <code>Hour = RemSec / 3600</code>, <code>Minute = (RemSec MOD 3600) / 60</code>, <code>Second = RemSec MOD 60</code> (safe LONG_TO_INT casting).</li>
+<li>Calculate year: <code>Year=2000</code>, WHILE <code>Days ≥ 365/366</code> (leap if MOD 4=0 and (MOD 100&lt;&gt;0 OR MOD 400=0)), subtract <code>Days</code>, <code>Year +=1</code>.</li>
+<li>Calculate month: FOR i:=0 TO 11, <code>j=MonthDays[i]</code>, adjust Feb <code>j=29</code> if leap, subtract <code>Days</code> if ≥j, <code>Month=i+1</code>.</li>
+<li><code>Day = Days +1</code>.</li>
+<li>Output <code>Year</code>, <code>Month</code>, <code>Day</code>, <code>Hour</code>, <code>Minute</code>, <code>Second</code> (e.g., 2025-11-08 00:00:00).</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
-<li>Long epoch converted into readable calendar format for SOE reports.</li>
-<li>Accurate leap year reversal—timestamp can be verified directly without external tools, enhancing audit transparency.</li>
+<li>Long epochs become readable calendar format for SOE reports.</li>
+<li>Accurate leap year reversal—direct timestamp verification without external tools, improving audit transparency.</li>
 </ul>
 <h3 id="kepochtotime-test-cases-100-logic-simulation">K_EpochToTime Test Cases (100% Logic Simulation)</h3>
 <table>
@@ -341,14 +342,14 @@ Convert epoch seconds since January 1, 2000 (ULONG) into human‑readable time f
 </tr>
 <tr>
 <td>815875200</td>
-<td>2025-11-8 0:0:0</td>
-<td>2025-11-8 0:0:0</td>
+<td>2025-11-08 00:00:00</td>
+<td>2025-11-08 00:00:00</td>
 <td>✓</td>
 </tr>
 <tr>
 <td>762480000</td>
-<td>2024-2-29 0:0:0</td>
-<td>2024-2-29 0:0:0</td>
+<td>2024-02-29 00:00:00</td>
+<td>2024-02-29 00:00:00</td>
 <td>✓</td>
 </tr>
 </tbody>
@@ -417,34 +418,34 @@ Convert epoch seconds since January 1, 2000 (ULONG) into human‑readable time f
 </thead>
 <tbody>
 <tr>
-<td>Incremental (Ch1 → Ch32, 2-second delay)</td>
+<td>Incremental (Ch1 → Ch32, delay 2 detik)</td>
 <td>1</td>
-<td>0 seconds</td>
-<td>62 seconds</td>
+<td>0 detik</td>
+<td>62 detik</td>
 <td>1 (0s), 2 (2s), 3 (4s), ..., 32 (62s)</td>
 <td>✓</td>
 </tr>
 <tr>
-<td>Decremental (Ch32 → Ch1, 2-second delay)</td>
+<td>Decremental (Ch32 → Ch1, delay 2 detik)</td>
 <td>32</td>
-<td>0 seconds</td>
-<td>62 seconds</td>
+<td>0 detik</td>
+<td>62 detik</td>
 <td>32 (0s), 31 (2s), 30 (4s), ..., 1 (62s)</td>
 <td>✓</td>
 </tr>
 <tr>
 <td>Random (random, 2-second delay)</td>
 <td>27</td>
-<td>0 seconds</td>
-<td>62 seconds</td>
+<td>0 detik</td>
+<td>62 detik</td>
 <td>27 (0s), 6 (2s), 11 (4s), 16 (6s), 26 (8s), 12 (10s), 23 (12s), 7 (14s), 20 (16s), 13 (18s)...</td>
 <td>✓</td>
 </tr>
 <tr>
 <td>Concurrent (all Ch1-32 in same scan)</td>
 <td>1</td>
-<td>0 seconds</td>
-<td>0 seconds</td>
+<td>0 detik</td>
+<td>0 detik</td>
 <td>1, 2, 3, 4, 5, 6, 7, 8, 9, 10... (index tie-break)</td>
 <td>✓</td>
 </tr>
@@ -453,7 +454,7 @@ Convert epoch seconds since January 1, 2000 (ULONG) into human‑readable time f
 <p><em>(Random seed 42 for reproducibility — random trip order: 27, 6, 11, 16, 26, 12, 23, 7, 20, 13, 17, 10, 29, 15, 25, 21, 31, 2, 14, 19, 3, 18, 22, 4, 30, 5, 28, 32, 9, 24, 1, 8)</em></p>
 <hr>
 <h2 id="conclusion">Conclusion</h2>
-<p>With this chain of function blocks, SOE in Supcon DCS can be built modularly, to audit-grade standards, and operator-friendly. Consistent header documentation ensures each block can be audited, taught, and adapted. All FBs are reusable across plants by simply changing I/O mappings, without altering internal logic.</p>
+<p>With this chain of function blocks, SOE in Supcon DCS can be built modularly, to audit-grade standards, and human-friendly. Consistent header documentation ensures each block can be audited, taught, and adapted. All FBs are reusable across plants by simply changing I/O mappings, without altering internal logic.</p>
 <hr>
 <h2 id="%F0%9F%93%8E-complete-function-block-appendix">📎 Complete Function Block Appendix</h2>
 <details>

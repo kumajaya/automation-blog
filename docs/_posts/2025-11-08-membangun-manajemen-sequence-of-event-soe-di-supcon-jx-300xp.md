@@ -263,21 +263,16 @@ Empat output yang di‑loop back menjadi 4 input persisten melalui variabel ekst
 Mengurutkan 32 timestamp hasil latching SOE secara naik, menghasilkan urutan kanal dan waktu kronologis yang konsisten.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li><strong>Restore input:</strong> copy <code>TsIn.Val1..Val32</code> ke array kerja <code>TsArr</code>.</li>
-<li><strong>Filter valid:</strong> bangun daftar indeks <code>Order</code> hanya untuk timestamp <code>&gt;0</code>. Slot kosong diisi <code>-1</code>.</li>
-<li><strong>Sorting:</strong>
+<li>Copy seluruh nilai <code>TsIn.Val1..Val32</code> ke array kerja <code>TsArr</code>.</li>
+<li>Bangun daftar indeks <code>Order</code> hanya untuk timestamp <code>&gt;0</code>. Slot kosong diisi <code>-1</code>.</li>
+<li>Terapkan bubble sort pada array <code>Order</code>:
 <ul>
-<li>Terapkan bubble sort pada array <code>Order</code>.</li>
 <li>Kriteria utama: nilai timestamp.</li>
 <li>Tie‑breaker: nomor kanal (lebih kecil didahulukan).</li>
 </ul>
 </li>
-<li><strong>Mapping output:</strong>
-<ul>
-<li>Urutan indeks → <code>Seq.Val1..Val32</code>.</li>
-<li>Timestamp terurut → <code>TsOut.Val1..Val32</code> (slot kosong = 0).</li>
-</ul>
-</li>
+<li>Hasil urutan indeks dipetakan ke struct <code>Seq.Val1..Val32</code>.</li>
+<li>Timestamp terurut dipetakan ke struct <code>TsOut.Val1..Val32</code>. Slot kosong diisi nol.</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>
@@ -291,15 +286,15 @@ Mengurutkan 32 timestamp hasil latching SOE secara naik, menghasilkan urutan kan
 Menghitung selisih waktu (delta detik) tiap kanal terhadap base timestamp (event pertama yang valid), untuk menilai kecepatan respon sistem.</p>
 <p><strong>Alur Logika:</strong></p>
 <ul>
-<li><strong>Restore input:</strong> copy <code>TsIn.Val1..Val32</code> ke array kerja <code>TsArr</code>.</li>
-<li><strong>Cari base:</strong> loop array, ambil timestamp pertama <code>&gt;0</code> sebagai <code>base</code>. Jika tidak ada, <code>base=0</code>.</li>
-<li><strong>Hitung delta:</strong>
+<li>Copy seluruh nilai <code>TsIn.Val1..Val32</code> ke array kerja <code>TsArr</code>.</li>
+<li>Cari base timestamp pertama <code>&gt;0</code>. Jika tidak ada, <code>base=0</code>.</li>
+<li>Loop tiap kanal:
 <ul>
 <li>Jika <code>base&gt;0</code> dan <code>TsArr[i] ≥ base</code>, maka <code>Diff[i] = TsArr[i] – base</code>.</li>
 <li>Jika tidak valid, <code>Diff[i] = 0</code>.</li>
 </ul>
 </li>
-<li><strong>Mapping output:</strong> hasil delta → <code>Diff.Val1..Val32</code>.</li>
+<li>Hasil delta dipetakan ke struct <code>Diff.Val1..Val32</code>.</li>
 </ul>
 <p><strong>Nilai Audit/Operator:</strong></p>
 <ul>

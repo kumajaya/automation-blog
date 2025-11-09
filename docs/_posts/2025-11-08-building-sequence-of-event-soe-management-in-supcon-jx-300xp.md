@@ -263,27 +263,22 @@ Four outputs looped back as four persistent inputs via external variables:
 Sort 32 latched timestamps in ascending order, producing a consistent chronological sequence of channels and times.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li><strong>Restore input:</strong> copy <code>TsIn.Val1..Val32</code> into working array <code>TsArr</code>.</li>
-<li><strong>Filter valid:</strong> build index list <code>Order</code> only for timestamps <code>&gt;0</code>. Empty slots filled with <code>–1</code>.</li>
-<li><strong>Sorting:</strong>
+<li>Copy all values <code>TsIn.Val1..Val32</code> into working array <code>TsArr</code>.</li>
+<li>Build index list <code>Order</code> only for timestamps <code>&gt;0</code>. Empty slots filled with <code>–1</code>.</li>
+<li>Apply bubble sort on array <code>Order</code>:
 <ul>
-<li>Apply bubble sort on array <code>Order</code>.</li>
-<li>Primary key: timestamp value.</li>
+<li>Primary criterion: timestamp value.</li>
 <li>Tie‑breaker: channel index (smaller first).</li>
 </ul>
 </li>
-<li><strong>Mapping output:</strong>
-<ul>
-<li>Sorted indices → <code>Seq.Val1..Val32</code>.</li>
-<li>Sorted timestamps → <code>TsOut.Val1..Val32</code> (empty slots = 0).</li>
-</ul>
-</li>
+<li>Sorted indices mapped to struct <code>Seq.Val1..Val32</code>.</li>
+<li>Sorted timestamps mapped to struct <code>TsOut.Val1..Val32</code>. Empty slots set to zero.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>
 <li>Event chronology can be traced precisely without manual interpretation.</li>
 <li>Tie‑breaker prevents ambiguity when two events occur simultaneously.</li>
-<li>Outputs provide both channel order and time order, simplifying operator use and audit verification.</li>
+<li>Outputs are clean: operators see channel order and time directly, auditors can verify chronology easily.</li>
 </ul>
 <hr>
 <h2 id="6-ksoe32delta">6. K_SOE32Delta</h2>
@@ -291,15 +286,15 @@ Sort 32 latched timestamps in ascending order, producing a consistent chronologi
 Calculate time differences (delta seconds) of each channel relative to the base timestamp (first valid event), to measure system response speed.</p>
 <p><strong>Logic Flow:</strong></p>
 <ul>
-<li><strong>Restore input:</strong> copy <code>TsIn.Val1..Val32</code> into working array <code>TsArr</code>.</li>
-<li><strong>Find base:</strong> loop array, take first timestamp <code>&gt;0</code> as <code>base</code>. If none, <code>base=0</code>.</li>
-<li><strong>Compute delta:</strong>
+<li>Copy all values <code>TsIn.Val1..Val32</code> into working array <code>TsArr</code>.</li>
+<li>Find the first timestamp <code>&gt;0</code> as <code>base</code>. If none, <code>base=0</code>.</li>
+<li>Loop each channel:
 <ul>
 <li>If <code>base&gt;0</code> and <code>TsArr[i] ≥ base</code>, then <code>Diff[i] = TsArr[i] – base</code>.</li>
 <li>If invalid, <code>Diff[i] = 0</code>.</li>
 </ul>
 </li>
-<li><strong>Mapping output:</strong> results mapped to <code>Diff.Val1..Val32</code>.</li>
+<li>Results mapped to struct <code>Diff.Val1..Val32</code>.</li>
 </ul>
 <p><strong>Audit/Operator Value:</strong></p>
 <ul>

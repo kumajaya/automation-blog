@@ -690,8 +690,8 @@ Konversi epoch detik sejak 1 Januari 2000 (ULONG) menjadi format waktu manusiawi
 <thead>
 <tr>
 <th>Block</th>
-<th>Fungsi Utama</th>
-<th>Nilai Audit/Operator</th>
+<th>Main Function</th>
+<th>Audit/Operator Value</th>
 </tr>
 </thead>
 <tbody>
@@ -787,6 +787,12 @@ Konversi epoch detik sejak 1 Januari 2000 (ULONG) menjadi format waktu manusiawi
 
 <h2 id="penutup">Penutup</h2>
 <p>Dengan rangkaian function block ini, SOE di Supcon DCS dapat dibangun secara modular, audit-grade, dan human-friendly. Dokumentasi header yang konsisten memastikan setiap block dapat diaudit, diajarkan, dan diadaptasi. Seluruh FB ini dapat dipakai ulang lintas plant dengan hanya mengganti mapping I/O, tanpa perlu ubah logika internal.</p>
+<hr />
+
+<h2 id="catatan-akhir">Catatan Akhir</h2>
+<p>Awalnya, niatnya sederhana: menulis logika <strong>first-out</strong> untuk menangkap sinyal trip pertama agar penyebab awal dari rangkaian trip dapat ditemukan.</p>
+<p>Namun, ketika <strong>timestamp</strong> ditambahkan, logika itu berubah menjadi kronologi. Saat <strong>pengurutan</strong> diterapkan, catatan itu menjadi cerita. Dan dengan <strong>delta waktu</strong>, cerita itu menjelma menjadi analisis kecepatan terjadinya trip.</p>
+<p>Dari logika sederhana lahirlah sistem <strong>SOE audit-grade</strong>—modular, transparan, dan selaras dengan standar global <em>root cause detection system</em>.</p>
 <hr />
 
 <h2 id="%F0%9F%93%8E-lampiran-function-block-lengkap">📎 Lampiran Function Block Lengkap</h2>

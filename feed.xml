@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-11-09T18:34:18+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kumajaya.github.io/automation-blog/feed.xml" rel="self" type="application/atom+xml" /><link href="https://kumajaya.github.io/automation-blog/" rel="alternate" type="text/html" /><updated>2025-11-10T02:30:33+00:00</updated><id>https://kumajaya.github.io/automation-blog/feed.xml</id><title type="html">Technical &amp;amp; Sustainability Digest</title><subtitle>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
 </subtitle><author><name>Ketut Kumajaya</name><email>ketut.kumajaya@gmail.com</email></author><entry><title type="html">Building Sequence of Event (SOE) Management in Supcon JX-300XP</title><link href="https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html" rel="alternate" type="text/html" title="Building Sequence of Event (SOE) Management in Supcon JX-300XP" /><published>2025-11-08T16:56:44+00:00</published><updated>2025-11-08T16:56:44+00:00</updated><id>https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp</id><content type="html" xml:base="https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html"><![CDATA[<p><strong>Modular • Audit-Grade • Human-Friendly</strong><br />
 <em>By: Ketut Kumajaya • November 08, 2025</em></p>
 <blockquote>
@@ -426,6 +426,12 @@ Convert epoch seconds since January 1, 2000 (ULONG) to human-readable time forma
 
 <h2 id="conclusion">Conclusion</h2>
 <p>With this chain of function blocks, SOE in Supcon DCS can be built modularly, to audit-grade standards, and human-friendly. Consistent header documentation ensures each block can be audited, taught, and adapted. All FBs are reusable across plants by simply changing I/O mappings, without altering internal logic.</p>
+<hr />
+
+<h2 id="closing-note">Closing Note</h2>
+<p>At first, the intention was simple: to write <strong>first‑out</strong> logic to capture the very first trip signal so that the root cause of a trip sequence could be identified.</p>
+<p>However, when a <strong>timestamp</strong> was added, the logic turned into a chronology. With <strong>sorting</strong>, the record became a story. And with <strong>time delta</strong>, that story transformed into an analysis of the speed at which the trip occurred.</p>
+<p>From this simple logic emerged an <strong>audit‑grade SOE</strong>—modular, transparent, and aligned with the global standard of a <em>root cause detection system</em>.</p>
 <hr />
 
 <h2 id="%F0%9F%93%8E-complete-function-block-appendix">📎 Complete Function Block Appendix</h2>
@@ -1589,8 +1595,8 @@ Konversi epoch detik sejak 1 Januari 2000 (ULONG) menjadi format waktu manusiawi
 <thead>
 <tr>
 <th>Block</th>
-<th>Fungsi Utama</th>
-<th>Nilai Audit/Operator</th>
+<th>Main Function</th>
+<th>Audit/Operator Value</th>
 </tr>
 </thead>
 <tbody>
@@ -1686,6 +1692,12 @@ Konversi epoch detik sejak 1 Januari 2000 (ULONG) menjadi format waktu manusiawi
 
 <h2 id="penutup">Penutup</h2>
 <p>Dengan rangkaian function block ini, SOE di Supcon DCS dapat dibangun secara modular, audit-grade, dan human-friendly. Dokumentasi header yang konsisten memastikan setiap block dapat diaudit, diajarkan, dan diadaptasi. Seluruh FB ini dapat dipakai ulang lintas plant dengan hanya mengganti mapping I/O, tanpa perlu ubah logika internal.</p>
+<hr />
+
+<h2 id="catatan-akhir">Catatan Akhir</h2>
+<p>Awalnya, niatnya sederhana: menulis logika <strong>first-out</strong> untuk menangkap sinyal trip pertama agar penyebab awal dari rangkaian trip dapat ditemukan.</p>
+<p>Namun, ketika <strong>timestamp</strong> ditambahkan, logika itu berubah menjadi kronologi. Saat <strong>pengurutan</strong> diterapkan, catatan itu menjadi cerita. Dan dengan <strong>delta waktu</strong>, cerita itu menjelma menjadi analisis kecepatan terjadinya trip.</p>
+<p>Dari logika sederhana lahirlah sistem <strong>SOE audit-grade</strong>—modular, transparan, dan selaras dengan standar global <em>root cause detection system</em>.</p>
 <hr />
 
 <h2 id="%F0%9F%93%8E-lampiran-function-block-lengkap">📎 Lampiran Function Block Lengkap</h2>

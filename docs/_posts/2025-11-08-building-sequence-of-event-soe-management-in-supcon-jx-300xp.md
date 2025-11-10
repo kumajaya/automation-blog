@@ -456,6 +456,11 @@ Convert epoch seconds since January 1, 2000 (ULONG) to human-readable time forma
 <h2 id="conclusion">Conclusion</h2>
 <p>With this chain of function blocks, SOE in Supcon DCS can be built modularly, to audit-grade standards, and human-friendly. Consistent header documentation ensures each block can be audited, taught, and adapted. All FBs are reusable across plants by simply changing I/O mappings, without altering internal logic.</p>
 <hr>
+<h2 id="closing-note">Closing Note</h2>
+<p>At first, the intention was simple: to write <strong>first‑out</strong> logic to capture the very first trip signal so that the root cause of a trip sequence could be identified.</p>
+<p>However, when a <strong>timestamp</strong> was added, the logic turned into a chronology. With <strong>sorting</strong>, the record became a story. And with <strong>time delta</strong>, that story transformed into an analysis of the speed at which the trip occurred.</p>
+<p>From this simple logic emerged an <strong>audit‑grade SOE</strong>—modular, transparent, and aligned with the global standard of a <em>root cause detection system</em>.</p>
+<hr>
 <h2 id="%F0%9F%93%8E-complete-function-block-appendix">📎 Complete Function Block Appendix</h2>
 <details>
 <summary>K_Epoch</summary>

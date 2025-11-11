@@ -247,7 +247,15 @@ async function downloadFile(url, dest, retries = 3, timeoutMs = 15000) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-      const res = await fetch(url, { signal: controller.signal });
+      const res = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          "User-Agent": "Mozilla/5.0 (compatible; GhostSync/1.0; +https://automation.samatorgroup.com)",
+          "Accept": "application/json",
+          "Accept-Language": "en-US,en;q=0.9",
+          "Cache-Control": "no-cache"
+        }
+      });
       clearTimeout(timeout);
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -312,7 +320,15 @@ async function syncContent(type, layout, outputFolder) {
       const endpoint = new URL(`${type}/?key=${GHOST_API_KEY}&include=authors,tags&limit=50&page=${page}`, GHOST_API_URL).toString();
       logInfo(`Fetching: ${endpoint}`);
 
-      const res = await fetch(endpoint);
+      const res = await fetch(endpoint, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (compatible; GhostSync/1.0; +https://automation.samatorgroup.com)",
+          "Accept": "application/json",
+          "Accept-Language": "en-US,en;q=0.9",
+          "Cache-Control": "no-cache"
+        }
+      });
+
       if (!res.ok) {
         const text = await res.text().catch(() => '');
         throw new Error(`Failed to fetch ${type}: ${res.status} ${res.statusText}\n${text}`);

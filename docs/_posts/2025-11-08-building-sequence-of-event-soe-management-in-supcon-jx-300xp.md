@@ -32,7 +32,7 @@ twitter_description: ""
 twitter_image: ""
 url: "https://automation.samatorgroup.com/blog/building-sequence-of-event-soe-management-in-supcon-jx-300xp/"
 comment_id: "690f6f2b28ca3e0592722b15"
-reading_time: 18
+reading_time: 19
 access: true
 comments: false
 ---
@@ -355,7 +355,22 @@ Convert epoch seconds since January 1, 2000 (ULONG) to human-readable time forma
 </tbody>
 </table>
 <hr>
-<h2 id="soe-function-block-chain">SOE Function Block Chain</h2>
+<h2 id="8-optional-k8bittocount">8. Optional: K_8BitToCount</h2>
+<p><strong>Purpose:</strong><br>
+Count the number of active trip channels from up to 8 BOOL inputs. This can help save inputs on K_SOE32—for example, if more than 4 units are still operational, it won't trigger an event (using unit redundancy voting logic).</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Copy <code>IN1..IN8</code> to an array.</li>
+<li>Loop from <code>0-7</code>: Add <code>+1</code> if TRUE.</li>
+<li>Output: <code>UINT 0-8</code>.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Quick summary: "Are the running units still &gt;4?"</li>
+<li>Integration: Used as a sub-8ch input for K_SOE32 (e.g., Ch1-8 consolidated into one logic input).</li>
+</ul>
+<hr>
+<h2 id="soe-base-function-block-chain">SOE Base Function Block Chain</h2>
 <table>
 <thead>
 <tr>
@@ -1293,6 +1308,61 @@ END_FUNCTION_BLOCK
 
 </code></pre>
 </details>
+<details>
+<summary>K_8BitToCount</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_8BitToCount
+    Versi        : 1.0
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 10 Nov 2025
+    Kontributor  : Copilot (Microsoft)
+    Deskripsi    : Hitung jumlah input BOOL=TRUE dari 8 unit atau kurang
+    Input        : IN1..IN8 (BOOL), static FALSE jika tidak diperlukan
+    Output       : OUT1 (UINT)
+    Catatan      : OUT1 = jumlah unit aktif (0..8)
+*)
+
+FUNCTION_BLOCK K_8BitToCount
+
+VAR_INPUT
+    IN1 : BOOL; IN2 : BOOL; IN3 : BOOL; IN4 : BOOL;
+    IN5 : BOOL; IN6 : BOOL; IN7 : BOOL; IN8 : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    OUT1 : UINT;  (* Jumlah unit aktif *)
+END_VAR
+
+VAR
+    Inputs : array8BOOL;  (* Internal array untuk loop *)
+    i      : INT;
+END_VAR
+
+(* Salin scalar input ke internal array *)
+Inputs[0] := IN1; Inputs[1] := IN2; Inputs[2] := IN3; Inputs[3] := IN4;
+Inputs[4] := IN5; Inputs[5] := IN6; Inputs[6] := IN7; Inputs[7] := IN8;
+
+(* Hitung jumlah TRUE *)
+OUT1 := 0;
+FOR i := 0 TO 7 DO
+    IF Inputs[i] THEN
+        OUT1 := OUT1 + 1;
+    END_IF;
+END_FOR;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
 <hr>
+
+<!--kg-card-begin: html-->
+<div class="scroll-button">
+  <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="18" y1="11" x2="12" y2="5"></line><line x1="6" y1="11" x2="12" y2="5"></line></svg>
+  </button>
+</div>
+<!--kg-card-end: html-->
 
 {% endraw %}

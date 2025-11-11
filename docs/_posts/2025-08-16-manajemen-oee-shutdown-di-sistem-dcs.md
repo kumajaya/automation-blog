@@ -32,7 +32,7 @@ twitter_description: ""
 twitter_image: ""
 url: "https://automation.samatorgroup.com/blog/manajemen-oee-shutdown-di-sistem-dcs/"
 comment_id: "689f701d7eeef80609b3ce17"
-reading_time: 7
+reading_time: 8
 access: true
 comments: false
 ---
@@ -514,6 +514,52 @@ END_FUNCTION_BLOCK
         O6 --&gt; Q
         P --&gt; Q
         Q --&gt; R["Kembali ke siklus awal"]:::akhir
+  </div>
+</div>
+</details>
+<details> <summary>Flowchart – Alur Hubungan Antar FB</summary>
+<div style="width: 100%; text-align: center; margin: 0.5em auto; max-width: 800px;">
+  <div class="mermaid" style="width: 100%; max-width: 800px;">
+    ---
+    config:
+      look: handDrawn
+      theme: neutral
+      layout: fixed
+    ---
+    flowchart LR
+        A["TIMER_IN<br>(UINT Global)"] --&gt; B["K_DELTA"]
+        C["OEE_RUN<br>RUP/RDN Eksternal<br>FLG_IN/TYP_IN HMI"] --&gt; KOEE["K_OEE<br>(State Machine + Transfer Flow)"]
+        B --&gt; E["DELTA_OUT<br>(UINT Shared, ~1s/cycle)"]
+        KOEE --&gt; G["ENABLEs<br>(BE=1 Buffered, AE=2 Agreed,<br>RE=3 Random, EE=4 ElecTrip,<br>LE=5 NoOrder, WE=6 WaterShort)"] &amp; H["PULSEs (Trigger)<br>(AD=2 Agreed, RD=3 Random,<br>ED=4 ElecTrip, LD=5 NoOrder,<br>WD=6 WaterShort)"] &amp; I["FLG_OUT/TYP_OUT<br>(HMI: 0=Idle, 1-6=Typ)"]
+        G --&gt; J["K_ACCUM Instances<br>(6x per Typ 1-6:<br>Buffer(1): Temp<br>Agreed(2): Planned<br>Random(3): Unplanned<br>Elec(4): Power<br>NoOrder(5): Demand<br>Water(6): Supply)<br>(RETAIN Loop)"]
+        E --&gt; J
+        K["RATE<br>(SFLOAT#1.0)"] --&gt; J
+        J --&gt; L["ACC_OUT<br>(structKAccum per Typ)<br>(RETAIN Persistent)"]
+        L --&gt; S["ALT_OUT Total<br>(FLOAT per Typ 1-6)"]
+        S --&gt; T["OEE Report/Audit<br>(Chain ADD Typ 2-6<br>Availability Calc)"]
+        H ---&gt; O["K_ADD_ACCUM<br>(Merge Buffer + Typ Target)"]
+        O ---&gt; Q["K_SUB_ACCUM<br>(Reset Buffer = 0)"]
+        J ---&gt; O &amp; Q
+        Q ---&gt; J
+         A:::ioClass
+         B:::fbClass
+         C:::ioClass
+         KOEE:::koeeClass
+         E:::fbClass
+         G:::stateClass
+         H:::stateClass
+         I:::ioClass
+         J:::fbClass
+         K:::fbClass
+         L:::fbClass
+         S:::fbClass
+         T:::ioClass
+         O:::fbClass
+         Q:::fbClass
+        classDef fbClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+        classDef koeeClass fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+        classDef ioClass fill:#f3e5f5,stroke:#4a148c
+        classDef stateClass fill:#e8f5e8,stroke:#1b5e20
   </div>
 </div>
 </details>

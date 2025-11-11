@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Building Sequence of Event (SOE) Management in Supcon JX-300XP | Technical &amp; Sustainability Digest</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Building Sequence of Event (SOE) Management in Supcon JX-300XP" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Implementation of Sequence of Event (SOE) in Supcon DCS using a chain of 7 modular function blocks. Ensures precise trip chronology recording, easy auditing, and operator-friendly operations." />
+<meta property="og:description" content="Implementation of Sequence of Event (SOE) in Supcon DCS using a chain of 7 modular function blocks. Ensures precise trip chronology recording, easy auditing, and operator-friendly operations." />
+<link rel="canonical" href="https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html" />
+<meta property="og:url" content="https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html" />
+<meta property="og:site_name" content="Technical &amp; Sustainability Digest" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1621571029036-1573d2b1dc5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fHNlcXVlbmNlfGVufDB8fHx8MTc2MjU0MzYxNnww&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-11-08T16:56:44+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://images.unsplash.com/photo-1621571029036-1573d2b1dc5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fHNlcXVlbmNlfGVufDB8fHx8MTc2MjU0MzYxNnww&ixlib=rb-4.1.0&q=80&w=2000" />
+<meta property="twitter:title" content="Building Sequence of Event (SOE) Management in Supcon JX-300XP" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-08T16:56:44+00:00","datePublished":"2025-11-08T16:56:44+00:00","description":"Implementation of Sequence of Event (SOE) in Supcon DCS using a chain of 7 modular function blocks. Ensures precise trip chronology recording, easy auditing, and operator-friendly operations.","headline":"Building Sequence of Event (SOE) Management in Supcon JX-300XP","image":"https://images.unsplash.com/photo-1621571029036-1573d2b1dc5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fHNlcXVlbmNlfGVufDB8fHx8MTc2MjU0MzYxNnww&ixlib=rb-4.1.0&q=80&w=2000","mainEntityOfPage":{"@type":"WebPage","@id":"https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html"},"url":"https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/automation-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://kumajaya.github.io/automation-blog/feed.xml" title="Technical &amp; Sustainability Digest" /><!-- Dark Mode Detection -->
+<script>
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.classList.add('dark-mode');
+  }
+</script>
+
+<!-- PrismJS Syntax Highlighting Theme + Plugins -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism-coy.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.css" crossorigin="anonymous">
+
+<!-- KaTeX (Math Typesetting Engine) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" crossorigin="anonymous">
+
+<!-- Font Awesome Icon Suite -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Dukungan favicon -->
+<link rel="icon" type="image/png" sizes="16x16" href="/automation-blog/assets/media/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/automation-blog/assets/media/favicon-32x32.png">
+<link rel="shortcut icon" href="/automation-blog/assets/media/favicon.ico">
+
+<style>
+/* Reduce site title line-height and bottom margin */
+.site-header .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 1rem;
+}
+.site-title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit;
+}
+.site-title:hover,
+.site-title:focus {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Post header left-align */
+.post-header {
+  text-align: left !important;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+.post-category a {
+  text-decoration: none;
+}
+.post-category a:hover,
+.post-category a:focus {
+  text-decoration: none;
+  color: inherit;
+}
+.post-title {
+  text-align: left !important;
+  margin-left: 0;
+}
+
+/* Hide Ghost-specific elements */
+.kg-card, .kg-file-card, .kg-audio-card, .kg-audio-card *, .gh-sidebar {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Native Audio Player Styling */
+.native-audio-wrapper {
+  margin: 1.5rem 0;
+}
+
+.native-audio-wrapper audio {
+  width: 100%;
+}
+
+.audio-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+/* Mermaid Diagram Styling */
+.mermaid {
+  font-family: 'Segoe UI', sans-serif;
+  background: rgba(255,255,255,0.9) !important;
+  margin: 2.5rem auto;
+  padding: 1.8rem;
+  overflow: visible;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.mermaid.is-ready { opacity: 1; }
+
+/* Node & Label Styling */
+.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon, .mermaid .actor {
+  fill: #ffffff;
+  stroke: #3b82f6;
+  stroke-width: 2.2px;
+  rx: 8px; ry: 8px;
+  filter: drop-shadow(0 2px 3px rgba(59,130,246,0.12)) drop-shadow(0 1px 1px rgba(59,130,246,0.1));
+  transition: all 0.25s ease;
+}
+.mermaid .node text, .mermaid .label, .mermaid .label text {
+  color: #1f2937;
+  font-weight: 600;
+  letter-spacing: 0.25px;
+  line-height: 1.5;
+}
+
+/* Arrow & Edge Styling */
+.mermaid .marker, .mermaid .arrowheadPath, .mermaid .arrowhead path { fill: #3b82f6 !important; stroke: none !important; }
+.mermaid .edgePath path, .mermaid .path { stroke: #3b82f6; stroke-width: 2.6px; stroke-linecap: round; }
+.mermaid path, .mermaid line { stroke-width: 1.5px !important; }
+
+/* Diagram Title */
+.mermaid .title, .mermaid .title text { font-weight: 600; color: #1e40af; }
+
+/* Dark Mode Overrides */
+.dark-mode .mermaid {
+  background: rgba(17,24,39,0.85) !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2), 0 10px 15px -3px rgba(0,0,0,0.25);
+}
+.dark-mode .mermaid .node rect, .dark-mode .mermaid .node circle, .dark-mode .mermaid .node polygon, .dark-mode .mermaid .actor {
+  fill: #111827;
+  stroke: #60a5fa;
+  filter: drop-shadow(0 2px 3px rgba(96,165,250,0.2)) drop-shadow(0 1px 1px rgba(96,165,250,0.15));
+}
+.dark-mode .mermaid .node text, .dark-mode .mermaid .label, .dark-mode .mermaid .label text { color: #f3f4f6; }
+.dark-mode .mermaid .edgePath path, .dark-mode .mermaid .path { stroke: #60a5fa; }
+.dark-mode .mermaid .title, .dark-mode .mermaid .title text { color: #93c5fd; }
+
+/* Responsive Mermaid Adjustments */
+@media (max-width: 768px) {
+  .mermaid { padding: 1.2rem; border-radius: 10px; }
+  .mermaid .label, .mermaid .node text, .mermaid .label text { font-size: 1.15rem !important; }
+}
+
+/* Table Styling */
+table td, table th { border: 1px solid #e0e0e0; }
+table tr:nth-child(even) { background-color: #f9f9f9; }
+table td:first-child, table th:first-child { padding-left: 0.75em !important; }
+table th { background-color: #222149; color: #fff !important; font-weight: bold; }
+
+/* ⬆ Scroll Top Button + Progress Indicator */
+.scroll-top {
+  --ghost-accent-color: #222149;
+  position: fixed;
+  z-index: 50;
+  padding: 0;
+  right: 20px; bottom: 20px;
+  opacity: 0; visibility: hidden;
+  transform: translateY(15px);
+  height: 46px; width: 46px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: all .4s ease;
+  border: none;
+  box-shadow: inset 0 0 0 2px #ccc;
+  color: #ccc; background-color: #fff;
+}
+.scroll-top.is-active {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.scroll-top .icon-tabler-arrow-up {
+  position: absolute;
+  stroke-width: 2px;
+  stroke: #333;
+}
+.scroll-top svg path { fill: none; }
+.scroll-top svg.progress-circle path {
+  stroke: #333;
+  stroke-width: 4;
+  transition: all .4s ease;
+}
+.scroll-top:hover {
+  color: var(--ghost-accent-color);
+}
+.scroll-top:hover .progress-circle path,
+.scroll-top:hover .icon-tabler-arrow-up {
+  stroke: var(--ghost-accent-color);
+}
+@media print {
+  .scroll-button .btn-toggle-round {
+    display: none !important;
+  }
+}
+
+/* Native File Download Card Styling */
+.native-file-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--ghost-bg, #f9f9f9);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 1em 0;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  font-weight: 600;
+}
+
+.file-desc {
+  color: #666;
+  font-size: 0.9em;
+}
+
+.file-meta {
+  color: #999;
+  font-size: 0.85em;
+}
+
+.dot {
+  margin: 0 6px;
+}
+
+.file-download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.05);
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.file-download:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.file-download svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.5;
+}
+</style>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/automation-blog/">Technical &amp; Sustainability Digest</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/automation-blog/pages/about.html">About this site</a>
+  <a class="nav-item" href="/automation-blog/pages/privacy.html">Privacy Statement</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    
+    
+
+    
+    <div class="post-category">
+      
+      <a href="/automation-blog/tags/sequence-of-event">
+        Sequence of Event
+      </a>
+    </div>
+    
+
+    <h1 class="post-title p-name" itemprop="name headline">Building Sequence of Event (SOE) Management in Supcon JX-300XP</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-11-08T16:56:44+00:00" itemprop="datePublished">
+        November 08, 2025
+      </time>
+      <div class="force-inline post-authors">
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Ketut Kumajaya</span>
+          </span>
+        
+      </div>
+      
+      <div class="force-inline post-authors">
+        <span class="reading-time">19 min read</span>
+      </div>
+      
+    </div>
+  </header>
+
+  
+  <p class="post-excerpt" itemprop="description">
+    Implementation of Sequence of Event (SOE) in Supcon DCS using a chain of 7 modular function blocks. Ensures precise trip chronology recording, easy auditing, and operator-friendly operations.
+
+  </p>
+  
+
+  
+  <figure class="post-feature-image">
+    <img src="https://images.unsplash.com/photo-1621571029036-1573d2b1dc5c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMTc3M3wwfDF8c2VhcmNofDF8fHNlcXVlbmNlfGVufDB8fHx8MTc2MjU0MzYxNnww&ixlib=rb-4.1.0&q=80&w=2000" alt="Building Sequence of Event (SOE) Management in Supcon JX-300XP" loading="lazy" class="post-feature-img">
+    
+    <figcaption class="post-feature-caption">
+      <p><span style="white-space: pre-wrap;">Photo by </span><a href="https://unsplash.com/@bradyn?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Bradyn Trollip</span></a><span style="white-space: pre-wrap;"> / </span><a href="https://unsplash.com/?utm_source=ghost&amp;utm_medium=referral&amp;utm_campaign=api-credit"><span style="white-space: pre-wrap;">Unsplash</span></a></p>
+
+    </figcaption>
+    
+  </figure>
+  
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p><strong>Modular • Audit-Grade • Human-Friendly</strong><br />
+<em>By: Ketut Kumajaya • November 08, 2025</em></p>
+<blockquote>
+<p><strong>TL;DR</strong> — 7 Custom Function Blocks for 32-channel SOE in JX-300XP: time conversion to second epoch since January 1, 2000, DWORD bit-packing, accurate first-out detection, second deltas, chronological sorting. Passed simulations for incremental, decremental, random (2-second delay), and concurrent all-trip with 0-second delta.</p>
+</blockquote>
+<h2 id="introduction">Introduction</h2>
+<p>Sequence of Event (SOE) is a critical feature in DCS systems for recording the sequence of critical incidents such as trips, alarms, and operator actions. With high time precision, SOE aids in incident investigations, system response analysis, and provides a transparent audit trail.</p>
+<p>This article presents the <strong>K_SOE32 Suite</strong> — an implementation of SOE in Supcon DCS using a chain of modular function blocks documented to audit-grade standards. This suite is designed to be reusable across plants with comprehensive documentation, facilitating adaptation across projects.</p>
+<figure style="text-align:center;">
+  <div class="mermaid" style="max-width:85%; margin:auto; font-size:0.85rem;">
+flowchart TD
+    subgraph ED2["Edge Detection Group 2"]
+        DI2["DI 17-32 Raw"] --&gt; RT2["R_TRIG 17-32"]
+        RT2 --&gt; P2["K_16BitsToWord"]
+    end
+    subgraph ED1["Edge Detection Group 1"]
+        DI1["DI 1-16 Raw"] --&gt; RT1["R_TRIG 1-16"]
+        RT1 --&gt; P1["K_16BitsToWord"]
+    end
+    subgraph PACKING["Packing Digital Input"]
+        ED1
+        ED2
+        P1 --&gt; MERGE["K_2WordToDWord"]
+        P2 --&gt; MERGE
+    end
+    TIME["System Time"] --&gt; EP["K_Epoch"]
+    MERGE --&gt; SOE["K_SOE32"]
+    EP --&gt; SOE
+    RESET["Reset"] --&gt; TP["TP Pulse"] --&gt; SOE
+    SOE --&gt; EPT["K_EpochToTime"]
+    SOE --&gt; SORT["K_SOE32Sort"]
+    SORT --&gt; DELTA["K_SOE32Delta"]
+    SORT --&gt; HMI[/"HMI • SCADA • Report"/]
+    EPT --&gt; HMI
+    DELTA --&gt; HMI
+    %% ClassDef for Efficient Styling (Variasi Warna)
+    classDef edge1 fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px
+    classDef edge2 fill:#C8E6C9,stroke:#2E7D32,stroke-width:1px
+    classDef time fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px
+    classDef system fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px
+    classDef sort fill:#FFE0B2,stroke:#FB8C00,stroke-width:2px
+    classDef hmi fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px
+    classDef pack fill:#E8F5E9,stroke:#43A047,stroke-width:2px
+    %% Assign Classes
+    class ED1,ED2 edge1
+    class PACKING pack
+    class P1,P2,MERGE edge2
+    class EP,EPT time
+    class DI1,DI2,RT1,RT2,TIME,RESET,TP system
+    class SOE,SORT,DELTA sort
+    class HMI hmi
+  </div>
+  <figcaption style="margin-top:0.5em; color:#555; font-size:14px;">
+    Sequence of Event (SOE) Management Flow in Supcon JX-300XP
+  </figcaption>
+</figure>
+<hr />
+
+<h2 id="1-kepoch">1. K_Epoch</h2>
+<p><strong>Purpose:</strong><br />
+Convert Supcon system time to epoch seconds since January 1, 2000 UTC, with leap year handling and strict validation.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>If <code>Enable=FALSE</code>, set <code>Epoch=0</code> and RETURN.</li>
+<li>Init <code>MonthDays</code> manual (31 Jan, 28 Feb, etc.).</li>
+<li>Fetch time: <code>Year = CENTURY()*100 + YEAR()</code>, <code>Month=MONTH()</code>, etc.</li>
+<li>Validate range (Year ≥2000, Month 1–12, etc.) → <code>Epoch=0</code> if invalid.</li>
+<li>Calculate <code>DaysSince2000</code> (total complete days since Jan 1, 2000):
+<ul>
+<li>Full years: FOR i:=2000 TO Year–1, add 365 (or 366 if leap year: MOD 4=0 and (MOD 100&lt;&gt;0 OR MOD 400=0)).</li>
+<li>Full months this year: Add days from months 1 TO Month–1 from <code>MonthDays[i-1]</code>.</li>
+<li>Leap day: +1 if Month&gt;2 and Year leap (Feb already passed).</li>
+</ul>
+</li>
+<li>Feb leap adjust (j=1), validate Day → <code>Epoch=0</code> if invalid.</li>
+<li><code>DaysSince2000 += Day–1</code>.</li>
+<li><code>Epoch = DaysSince2000*86400 + Hour*3600 + Minute*60 + Second</code>.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>UTC consistency since 2000 with error protection (output 0).</li>
+<li>Accurate leap year for SOE—easy verification via K_EpochToTime.</li>
+</ul>
+<h3 id="kepoch-test-cases-100-logic-simulation">K_Epoch Test Cases (100% Logic Simulation)</h3>
+<table>
+<thead>
+<tr>
+<th>Enable</th>
+<th>Year</th>
+<th>Month</th>
+<th>Day</th>
+<th>Hour</th>
+<th>Minute</th>
+<th>Second</th>
+<th>Expected Epoch</th>
+<th>Actual</th>
+<th>Pass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>True</td>
+<td>2000</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>True</td>
+<td>2025</td>
+<td>11</td>
+<td>8</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>815875200</td>
+<td>815875200</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>True</td>
+<td>2024</td>
+<td>2</td>
+<td>29</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>762480000</td>
+<td>762480000</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>True</td>
+<td>2000</td>
+<td>2</td>
+<td>30</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0 (invalid)</td>
+<td>0</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>False</td>
+<td>2025</td>
+<td>11</td>
+<td>8</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+<h2 id="2-k16bitstoword">2. K_16BitsToWord</h2>
+<p><strong>Purpose:</strong><br />
+Packing 16 scalar BOOL inputs into a WORD bitmask (0x0000–0xFFFF) for digital channel snapshot before merging to DWORD in SOE.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Copy <code>IN1..IN16</code> to internal array <code>Inputs[0..15]</code> (IN1=Inputs[0]).</li>
+<li>Init <code>OUT1 = 0</code>.</li>
+<li>Loop <code>FOR i:=0 TO 15</code>: If <code>Inputs[i]=TRUE</code>, <code>OUT1 = OR_WORD(OUT1, SHL_WORD(1,i))</code>.</li>
+<li>Output bitmask: Bit0=IN1 (LSB), Bit15=IN16 (MSB); inputs from R_TRIG external pre-processing for rising edge.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Compact snapshot of 16 channels, easy packing to DWORD SOE.</li>
+<li>Clear mapping (IN1=Bit0, IN16=Bit15)—direct bit set verification from HMI, fast traceability in edge detection.</li>
+</ul>
+<hr />
+
+<h2 id="3-k2wordtodword">3. K_2WordToDWord</h2>
+<p><strong>Purpose:</strong><br />
+Combine two WORDs (HiInput &amp; LoInput) into one DWORD for long data packing.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Convert HiInput &amp; LoInput to ULONG (<code>WORD_TO_UINT → UINT_TO_ULONG</code>).</li>
+<li>Shift HiInput left by 16 bits: <code>tempHi = SHL_DWORD(ULONG_TO_DWORD(tempHi), 16)</code>.</li>
+<li>Combine with OR: <code>Output = OR_DWORD(tempHi shifted, tempLo)</code>.</li>
+<li>Output DWORD = Hi&lt;&lt;16 | Lo (MSB Hi, LSB Lo).</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Compact 32-bit packing from two 16-bit, without direct WORD-DWORD conversion.</li>
+<li>Transparent bitwise operation—easy trace (e.g., verify Hi/Lo alignment without disassembly).</li>
+</ul>
+<hr />
+
+<h2 id="4-ksoe32">4. K_SOE32</h2>
+<p><strong>Purpose:</strong><br />
+This is the SOE core: Handles 32 digital channels, latches trips, stores timestamps, and detects first-out automatically.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Restore state from persistent input (global latch &amp; timestamp, connected from previous cycle output for data continuity).<br />
+Four outputs looped back as 4 persistent inputs via external variables:
+<ul>
+<li><code>TripIn</code>/<code>TripOut</code> (INT): First trip channel (-1 if none) for rebuild validation.</li>
+<li><code>LockIn</code>/<code>LockOut</code> (BOOL): Active trip status for initial cycle condition.</li>
+<li><code>TripsIn</code>/<code>TripsOut</code> (DWORD): Bitmask of latched channels for restore and update state.</li>
+<li><code>TsIn</code>/<code>TsOut</code> (struct32ULONG): Array timestamp[0..31] to store epoch per channel and check latched status.</li>
+</ul>
+</li>
+<li>Rebuild first trip if <code>LockOut=TRUE</code> and <code>TripOut</code> invalid (e.g., -1 or does not match latched bit, from lowest latched channel via <code>FOR</code> loop).</li>
+<li>Manual reset (via pulse <code>Reset=TRUE</code>) → clear all latches (set <code>Latched=FALSE</code>, <code>TripsOut=0</code>, <code>TripOut=-1</code>, <code>TsInt=0</code>, <code>LockOut=FALSE</code>).</li>
+<li>Loop channels (<code>FOR i:=0 TO 31</code>): Detect rising edge (<code>Run</code> bit i set AND NOT <code>Latched[i]</code>, where <code>Run</code> is DWORD from R_TRIG external pre-processing before K_16BitsToWord), store <code>TsInt[i]=Ts</code> current if not latched and <code>Ts&gt;0</code> (skip glitch), set <code>TripOut=i</code> if <code>TripOut=-1</code>. Update <code>TripsOut</code> from <code>Latched</code> bits; <code>LockOut = LockOut OR (TripsOut &lt;&gt; 0)</code>.</li>
+<li>Map <code>TsInt</code> to <code>TsOut</code> struct (via <code>CASE</code> Val1-Val32).</li>
+<li><code>TripTs = TsInt[TripOut]</code> if <code>TripOut &gt;=0</code>, else 0.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Each trip recorded with unique timestamp (ULONG epoch), prevent data loss post-restart thanks to explicit persistent loop-back.</li>
+<li><code>TripOut</code> and <code>TripTs</code> directly indicate first channel &amp; time—e.g., "Trip started on channel 5 at 14:23:45", enabling quick diagnosis and transparent audits without manual reconstruction.</li>
+</ul>
+<hr />
+
+<h2 id="5-ksoe32sort">5. K_SOE32Sort</h2>
+<p><strong>Purpose:</strong><br />
+Sort 32 latched SOE timestamps ascending, generating consistent channel and time sequence.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Copy all <code>TsIn.Val1..Val32</code> to working array <code>TsArr</code>.</li>
+<li>Build index list <code>Order</code> only for timestamps <code>&gt;0</code>. Empty slots filled with -1.</li>
+<li>Apply bubble sort on <code>Order</code> array:
+<ul>
+<li>Primary key: timestamp value.</li>
+<li>Tie-breaker: channel number (lower prioritized).</li>
+</ul>
+</li>
+<li>Map sorted indices to <code>Seq.Val1..Val32</code> struct.</li>
+<li>Map sorted timestamps to <code>TsOut.Val1..Val32</code> struct. Empty slots filled with zero.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Chronology traceable with precision without manual interpretation.</li>
+<li>Channel tie-breaker prevents ambiguity for concurrent events.</li>
+<li>Clean output: Operators directly see channel and time sequence, auditors easily verify chronology.</li>
+</ul>
+<hr />
+
+<h2 id="6-ksoe32delta">6. K_SOE32Delta</h2>
+<p><strong>Purpose:</strong><br />
+Calculate time differences (delta seconds) for each channel against base timestamp (first valid event), to assess system response speed.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Copy all <code>TsIn.Val1..Val32</code> to working array <code>TsArr</code>.</li>
+<li>Find base timestamp first <code>&gt;0</code>. If none, <code>base=0</code>.</li>
+<li>Loop each channel:
+<ul>
+<li>If <code>base&gt;0</code> and <code>TsArr[i] ≥ base</code>, then <code>Diff[i] = TsArr[i] – base</code>.</li>
+<li>If invalid, <code>Diff[i] = 0</code>.</li>
+</ul>
+</li>
+<li>Map deltas to <code>Diff.Val1..Val32</code> struct.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Delta seconds provide concrete time gaps between events.</li>
+<li>Operators can directly read “Channel X tripped N seconds after Channel Y” without manual calculation.</li>
+<li>Auditors can compare deltas to protection/interlock standards, enhancing audit transparency.</li>
+</ul>
+<hr />
+
+<h2 id="7-kepochtotime">7. K_EpochToTime</h2>
+<p><strong>7. K_EpochToTime</strong><br />
+<strong>Purpose:</strong><br />
+Convert epoch seconds since January 1, 2000 (ULONG) to human-readable time format (Y-M-D H:M:S) in Supcon, with leap year adjustment for accurate date reconstruction.</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>If <code>Enable=FALSE</code> or <code>Epoch &gt; 4294967295</code> (max ULONG), set all outputs (<code>Year</code>..<code>Second</code>)=0 and RETURN.</li>
+<li>Init <code>MonthDays</code> manual (31 Jan, 28 Feb, etc.).</li>
+<li>Separate <code>Days = Epoch / 86400</code>, <code>RemSec = Epoch MOD 86400</code>.</li>
+<li>Calculate <code>Hour = RemSec / 3600</code>, <code>Minute = (RemSec MOD 3600) / 60</code>, <code>Second = RemSec MOD 60</code> (safe LONG_TO_INT casting).</li>
+<li>Calculate year: <code>Year=2000</code>, WHILE <code>Days ≥ 365/366</code> (leap if MOD 4=0 and (MOD 100&lt;&gt;0 OR MOD 400=0)), subtract <code>Days</code>, <code>Year +=1</code>.</li>
+<li>Calculate month: FOR i:=0 TO 11, <code>j=MonthDays[i]</code>, adjust Feb <code>j=29</code> if leap, subtract <code>Days</code> if ≥j, <code>Month=i+1</code>.</li>
+<li><code>Day = Days +1</code>.</li>
+<li>Output <code>Year</code>, <code>Month</code>, <code>Day</code>, <code>Hour</code>, <code>Minute</code>, <code>Second</code> (e.g., 2025-11-08 00:00:00).</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Long epochs become readable calendar format for SOE reports.</li>
+<li>Accurate leap year reversal—direct timestamp verification without external tools, improving audit transparency.</li>
+</ul>
+<h3 id="kepochtotime-test-cases-100-logic-simulation">K_EpochToTime Test Cases (100% Logic Simulation)</h3>
+<table>
+<thead>
+<tr>
+<th>Epoch</th>
+<th>Expected Y-M-D H:M:S</th>
+<th>Actual</th>
+<th>Pass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Invalid/0</td>
+<td>0</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>815875200</td>
+<td>2025-11-08 00:00:00</td>
+<td>2025-11-08 00:00:00</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>762480000</td>
+<td>2024-02-29 00:00:00</td>
+<td>2024-02-29 00:00:00</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+<h2 id="8-optional-k8bittocount">8. Optional: K_8BitToCount</h2>
+<p><strong>Purpose:</strong><br />
+Count the number of active trip channels from up to 8 BOOL inputs. This can help save inputs on K_SOE32—for example, if more than 4 units are still operational, it won't trigger an event (using unit redundancy voting logic).</p>
+<p><strong>Logic Flow:</strong></p>
+<ul>
+<li>Copy <code>IN1..IN8</code> to an array.</li>
+<li>Loop from <code>0-7</code>: Add <code>+1</code> if TRUE.</li>
+<li>Output: <code>UINT 0-8</code>.</li>
+</ul>
+<p><strong>Audit/Operator Value:</strong></p>
+<ul>
+<li>Quick summary: "Are the running units still &gt;4?"</li>
+<li>Integration: Used as a sub-8ch input for K_SOE32 (e.g., Ch1-8 consolidated into one logic input).</li>
+</ul>
+<hr />
+
+<h2 id="soe-base-function-block-chain">SOE Base Function Block Chain</h2>
+<table>
+<thead>
+<tr>
+<th>Block</th>
+<th>Main Function</th>
+<th>Audit/Operator Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K_Epoch</td>
+<td>Build epoch seconds since 2000</td>
+<td>Time consistency</td>
+</tr>
+<tr>
+<td>K_EpochToTime</td>
+<td>Epoch → human-readable time</td>
+<td>Audit reports</td>
+</tr>
+<tr>
+<td>K_16BitsToWord</td>
+<td>Pack 16 BOOL → WORD</td>
+<td>Channel snapshot</td>
+</tr>
+<tr>
+<td>K_2WordToDWord</td>
+<td>Combine 2 WORD → DWORD</td>
+<td>Long data</td>
+</tr>
+<tr>
+<td>K_SOE32</td>
+<td>SOE core, latch 32 channels</td>
+<td>Trip chronology</td>
+</tr>
+<tr>
+<td>K_SOE32Sort</td>
+<td>Sort timestamps</td>
+<td>Sequence transparency</td>
+</tr>
+<tr>
+<td>K_SOE32Delta</td>
+<td>Calculate second deltas</td>
+<td>Response analysis</td>
+</tr>
+</tbody>
+</table>
+<hr />
+
+<h2 id="test-case-table-real-logic-simulation-08-nov-2025">Test Case Table (Real Logic Simulation 08-Nov-2025)</h2>
+<p>All simulations use 2-second delays between trips (except concurrent). 100% replica of original FB logic (relative epoch, low-index tie-break).</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>FirstOut (Channel)</th>
+<th>Delta Base</th>
+<th>Delta Max</th>
+<th>Sorted Sequence (example)</th>
+<th>Pass</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incremental (Ch1 → Ch32, delay 2 detik)</td>
+<td>1</td>
+<td>0 detik</td>
+<td>62 detik</td>
+<td>1 (0s), 2 (2s), 3 (4s), ..., 32 (62s)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Decremental (Ch32 → Ch1, delay 2 detik)</td>
+<td>32</td>
+<td>0 detik</td>
+<td>62 detik</td>
+<td>32 (0s), 31 (2s), 30 (4s), ..., 1 (62s)</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Random (random, 2-second delay)</td>
+<td>27</td>
+<td>0 detik</td>
+<td>62 detik</td>
+<td>27 (0s), 6 (2s), 11 (4s), 16 (6s), 26 (8s), 12 (10s), 23 (12s), 7 (14s), 20 (16s), 13 (18s)...</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Concurrent (all Ch1-32 in same scan)</td>
+<td>1</td>
+<td>0 detik</td>
+<td>0 detik</td>
+<td>1, 2, 3, 4, 5, 6, 7, 8, 9, 10... (index tie-break)</td>
+<td>✓</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Random seed 42 for reproducibility — random trip order: 27, 6, 11, 16, 26, 12, 23, 7, 20, 13, 17, 10, 29, 15, 25, 21, 31, 2, 14, 19, 3, 18, 22, 4, 30, 5, 28, 32, 9, 24, 1, 8)</em></p>
+<hr />
+
+<h2 id="conclusion">Conclusion</h2>
+<p>With this chain of function blocks, SOE in Supcon DCS can be built modularly, to audit-grade standards, and human-friendly. Consistent header documentation ensures each block can be audited, taught, and adapted. All FBs are reusable across plants by simply changing I/O mappings, without altering internal logic.</p>
+<hr />
+
+<h2 id="closing-note">Closing Note</h2>
+<p>At first, the intention was simple: to write <strong>first‑out</strong> logic to capture the very first trip signal so that the root cause of a trip sequence could be identified.</p>
+<p>However, when a <strong>timestamp</strong> was added, the logic turned into a chronology. With <strong>sorting</strong>, the record became a story. And with <strong>time delta</strong>, that story transformed into an analysis of the speed at which the trip occurred.</p>
+<p>From this simple logic emerged an <strong>audit‑grade SOE</strong>—modular, transparent, and aligned with the global standard of a <em>root cause detection system</em>.</p>
+<hr />
+
+<h2 id="%F0%9F%93%8E-complete-function-block-appendix">📎 Complete Function Block Appendix</h2>
+<details>
+<summary>K_Epoch</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_Epoch
+    Versi        : 1.0
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 3 Nov 2025
+    Kontributor  : ChatGPT (OpenAI), Grok (xAI)
+    Deskripsi    : Waktu sistem Supcon -&gt; epoch detik sejak 1 Jan 2000
+    Input        : Enable (BOOL)
+    Output       : Epoch (ULONG)
+    Catatan      : Leap year &amp; validasi internal; asumsi UTC
+*)
+
+FUNCTION_BLOCK K_Epoch
+VAR_INPUT
+    Enable : BOOL;
+END_VAR
+VAR_OUTPUT
+    Epoch : ULONG;
+END_VAR
+VAR
+    Year, Month, Day, Hour, Minute, Second : INT;
+    DaysSince2000 : ULONG;
+    i, j : INT;  (* i untuk loop, j untuk leap adjust *)
+    MonthDays : array12INT;
+END_VAR
+
+IF NOT Enable THEN
+    Epoch := 0;
+    RETURN;
+END_IF;
+
+(* Manual init MonthDays - Supcon tidak support init langsung *)
+MonthDays[0] := 31;   (* Jan *)
+MonthDays[1] := 28;   (* Feb *)
+MonthDays[2] := 31;   (* Mar *)
+MonthDays[3] := 30;   (* Apr *)
+MonthDays[4] := 31;   (* May *)
+MonthDays[5] := 30;   (* Jun *)
+MonthDays[6] := 31;   (* Jul *)
+MonthDays[7] := 31;   (* Aug *)
+MonthDays[8] := 30;   (* Sep *)
+MonthDays[9] := 31;   (* Oct *)
+MonthDays[10] := 30;  (* Nov *)
+MonthDays[11] := 31;  (* Dec *)
+
+(* Ambil waktu sistem Supcon *)
+Year   := CENTURY() * 100 + YEAR();
+Month  := MONTH();
+Day    := DAY();
+Hour   := HOUR();
+Minute := MINUTE();
+Second := SECOND();
+
+(* Validasi input waktu *)
+IF Year &lt; 2000 THEN Epoch := 0; RETURN; END_IF;  (* Tambah untuk year &lt;2000 *)
+IF Month &lt; 1 OR Month &gt; 12 THEN Epoch := 0; RETURN; END_IF;
+IF Day &lt; 1 OR Day &gt; 31 THEN Epoch := 0; RETURN; END_IF;
+IF Hour &lt; 0 OR Hour &gt; 23 THEN Epoch := 0; RETURN; END_IF;
+IF Minute &lt; 0 OR Minute &gt; 59 THEN Epoch := 0; RETURN; END_IF;
+IF Second &lt; 0 OR Second &gt; 59 THEN Epoch := 0; RETURN; END_IF;
+
+(* Hitung jumlah hari sejak 1 Jan 2000 *)
+DaysSince2000 := 0;
+FOR i := 2000 TO (Year - 1) DO
+    IF (i MOD 4 = 0 AND (i MOD 100 &lt;&gt; 0 OR i MOD 400 = 0)) THEN
+        DaysSince2000 := DaysSince2000 + 366;
+    ELSE
+        DaysSince2000 := DaysSince2000 + 365;
+    END_IF;
+END_FOR;
+
+FOR i := 1 TO (Month - 1) DO
+    DaysSince2000 := DaysSince2000 + UINT_TO_ULONG(INT_TO_UINT(MonthDays[i - 1]));  (* Casting aman untuk array index  *)
+END_FOR;
+
+IF (Month &gt; 2 AND Year MOD 4 = 0 AND (Year MOD 100 &lt;&gt; 0 OR Year MOD 400 = 0)) THEN
+    DaysSince2000 := DaysSince2000 + 1;
+END_IF;
+
+(* Validasi Day lebih presisi - Gunakan j untuk leap adjust *)
+j := 0;
+IF (Month = 2 AND Year MOD 4 = 0 AND (Year MOD 100 &lt;&gt; 0 OR Year MOD 400 = 0)) THEN j := 1; END_IF;
+IF Day &gt; (MonthDays[Month - 1] + j) THEN
+    Epoch := 0;
+    RETURN;
+END_IF;
+
+DaysSince2000 := DaysSince2000 + UINT_TO_ULONG(INT_TO_UINT(Day - 1));
+
+Epoch := DaysSince2000 * 86400
+            + UINT_TO_ULONG(INT_TO_UINT(Hour)) * 3600
+            + UINT_TO_ULONG(INT_TO_UINT(Minute)) * 60
+            + UINT_TO_ULONG(INT_TO_UINT(Second));
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_16BitsToWord</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_16BitsToWord
+    Versi        : 1.0
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 4 Nov 2025
+    Kontributor  : ChatGPT (OpenAI)
+    Deskripsi    : Packing 16 BOOL -&gt; WORD bitmask (bits 0..15)
+    Input        : IN1..IN16 (BOOL)
+    Output       : OUT1 (WORD)
+    Catatan      : Bit=1 jika input TRUE; output 0x0000..0xFFFF
+*)
+
+FUNCTION_BLOCK K_16BitsToWord
+
+VAR_INPUT
+    IN1  : BOOL; IN2  : BOOL; IN3  : BOOL; IN4  : BOOL;
+    IN5  : BOOL; IN6  : BOOL; IN7  : BOOL; IN8  : BOOL;
+    IN9  : BOOL; IN10 : BOOL; IN11 : BOOL; IN12 : BOOL;
+    IN13 : BOOL; IN14 : BOOL; IN15 : BOOL; IN16 : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    OUT1 : WORD;  (* Packed bitmask: Bit0=IN1, ..., Bit15=IN16 *)
+END_VAR
+
+VAR
+    Inputs : array16BOOL;  (* Internal array untuk loop - custom type di library *)
+    mask   : WORD;
+    i      : INT;
+END_VAR
+
+(* Salin scalar input ke internal array *)
+Inputs[0] := IN1;  Inputs[1] := IN2;  Inputs[2] := IN3;  Inputs[3] := IN4;
+Inputs[4] := IN5;  Inputs[5] := IN6;  Inputs[6] := IN7;  Inputs[7] := IN8;
+Inputs[8] := IN9;  Inputs[9] := IN10; Inputs[10] := IN11; Inputs[11] := IN12;
+Inputs[12] := IN13; Inputs[13] := IN14; Inputs[14] := IN15; Inputs[15] := IN16;
+
+(* Build OUT1 dengan loop *)
+OUT1 := 0;
+FOR i := 0 TO 15 DO
+    IF Inputs[i] THEN
+        mask := SHL_WORD(1, INT_TO_UINT(i));  (* Explicit cast aman *)
+        OUT1 := OR_WORD(OUT1, mask);
+    END_IF;
+END_FOR;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_2WordToDWord</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_2WordToDWord
+    Versi        : 1.0
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 7 Nov 2025
+    Kontributor  : ChatGPT (OpenAI)
+    Deskripsi    : Gabungkan HiInput (WORD) &amp; LoInput (WORD) -&gt; DWORD
+    Input        : HiInput, LoInput (WORD)
+    Output       : Output (DWORD)
+    Catatan      : Implementasi via ULONG; tidak ada konversi langsung WORD &lt;-&gt; DWORD
+*)
+
+FUNCTION_BLOCK K_2WordToDWord
+VAR_INPUT
+    LoInput : WORD;  (* WORD 16-bit *)
+    HiInput : WORD;  (* WORD 16-bit *)
+END_VAR
+VAR_OUTPUT
+    Output : DWORD;  (* DWORD 32-bit *)
+END_VAR
+VAR
+    tempHi : ULONG;
+    tempLo : ULONG;
+END_VAR
+
+(* Konversi ke ULONG *)
+tempHi := UINT_TO_ULONG(WORD_TO_UINT(HiInput));
+tempLo := UINT_TO_ULONG(WORD_TO_UINT(LoInput));
+
+(* Geser HiInput 16 bit kiri dan gabungkan dengan LoInput *)
+Output := OR_DWORD(SHL_DWORD(ULONG_TO_DWORD(tempHi), 16), ULONG_TO_DWORD(tempLo));
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_SOE32</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_SOE32
+    Versi        : 1.1
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 7 Nov 2025
+    Kontributor  : ChatGPT (OpenAI), Copilot (Microsoft), Grok (xAI)
+    Deskripsi    : SOE 32 channel; latching trip, timestamp unik, first-out detection
+    Input        : Run (DWORD), Ts (ULONG), Reset (BOOL), TripIn, LockIn, TripsIn, TsIn
+    Output       : TripOut (INT), TripTs (ULONG), TripsOut (DWORD), TsOut, LockOut
+    Catatan      : Restore state; skip Ts&lt;=0; rebuild lowest latched index
+*)
+
+FUNCTION_BLOCK K_SOE32
+VAR_INPUT
+    TripIn : INT; (* First trip index input (restore) *)
+    LockIn : BOOL; (* Locked state input (restore) *)
+    TripsIn : DWORD; (* Latched word input (restore) *)
+    TsIn : struct32ULONG; (* Timestamp array input (restore) *)
+    Run : DWORD; (* Channel status input (bit per channel) *)
+    Ts : ULONG; (* Current time input (epoch seconds) *)
+    Reset : BOOL;
+END_VAR
+VAR_OUTPUT
+    TripOut : INT; (* First trip index output (-1 if none) *)
+    LockOut : BOOL; (* Locked state output *)
+    TripsOut : DWORD; (* Latched word output *)
+    TsOut : struct32ULONG; (* Timestamp array output *)
+    TripTs : ULONG; (* First trip timestamp (0 if none) *)
+END_VAR
+VAR
+    WordInt : DWORD;
+    Latched : array32BOOL;
+    TsInt : array32ULONG;
+    mask : DWORD;
+    i : INT;
+    (* Helper for rebuild *)
+    firstFound : INT;
+END_VAR
+
+(* Restore persistent *)
+WordInt := TripsIn;
+FOR i := 0 TO 31 DO
+    mask := SHL_DWORD(1, INT_TO_UINT(i));
+    Latched[i] := (AND_DWORD(WordInt, mask) &lt;&gt; 0);
+END_FOR;
+TripsOut := TripsIn;
+LockOut := LockIn;
+TripOut := TripIn;
+
+(* Restore TsInt from TsIn *)
+FOR i := 0 TO 31 DO
+    CASE i OF
+        0: TsInt[i] := TsIn.Val1;
+        1: TsInt[i] := TsIn.Val2;
+        2: TsInt[i] := TsIn.Val3;
+        3: TsInt[i] := TsIn.Val4;
+        4: TsInt[i] := TsIn.Val5;
+        5: TsInt[i] := TsIn.Val6;
+        6: TsInt[i] := TsIn.Val7;
+        7: TsInt[i] := TsIn.Val8;
+        8: TsInt[i] := TsIn.Val9;
+        9: TsInt[i] := TsIn.Val10;
+        10: TsInt[i] := TsIn.Val11;
+        11: TsInt[i] := TsIn.Val12;
+        12: TsInt[i] := TsIn.Val13;
+        13: TsInt[i] := TsIn.Val14;
+        14: TsInt[i] := TsIn.Val15;
+        15: TsInt[i] := TsIn.Val16;
+        16: TsInt[i] := TsIn.Val17;
+        17: TsInt[i] := TsIn.Val18;
+        18: TsInt[i] := TsIn.Val19;
+        19: TsInt[i] := TsIn.Val20;
+        20: TsInt[i] := TsIn.Val21;
+        21: TsInt[i] := TsIn.Val22;
+        22: TsInt[i] := TsIn.Val23;
+        23: TsInt[i] := TsIn.Val24;
+        24: TsInt[i] := TsIn.Val25;
+        25: TsInt[i] := TsIn.Val26;
+        26: TsInt[i] := TsIn.Val27;
+        27: TsInt[i] := TsIn.Val28;
+        28: TsInt[i] := TsIn.Val29;
+        29: TsInt[i] := TsIn.Val30;
+        30: TsInt[i] := TsIn.Val31;
+        31: TsInt[i] := TsIn.Val32;
+    END_CASE;
+END_FOR;
+
+(* Rebuild First Trip from persistent (if locked) *)
+IF LockOut THEN
+    IF WordInt &lt;&gt; 0 THEN
+        (* Ensure TripOut is valid and belongs to latched set; otherwise pick lowest index latched *)
+        IF (TripOut &lt; 0) OR (TripOut &gt; 31) OR (AND_DWORD(WordInt, SHL_DWORD(1, INT_TO_UINT(TripOut))) = 0) THEN
+            TripOut := -1;
+            firstFound := -1;
+            FOR i := 0 TO 31 DO
+                mask := SHL_DWORD(1, INT_TO_UINT(i));
+                IF (AND_DWORD(WordInt, mask) &lt;&gt; 0) THEN
+                    firstFound := i;
+                    EXIT;
+                END_IF;
+            END_FOR;
+            IF firstFound &lt;&gt; -1 THEN
+                TripOut := firstFound;
+            END_IF;
+        END_IF;
+    ELSE
+        TripOut := -1;
+    END_IF;
+    LockOut := (TripOut &gt;= 0);
+END_IF;
+
+(* Reset manual *)
+IF Reset THEN
+    TripsOut := 0;
+    LockOut := FALSE;
+    TripOut := -1;
+    TripTs := 0;
+    FOR i := 0 TO 31 DO
+        Latched[i] := FALSE;
+        TsInt[i] := 0;
+    END_FOR;
+ELSE
+    (* New latching from Run input *)
+    TripsOut := 0;
+    FOR i := 0 TO 31 DO
+        mask := SHL_DWORD(1, INT_TO_UINT(i));
+        IF (AND_DWORD(Run, mask) &lt;&gt; 0) AND NOT Latched[i] THEN
+            Latched[i] := TRUE;
+            (* Only stamp if Ts &gt; 0 to avoid epoch glitch false-early events *)
+            IF Ts &gt; 0 THEN
+                TsInt[i] := Ts;
+            END_IF;
+            (* If TripOut not yet set, take this as first *)
+            IF TripOut &lt; 0 THEN
+                TripOut := i;
+            END_IF;
+        END_IF;
+        IF Latched[i] THEN
+            TripsOut := OR_DWORD(TripsOut, mask);
+        END_IF;
+    END_FOR;
+    LockOut := LockOut OR (TripsOut &lt;&gt; 0);
+END_IF;
+
+(* Map TsInt -&gt; TsOut struct *)
+FOR i := 0 TO 31 DO
+    CASE i OF
+        0: TsOut.Val1 := TsInt[i];
+        1: TsOut.Val2 := TsInt[i];
+        2: TsOut.Val3 := TsInt[i];
+        3: TsOut.Val4 := TsInt[i];
+        4: TsOut.Val5 := TsInt[i];
+        5: TsOut.Val6 := TsInt[i];
+        6: TsOut.Val7 := TsInt[i];
+        7: TsOut.Val8 := TsInt[i];
+        8: TsOut.Val9 := TsInt[i];
+        9: TsOut.Val10 := TsInt[i];
+        10: TsOut.Val11 := TsInt[i];
+        11: TsOut.Val12 := TsInt[i];
+        12: TsOut.Val13 := TsInt[i];
+        13: TsOut.Val14 := TsInt[i];
+        14: TsOut.Val15 := TsInt[i];
+        15: TsOut.Val16 := TsInt[i];
+        16: TsOut.Val17 := TsInt[i];
+        17: TsOut.Val18 := TsInt[i];
+        18: TsOut.Val19 := TsInt[i];
+        19: TsOut.Val20 := TsInt[i];
+        20: TsOut.Val21 := TsInt[i];
+        21: TsOut.Val22 := TsInt[i];
+        22: TsOut.Val23 := TsInt[i];
+        23: TsOut.Val24 := TsInt[i];
+        24: TsOut.Val25 := TsInt[i];
+        25: TsOut.Val26 := TsInt[i];
+        26: TsOut.Val27 := TsInt[i];
+        27: TsOut.Val28 := TsInt[i];
+        28: TsOut.Val29 := TsInt[i];
+        29: TsOut.Val30 := TsInt[i];
+        30: TsOut.Val31 := TsInt[i];
+        31: TsOut.Val32 := TsInt[i];
+    END_CASE;
+END_FOR;
+
+(* TripTs: timestamp first trip (if available) *)
+IF (TripOut &gt;= 0) AND (TripOut &lt;= 31) THEN
+    TripTs := TsInt[TripOut];
+ELSE
+    TripTs := 0;
+END_IF;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_SOE32Sort</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_SOE32Sort
+    Versi        : 1.1
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 7 Nov 2025
+    Kontributor  : ChatGPT (OpenAI), Copilot (Microsoft), Grok (xAI)
+    Deskripsi    : Urutkan timestamp -&gt; urutan kanal &amp; waktu
+    Input        : TsIn (struct32ULONG)
+    Output       : Seq (struct32INT), TsOut (struct32ULONG)
+    Catatan      : Bubble sort; tie-break index; -1 untuk slot kosong
+*)
+
+FUNCTION_BLOCK K_SOE32Sort
+VAR_INPUT
+    TsIn : struct32ULONG;
+END_VAR
+VAR_OUTPUT
+    Seq  : struct32INT;
+    TsOut : struct32ULONG;   (* Sorted timestamp output *)
+END_VAR
+VAR
+    TsArr : array32ULONG;
+    Order : array32INT;
+    Count : INT;
+    i, j, k : INT;
+    tL, tR : ULONG;
+END_VAR
+
+(* Copy struct to array *)
+FOR i := 0 TO 31 DO
+    CASE i OF
+        0: TsArr[i] := TsIn.Val1;
+        1: TsArr[i] := TsIn.Val2;
+        2: TsArr[i] := TsIn.Val3;
+        3: TsArr[i] := TsIn.Val4;
+        4: TsArr[i] := TsIn.Val5;
+        5: TsArr[i] := TsIn.Val6;
+        6: TsArr[i] := TsIn.Val7;
+        7: TsArr[i] := TsIn.Val8;
+        8: TsArr[i] := TsIn.Val9;
+        9: TsArr[i] := TsIn.Val10;
+        10: TsArr[i] := TsIn.Val11;
+        11: TsArr[i] := TsIn.Val12;
+        12: TsArr[i] := TsIn.Val13;
+        13: TsArr[i] := TsIn.Val14;
+        14: TsArr[i] := TsIn.Val15;
+        15: TsArr[i] := TsIn.Val16;
+        16: TsArr[i] := TsIn.Val17;
+        17: TsArr[i] := TsIn.Val18;
+        18: TsArr[i] := TsIn.Val19;
+        19: TsArr[i] := TsIn.Val20;
+        20: TsArr[i] := TsIn.Val21;
+        21: TsArr[i] := TsIn.Val22;
+        22: TsArr[i] := TsIn.Val23;
+        23: TsArr[i] := TsIn.Val24;
+        24: TsArr[i] := TsIn.Val25;
+        25: TsArr[i] := TsIn.Val26;
+        26: TsArr[i] := TsIn.Val27;
+        27: TsArr[i] := TsIn.Val28;
+        28: TsArr[i] := TsIn.Val29;
+        29: TsArr[i] := TsIn.Val30;
+        30: TsArr[i] := TsIn.Val31;
+        31: TsArr[i] := TsIn.Val32;
+    END_CASE;
+END_FOR;
+
+(* Build order list of indices with Ts &gt; 0 *)
+Count := 0;
+FOR i := 0 TO 31 DO
+    IF TsArr[i] &gt; 0 THEN
+        Order[Count] := i;
+        Count := Count + 1;
+    END_IF;
+END_FOR;
+
+(* Fill rest with -1 *)
+FOR i := Count TO 31 DO
+    Order[i] := -1;
+END_FOR;
+
+(* Bubble sort (Count small; deterministic) *)
+IF Count &gt; 1 THEN
+    FOR i := 0 TO Count - 2 DO
+        FOR j := 0 TO Count - 2 - i DO
+            tL := TsArr[Order[j]];
+            tR := TsArr[Order[j+1]];
+            IF (tL &gt; tR) OR ((tL = tR) AND (Order[j] &gt; Order[j+1])) THEN
+                k := Order[j];
+                Order[j] := Order[j+1];
+                Order[j+1] := k;
+            END_IF;
+        END_FOR;
+    END_FOR;
+END_IF;
+
+(* Map to Seq struct *)
+FOR i := 0 TO 31 DO
+    CASE i OF
+        0: Seq.Val1 := Order[i];
+        1: Seq.Val2 := Order[i];
+        2: Seq.Val3 := Order[i];
+        3: Seq.Val4 := Order[i];
+        4: Seq.Val5 := Order[i];
+        5: Seq.Val6 := Order[i];
+        6: Seq.Val7 := Order[i];
+        7: Seq.Val8 := Order[i];
+        8: Seq.Val9 := Order[i];
+        9: Seq.Val10 := Order[i];
+        10: Seq.Val11 := Order[i];
+        11: Seq.Val12 := Order[i];
+        12: Seq.Val13 := Order[i];
+        13: Seq.Val14 := Order[i];
+        14: Seq.Val15 := Order[i];
+        15: Seq.Val16 := Order[i];
+        16: Seq.Val17 := Order[i];
+        17: Seq.Val18 := Order[i];
+        18: Seq.Val19 := Order[i];
+        19: Seq.Val20 := Order[i];
+        20: Seq.Val21 := Order[i];
+        21: Seq.Val22 := Order[i];
+        22: Seq.Val23 := Order[i];
+        23: Seq.Val24 := Order[i];
+        24: Seq.Val25 := Order[i];
+        25: Seq.Val26 := Order[i];
+        26: Seq.Val27 := Order[i];
+        27: Seq.Val28 := Order[i];
+        28: Seq.Val29 := Order[i];
+        29: Seq.Val30 := Order[i];
+        30: Seq.Val31 := Order[i];
+        31: Seq.Val32 := Order[i];
+    END_CASE;
+END_FOR;
+
+(* Map sorted timestamp to struct *)
+FOR i := 0 TO 31 DO
+    IF Order[i] &lt;&gt; -1 THEN
+        CASE i OF
+            0:  TsOut.Val1 := TsArr[Order[i]];
+            1:  TsOut.Val2 := TsArr[Order[i]];
+            2:  TsOut.Val3 := TsArr[Order[i]];
+            3:  TsOut.Val4 := TsArr[Order[i]];
+            4:  TsOut.Val5 := TsArr[Order[i]];
+            5:  TsOut.Val6 := TsArr[Order[i]];
+            6:  TsOut.Val7 := TsArr[Order[i]];
+            7:  TsOut.Val8 := TsArr[Order[i]];
+            8:  TsOut.Val9 := TsArr[Order[i]];
+            9:  TsOut.Val10 := TsArr[Order[i]];
+            10: TsOut.Val11 := TsArr[Order[i]];
+            11: TsOut.Val12 := TsArr[Order[i]];
+            12: TsOut.Val13 := TsArr[Order[i]];
+            13: TsOut.Val14 := TsArr[Order[i]];
+            14: TsOut.Val15 := TsArr[Order[i]];
+            15: TsOut.Val16 := TsArr[Order[i]];
+            16: TsOut.Val17 := TsArr[Order[i]];
+            17: TsOut.Val18 := TsArr[Order[i]];
+            18: TsOut.Val19 := TsArr[Order[i]];
+            19: TsOut.Val20 := TsArr[Order[i]];
+            20: TsOut.Val21 := TsArr[Order[i]];
+            21: TsOut.Val22 := TsArr[Order[i]];
+            22: TsOut.Val23 := TsArr[Order[i]];
+            23: TsOut.Val24 := TsArr[Order[i]];
+            24: TsOut.Val25 := TsArr[Order[i]];
+            25: TsOut.Val26 := TsArr[Order[i]];
+            26: TsOut.Val27 := TsArr[Order[i]];
+            27: TsOut.Val28 := TsArr[Order[i]];
+            28: TsOut.Val29 := TsArr[Order[i]];
+            29: TsOut.Val30 := TsArr[Order[i]];
+            30: TsOut.Val31 := TsArr[Order[i]];
+            31: TsOut.Val32 := TsArr[Order[i]];
+        END_CASE;
+    ELSE
+        CASE i OF
+            0:  TsOut.Val1 := 0;
+            1:  TsOut.Val2 := 0;
+            2:  TsOut.Val3 := 0;
+            3:  TsOut.Val4 := 0;
+            4:  TsOut.Val5 := 0;
+            5:  TsOut.Val6 := 0;
+            6:  TsOut.Val7 := 0;
+            7:  TsOut.Val8 := 0;
+            8:  TsOut.Val9 := 0;
+            9:  TsOut.Val10 := 0;
+            10: TsOut.Val11 := 0;
+            11: TsOut.Val12 := 0;
+            12: TsOut.Val13 := 0;
+            13: TsOut.Val14 := 0;
+            14: TsOut.Val15 := 0;
+            15: TsOut.Val16 := 0;
+            16: TsOut.Val17 := 0;
+            17: TsOut.Val18 := 0;
+            18: TsOut.Val19 := 0;
+            19: TsOut.Val20 := 0;
+            20: TsOut.Val21 := 0;
+            21: TsOut.Val22 := 0;
+            22: TsOut.Val23 := 0;
+            23: TsOut.Val24 := 0;
+            24: TsOut.Val25 := 0;
+            25: TsOut.Val26 := 0;
+            26: TsOut.Val27 := 0;
+            27: TsOut.Val28 := 0;
+            28: TsOut.Val29 := 0;
+            29: TsOut.Val30 := 0;
+            30: TsOut.Val31 := 0;
+            31: TsOut.Val32 := 0;
+        END_CASE;
+    END_IF;
+END_FOR;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_SOE32Delta</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_SOE32Delta
+    Versi        : 1.1
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 7 Nov 2025
+    Kontributor  : ChatGPT (OpenAI), Copilot (Microsoft), Grok (xAI)
+    Deskripsi    : Hitung selisih waktu relatif terhadap base
+    Input        : TsIn (struct32ULONG)
+    Output       : Diff.Val1..Val32 (UINT)
+    Catatan      : Base = first non-zero Ts
+*)
+
+FUNCTION_BLOCK K_SOE32Delta
+VAR_INPUT
+    TsIn : struct32ULONG;
+END_VAR
+VAR_OUTPUT
+    Diff : struct32UINT;
+END_VAR
+VAR
+    TsArr : array32ULONG;
+    base  : ULONG;
+    dcalc : UINT;
+    i     : INT;
+    cond1, cond2 : BOOL;
+END_VAR
+
+(* Copy struct to array *)
+FOR i := 0 TO 31 DO
+    CASE i OF
+        0: TsArr[i] := TsIn.Val1;
+        1: TsArr[i] := TsIn.Val2;
+        2: TsArr[i] := TsIn.Val3;
+        3: TsArr[i] := TsIn.Val4;
+        4: TsArr[i] := TsIn.Val5;
+        5: TsArr[i] := TsIn.Val6;
+        6: TsArr[i] := TsIn.Val7;
+        7: TsArr[i] := TsIn.Val8;
+        8: TsArr[i] := TsIn.Val9;
+        9: TsArr[i] := TsIn.Val10;
+        10: TsArr[i] := TsIn.Val11;
+        11: TsArr[i] := TsIn.Val12;
+        12: TsArr[i] := TsIn.Val13;
+        13: TsArr[i] := TsIn.Val14;
+        14: TsArr[i] := TsIn.Val15;
+        15: TsArr[i] := TsIn.Val16;
+        16: TsArr[i] := TsIn.Val17;
+        17: TsArr[i] := TsIn.Val18;
+        18: TsArr[i] := TsIn.Val19;
+        19: TsArr[i] := TsIn.Val20;
+        20: TsArr[i] := TsIn.Val21;
+        21: TsArr[i] := TsIn.Val22;
+        22: TsArr[i] := TsIn.Val23;
+        23: TsArr[i] := TsIn.Val24;
+        24: TsArr[i] := TsIn.Val25;
+        25: TsArr[i] := TsIn.Val26;
+        26: TsArr[i] := TsIn.Val27;
+        27: TsArr[i] := TsIn.Val28;
+        28: TsArr[i] := TsIn.Val29;
+        29: TsArr[i] := TsIn.Val30;
+        30: TsArr[i] := TsIn.Val31;
+        31: TsArr[i] := TsIn.Val32;
+    END_CASE;
+END_FOR;
+
+(* Find base (first non-zero timestamp) *)
+base := 0;
+FOR i := 0 TO 31 DO
+    cond1 := (base = 0);
+    cond2 := (TsArr[i] &gt; 0);
+    IF cond1 AND cond2 THEN
+        base := TsArr[i];
+        EXIT;
+    END_IF;
+END_FOR;
+
+(* Compute diffs *)
+FOR i := 0 TO 31 DO
+    cond1 := (base &gt; 0);
+    cond2 := (TsArr[i] &gt;= base);
+    IF cond1 AND cond2 THEN
+        dcalc := ULONG_TO_UINT(TsArr[i] - base);
+    ELSE
+        dcalc := 0;
+    END_IF;
+
+    CASE i OF
+        0: Diff.Val1 := dcalc;
+        1: Diff.Val2 := dcalc;
+        2: Diff.Val3 := dcalc;
+        3: Diff.Val4 := dcalc;
+        4: Diff.Val5 := dcalc;
+        5: Diff.Val6 := dcalc;
+        6: Diff.Val7 := dcalc;
+        7: Diff.Val8 := dcalc;
+        8: Diff.Val9 := dcalc;
+        9: Diff.Val10 := dcalc;
+        10: Diff.Val11 := dcalc;
+        11: Diff.Val12 := dcalc;
+        12: Diff.Val13 := dcalc;
+        13: Diff.Val14 := dcalc;
+        14: Diff.Val15 := dcalc;
+        15: Diff.Val16 := dcalc;
+        16: Diff.Val17 := dcalc;
+        17: Diff.Val18 := dcalc;
+        18: Diff.Val19 := dcalc;
+        19: Diff.Val20 := dcalc;
+        20: Diff.Val21 := dcalc;
+        21: Diff.Val22 := dcalc;
+        22: Diff.Val23 := dcalc;
+        23: Diff.Val24 := dcalc;
+        24: Diff.Val25 := dcalc;
+        25: Diff.Val26 := dcalc;
+        26: Diff.Val27 := dcalc;
+        27: Diff.Val28 := dcalc;
+        28: Diff.Val29 := dcalc;
+        29: Diff.Val30 := dcalc;
+        30: Diff.Val31 := dcalc;
+        31: Diff.Val32 := dcalc;
+    END_CASE;
+END_FOR;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_EpochToTime</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_EpochToTime
+    Versi        : 1.0
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 3 Nov 2025
+    Kontributor  : ChatGPT (OpenAI), Grok (xAI)
+    Deskripsi    : Epoch 2000 (ULONG) -&gt; waktu sistem Supcon (Year..Second)
+    Input        : Enable (BOOL), Epoch (ULONG)
+    Output       : Year, Month, Day, Hour, Minute, Second (INT)
+    Catatan      : Leap year adjust; Epoch &gt; 4294967295 invalid
+*)
+
+FUNCTION_BLOCK K_EpochToTime
+VAR_INPUT
+    Enable   : BOOL;
+    Epoch : ULONG;
+END_VAR
+VAR_OUTPUT
+    Year, Month, Day, Hour, Minute, Second : INT;
+END_VAR
+VAR
+    Days, RemSec : ULONG;
+    i, j         : INT;  (* i untuk month loop, j untuk days_in_year/month_days *)
+    MonthDays    : array12INT;
+END_VAR
+
+IF NOT Enable THEN
+    Year   := 0;
+    Month  := 0;
+    Day    := 0;
+    Hour   := 0;
+    Minute := 0;
+    Second := 0;
+    RETURN;
+END_IF;
+
+(* Validasi input epoch *)
+IF Epoch &gt; 4294967295 THEN
+    Year   := 0; Month := 0; Day := 0;
+    Hour   := 0; Minute := 0; Second := 0;
+    RETURN;
+END_IF;
+
+(* Manual init MonthDays - Supcon tidak support array literal *)
+MonthDays[0] := 31;  (* Jan *)
+MonthDays[1] := 28;  (* Feb *)
+MonthDays[2] := 31;  (* Mar *)
+MonthDays[3] := 30;  (* Apr *)
+MonthDays[4] := 31;  (* May *)
+MonthDays[5] := 30;  (* Jun *)
+MonthDays[6] := 31;  (* Jul *)
+MonthDays[7] := 31;  (* Aug *)
+MonthDays[8] := 30;  (* Sep *)
+MonthDays[9] := 31;  (* Oct *)
+MonthDays[10] := 30; (* Nov *)
+MonthDays[11] := 31; (* Dec *)
+
+(* Pisahkan hari dan sisa detik *)
+Days   := Epoch / 86400;
+RemSec := Epoch MOD 86400;
+
+Hour   := LONG_TO_INT(ULONG_TO_LONG(RemSec / 3600));
+Minute := LONG_TO_INT(ULONG_TO_LONG((RemSec MOD 3600) / 60));
+Second := LONG_TO_INT(ULONG_TO_LONG(RemSec MOD 60));  (* Direct MOD 60 *)
+
+(* Hitung Tahun *)
+Year := 2000;
+WHILE TRUE DO
+    IF (Year MOD 4=0 AND (Year MOD 100&lt;&gt;0 OR Year MOD 400=0)) THEN
+        j := 366;
+    ELSE
+        j := 365;
+    END_IF;
+    IF Days &gt;= LONG_TO_ULONG(INT_TO_LONG(j)) THEN
+        Days := Days - LONG_TO_ULONG(INT_TO_LONG(j));
+        Year := Year + 1;
+    ELSE
+        EXIT;
+    END_IF;
+END_WHILE;
+
+(* Hitung Bulan *)
+Month := 1;
+FOR i := 0 TO 11 DO  (* Loop for months Jan (i=0) to Dec (i=11) *)
+    j := MonthDays[i];
+    (* Leap year adjustment untuk Februari (i=1) *)
+    IF (i = 1 AND Year MOD 4=0 AND (Year MOD 100&lt;&gt;0 OR Year MOD 400=0)) THEN j := 29; END_IF;
+    IF Days &gt;= LONG_TO_ULONG(INT_TO_LONG(j)) THEN
+        Days := Days - LONG_TO_ULONG(INT_TO_LONG(j));
+        Month := Month + 1;
+    ELSE
+        EXIT;
+    END_IF;
+END_FOR;
+
+(* Sisa hari menjadi Day *)
+Day := LONG_TO_INT(ULONG_TO_LONG(Days)) + 1;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<details>
+<summary>K_8BitToCount</summary>
+<pre><code class="language-pascal">(*
+    Nama Block   : K_8BitToCount
+    Versi        : 1.0
+    Pembuat      : Ketut Kumajaya
+    Tanggal      : 10 Nov 2025
+    Kontributor  : Copilot (Microsoft)
+    Deskripsi    : Hitung jumlah input BOOL=TRUE dari 8 unit atau kurang
+    Input        : IN1..IN8 (BOOL), static FALSE jika tidak diperlukan
+    Output       : OUT1 (UINT)
+    Catatan      : OUT1 = jumlah unit aktif (0..8)
+*)
+
+FUNCTION_BLOCK K_8BitToCount
+
+VAR_INPUT
+    IN1 : BOOL; IN2 : BOOL; IN3 : BOOL; IN4 : BOOL;
+    IN5 : BOOL; IN6 : BOOL; IN7 : BOOL; IN8 : BOOL;
+END_VAR
+
+VAR_OUTPUT
+    OUT1 : UINT;  (* Jumlah unit aktif *)
+END_VAR
+
+VAR
+    Inputs : array8BOOL;  (* Internal array untuk loop *)
+    i      : INT;
+END_VAR
+
+(* Salin scalar input ke internal array *)
+Inputs[0] := IN1; Inputs[1] := IN2; Inputs[2] := IN3; Inputs[3] := IN4;
+Inputs[4] := IN5; Inputs[5] := IN6; Inputs[6] := IN7; Inputs[7] := IN8;
+
+(* Hitung jumlah TRUE *)
+OUT1 := 0;
+FOR i := 0 TO 7 DO
+    IF Inputs[i] THEN
+        OUT1 := OUT1 + 1;
+    END_IF;
+END_FOR;
+
+END_FUNCTION_BLOCK
+
+</code></pre>
+</details>
+<hr />
+
+<!--kg-card-begin: html-->
+<div class="scroll-button">
+  <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="18" y1="11" x2="12" y2="5"></line><line x1="6" y1="11" x2="12" y2="5"></line></svg>
+  </button>
+</div>
+<!--kg-card-end: html-->
+
+
+  </div>
+
+  <a class="u-url" href="/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html" hidden></a>
+  <meta itemprop="mainEntityOfPage" content="https://kumajaya.github.io/automation-blog/sequence-of-event/2025/11/08/building-sequence-of-event-soe-management-in-supcon-jx-300xp.html">
+</article>
+
+<style>
+.post-category {
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.post-feature-image {
+  margin-top: 1rem;
+}
+
+.post-feature-img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.post-feature-caption {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+</style>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.0.0/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/automation-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Ketut Kumajaya</li>
+          <li><a class="u-email" href="mailto:ketut.kumajaya@gmail.com">ketut.kumajaya@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Technical &amp; Sustainability Digest adalah arsip konten blog internal Samator Group yang menampilkan wawasan teknis, perspektif keberlanjutan, dan solusi praktis berdasarkan pengalaman lapangan. Repositori ini menyimpan konten dalam bentuk statis, hasil replikasi otomatis satu arah dari platform utama untuk keperluan publikasi dan arsip jangka panjang.
+</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/kumajaya/automation-blog" target="_blank" title="Repositori Automation Blog di GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://x.com/ketutkumajaya" target="_blank" title="Ketut Kumajaya at X (formerly Twitter)">
+      <span class="grey fa-brands fa-x-twitter fa-lg"></span>
+    </a>
+  </li>
+  <li>
+    <a href="https://kumajaya.github.io/automation-blog/feed.xml" target="_blank" title="Subscribe to syndication feed">
+      <svg class="svg-icon grey" viewbox="0 0 16 16">
+        <path d="M12.8 16C12.8 8.978 7.022 3.2 0 3.2V0c8.777 0 16 7.223 16 16h-3.2zM2.194
+          11.61c1.21 0 2.195.985 2.195 2.196 0 1.21-.99 2.194-2.2 2.194C.98 16 0 15.017 0
+          13.806c0-1.21.983-2.195 2.194-2.195zM10.606
+          16h-3.11c0-4.113-3.383-7.497-7.496-7.497v-3.11c5.818 0 10.606 4.79 10.606 10.607z"
+        />
+      </svg>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+<!-- PrismJS: Core syntax highlighting engine and plugins -->
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/toolbar/prism-toolbar.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/plugins/command-line/prism-command-line.min.js"></script>
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    // Configure Prism Autoloader
+    if (Prism.plugins.autoloader) {
+      Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/';
+    }
+
+    // Add line numbers to all code blocks
+    document.querySelectorAll('pre[class*=language-]').forEach(node => {
+      node.classList.add('line-numbers');
+    });
+
+    // Trigger syntax highlighting
+    Prism.highlightAll();
+  });
+</script>
+
+<!-- KaTeX: Load math typesetting engine + auto-render -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+<script defer>
+  document.addEventListener("DOMContentLoaded", () => {
+    renderMathInElement(document.body, {
+      delimiters: [
+        {left: "$$", right: "$$", display: true},   // Block
+        {left: "$", right: "$", display: false},     // Inline
+        {left: "\\(", right: "\\)", display: false},
+        {left: "\\[", right: "\\]", display: true}
+      ]
+    });
+  });
+</script>
+
+<!-- Mermaid.js: Initialize diagrams -->
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script defer>
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.mermaid) return;
+
+    mermaid.initialize({
+      startOnLoad: false,        // Manual rendering
+      theme: 'base',
+      fontFamily: 'Segoe UI, sans-serif',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#f0f7ff',
+        primaryBorderColor: '#3b82f6'
+      }
+    });
+
+    // Lazy-load observer for Mermaid diagrams
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(async entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          if (!el.id) el.id = `mermaid-diagram-${Math.random().toString(36).substr(2, 9)}`;
+          await mermaid.run({ querySelector: `#${el.id}` });
+          el.classList.add('is-ready');
+          obs.unobserve(el);
+        }
+      });
+    }, { rootMargin: '100px' });
+
+    document.querySelectorAll('.mermaid').forEach(el => observer.observe(el));
+  });
+</script>
+
+<!-- Scroll Top Button & Progress Indicator: UX enhancement by Norbert Hunyadi -->
+<script defer>
+  const scrollTopBtn = document.querySelector('.js-scroll-top');   // Tombol scroll ke atas
+  const topSelector = document.querySelector('.post-content');     // Konten utama sebagai titik awal scroll
+
+  if (scrollTopBtn && topSelector) {
+    scrollTopBtn.onclick = () => {
+      const topPosition = topSelector.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: topPosition, behavior: 'smooth' });
+    };
+
+    const progressPath = document.querySelector('.scroll-top path');
+    const pathLength = progressPath.getTotalLength();
+    progressPath.style.transition = 'none';
+    progressPath.style.strokeDasharray = `${pathLength} ${pathLength}`;
+    progressPath.style.strokeDashoffset = pathLength;
+    progressPath.getBoundingClientRect();
+    progressPath.style.transition = 'stroke-dashoffset 10ms linear';
+
+    const updateProgress = () => {
+      const scroll = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = Math.max(
+        document.body.scrollHeight, document.documentElement.scrollHeight,
+        document.body.offsetHeight, document.documentElement.offsetHeight,
+        document.body.clientHeight, document.documentElement.clientHeight
+      );
+      const windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const topOffset = topSelector.offsetTop;
+      const height = docHeight - windowHeight - topOffset;
+      const progress = pathLength - ((scroll - topOffset) * pathLength / height);
+      progressPath.style.strokeDashoffset = progress;
+    };
+
+    updateProgress();
+
+    const offset = topSelector.offsetTop; // Trigger scroll-top button visibility
+
+    window.addEventListener('scroll', () => {
+      updateProgress();
+      const scrollPos = window.scrollY || document.documentElement.scrollTop;
+      scrollPos > offset
+        ? scrollTopBtn.classList.add('is-active')
+        : scrollTopBtn.classList.remove('is-active');
+    }, false);
+  }
+</script>
+
+<!-- Audio Card Enhancement: Replace Ghost audio cards with native players -->
+<script defer>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kg-audio-card").forEach(function (card) {
+      const audio = card.querySelector("audio");
+      const title = card.querySelector(".kg-audio-title")?.textContent || "";
+      const src = audio?.getAttribute("src");
+
+      if (!src) return;
+
+      // Buat elemen player
+      const nativePlayer = document.createElement("audio");
+      nativePlayer.setAttribute("controls", "");
+      nativePlayer.setAttribute("preload", "metadata");
+
+      const source = document.createElement("source");
+      source.setAttribute("src", src);
+      source.setAttribute("type", "audio/mpeg");
+      nativePlayer.appendChild(source);
+
+      // Tambahkan fallback sebagai node teks
+      nativePlayer.appendChild(document.createTextNode(
+        "Browser Anda tidak mendukung pemutar audio atau file tidak tersedia."
+      ));
+
+      // Bungkus semua dalam wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = "native-audio-wrapper";
+
+      // Tambahkan caption di atas player
+      if (title) {
+        const caption = document.createElement("div");
+        caption.className = "audio-title";
+        caption.textContent = title;
+        wrapper.appendChild(caption);
+      }
+
+      wrapper.appendChild(nativePlayer);
+
+      // Tambahkan metadata untuk audit/logging
+      wrapper.setAttribute("data-audio-source", src);
+      wrapper.setAttribute("data-audio-title", title);
+
+      // Ganti elemen Ghost dengan versi native
+      card.replaceWith(wrapper);
+    });
+  });
+</script>
+
+<!-- Native File Card Enhancement: Replace Ghost file cards with native download links -->
+<script defer>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".kg-file-card").forEach(card => {
+    const link = card.querySelector("a.kg-file-card-container");
+    const fileUrl = link?.getAttribute("href");
+    const fileName = card.querySelector(".kg-file-card-title")?.textContent?.trim() || "Download File";
+    const fileDesc = card.querySelector(".kg-file-card-caption")?.textContent?.trim() || "";
+    const fileMeta = card.querySelector(".kg-file-card-metadata");
+    const fileSize = fileMeta?.querySelector(".kg-file-card-filesize")?.textContent?.trim() || "";
+    const fileBase = fileMeta?.querySelector(".kg-file-card-filename")?.textContent?.trim() || "";
+
+    if (!fileUrl) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "native-file-wrapper";
+
+    const svgIcon = `
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none"
+           stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+        <polyline points="8.25 14.25 12 18 15.75 14.25"></polyline>
+        <line x1="12" y1="6.75" x2="12" y2="18"></line>
+        <circle cx="12" cy="12" r="11.25"></circle>
+      </svg>
+    `;
+
+    wrapper.innerHTML = `
+      <div class="file-info">
+        <div class="file-name">${fileName}</div>
+        ${fileDesc ? `<div class="file-desc">${fileDesc}</div>` : ""}
+        <div class="file-meta">
+          ${fileBase ? `<span>${fileBase}</span>` : ""}
+          ${fileBase && fileSize ? `<span class="dot">•</span>` : ""}
+          ${fileSize ? `<span>${fileSize}</span>` : ""}
+        </div>
+      </div>
+      <a class="file-download" href="${fileUrl}" download aria-label="Download file">
+        ${svgIcon}
+      </a>
+    `;
+
+    card.replaceWith(wrapper);
+  });
+});
+</script>
+</body>
+
+</html>

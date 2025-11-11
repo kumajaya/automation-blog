@@ -247,7 +247,6 @@ async function downloadFile(url, dest, retries = 3, timeoutMs = 15000) {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-      //const res = await fetch(url, { signal: controller.signal });
       const res = await fetch(url, {
         signal: controller.signal,
         headers: {
@@ -321,7 +320,6 @@ async function syncContent(type, layout, outputFolder) {
       const endpoint = new URL(`${type}/?key=${GHOST_API_KEY}&include=authors,tags&limit=50&page=${page}`, GHOST_API_URL).toString();
       logInfo(`Fetching: ${endpoint}`);
 
-      //const res = await fetch(endpoint);
       const res = await fetch(endpoint, {
         headers: {
           "User-Agent": "Mozilla/5.0 (compatible; GhostSync/1.0; +https://automation.samatorgroup.com)",

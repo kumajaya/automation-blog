@@ -867,6 +867,9 @@ def K_DENSITY(IN1, IN2, SW, P, M):
         5: (309.57, 72.45, 0.044),
     }[P]
 
+    # Standard gas densities at STP
+    density_stp = {1: 1.4291, 2: 1.2506, 3: 1.7840, 4: 1.9772, 5: 1.9774}
+
     Y_abs = 0.0
 
     # Mode 2: Pressure -&gt; Temperature conversion
@@ -967,10 +970,34 @@ def K_DENSITY(IN1, IN2, SW, P, M):
     except:
         pass
 
-    if 0.0 &lt; OUT3 &lt; 1.0:
-        ERR = False
+    # Vapor density calculations - Prioritas 1: Peng-Robinson Z-factor
+    vd_valid = False
+    if Y_abs &gt; 0:
+        P_gauge = Y_abs - 1.01325
+        Z_factor = K_ZFACTOR(P_gauge, Y, P)
+        if Z_factor &gt; 0.0:
+            OUT3 = (Y_abs * 100000.0 * Mw) / (Z_factor * 8314.47 * (Y + 273.15))
+            vd_valid = True
+
+    # Prioritas 2: Ideal gas law fallback jika Z-factor gagal
+    if not vd_valid and Y_abs &gt; 0 and P in density_stp:
+        # Ideal gas law: ρ = (P_abs/P_std) * (T_std/T_abs) * ρ_std
+        T_K = Y + 273.15
+        if T_K &gt; 0:
+            OUT3 = (Y_abs / 1.01325) * (273.15 / T_K) * density_stp[P] / 1000.0  # kg/L
+            vd_valid = True
 
     OUT2 = Y
+
+    # Validasi akhir output
+    if (OUT1 &gt; 0.0 and OUT1 &lt; 2.0 and  # Densitas cairan reasonable
+        vd_valid and OUT3 &gt; 0.0 and OUT3 &lt; 1.0): # Densitas uap reasonable
+            ERR = False
+    else:
+        # Fallback ke default values
+        OUT1, OUT2, OUT3 = defaults[P]
+        ERR = True  # Return nilai default dengan error
+
     return OUT1, OUT2, OUT3, ERR
 
 
@@ -1067,7 +1094,7 @@ def K_VESSEL(IN, O, T, D, L, A):
     return OUT, ERR
 
 
-def K_POSTVESSEL(IN, P, SW, STDT, MAX1, MAX2, PRES, TEMP, DENS, GDENS=0.0):
+def K_POSTVESSEL(IN, P, SW, STDT, MAX1, MAX2, DENS, GDENS=0.0):
     """
     Stok tangki cryo -&gt; % fill, berat cairan/gas, total weight, volume gas Nm³.
 
@@ -1077,19 +1104,16 @@ def K_POSTVESSEL(IN, P, SW, STDT, MAX1, MAX2, PRES, TEMP, DENS, GDENS=0.0):
         SW (bool): Switch for gas mass calc.
         STDT (float): Standard temp degC.
         MAX1, MAX2 (float): Max volumes m3.
-        PRES (float): Pressure barg.
-        TEMP (float): Temp degC.
         DENS (float): Liquid density kg/L.
         GDENS (float): Gas density (optional) kg/L.
 
     Returns:
         tuple: (%fill, vol liq (L), wt liq (kg), wt gas (kg), total wt (kg), Nm3, ERR bool).
     """
-    P_STD, T0 = 1.01325, 273.15
     ERR = False
     OUT1 = OUT2 = OUT3 = OUT4 = OUT5 = OUT6 = 0.0
 
-    if (DENS &lt;= 0.0) or (TEMP &lt; -273.0) or (PRES &lt; 0.0) or (MAX1 &lt;= 0.0) or (MAX2 &lt;= 0.0):
+    if (DENS &lt;= 0.0) or (MAX1 &lt;= 0.0) or (MAX2 &lt;= 0.0):
         ERR = True
         return OUT1, OUT2, OUT3, OUT4, OUT5, OUT6, ERR
 
@@ -1110,12 +1134,12 @@ def K_POSTVESSEL(IN, P, SW, STDT, MAX1, MAX2, PRES, TEMP, DENS, GDENS=0.0):
         if GDENS &gt; 0.0:
             OUT4 = (MAX2 - X) * GDENS * 1000.0  # Wt gas from given dens
         else:
-            OUT4 = (MAX2 - X) * ((PRES + P_STD) / P_STD) * (T0 / (TEMP + T0)) * Y  # Ideal gas law fallback
+            OUT4 = 0.0
     else:
         OUT4 = 0.0
 
     OUT5 = OUT3 + OUT4  # Total wt kg
-    OUT6 = ((STDT + T0) / T0) * OUT5 / Y  # Nm3 at standard
+    OUT6 = ((STDT + 273.15) / 273.15) * OUT5 / Y  # Nm3 at standard
 
     return OUT1, OUT2, OUT3, OUT4, OUT5, OUT6, ERR
 
@@ -1207,8 +1231,7 @@ for pres in pressures:
             continue
 
         out1, _, out3, out4, out5, out6, _ = K_POSTVESSEL(
-            vol, gas['P'], SW, STDT, MAX1, MAX2,
-            pres, temp_c, dens_liq, gdens
+            vol, gas['P'], SW, STDT, MAX1, MAX2, dens_liq, gdens
         )
 
         # CoolProp/NIST

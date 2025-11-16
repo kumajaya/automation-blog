@@ -1281,4 +1281,13 @@ END_FUNCTION_BLOCK
 <h2 id="penutup-lampiran">Penutup Lampiran</h2>
 <p>Keenam Function Block dan Function ini membentuk <strong>toolkit rekayasa proses yang terukur, robust, dan portabel</strong>. Seluruhnya dapat langsung diimplementasikan di sistem kontrol industri berbasis IEC 61131-3 atau digunakan sebagai baseline untuk simulasi numerik di platform modern.</p>
 
+<!--kg-card-begin: html-->
+<div class="scroll-button">
+  <button class="btn-toggle-round scroll-top js-scroll-top" type="button" title="Scroll to top">
+    <svg class="progress-circle" width="100%" height="100%" viewBox="-1 -1 102 102"><path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"></path></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-up" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="cuurentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="18" y1="11" x2="12" y2="5"></line><line x1="6" y1="11" x2="12" y2="5"></line></svg>
+  </button>
+</div>
+<!--kg-card-end: html-->
+
 {% endraw %}

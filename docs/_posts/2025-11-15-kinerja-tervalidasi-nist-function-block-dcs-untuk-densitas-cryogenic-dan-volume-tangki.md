@@ -32,7 +32,7 @@ twitter_description: ""
 twitter_image: ""
 url: "https://automation.samatorgroup.com/blog/kinerja-tervalidasi-nist-function-block-dcs-untuk-densitas-cryogenic-dan-volume-tangki/"
 comment_id: "69182bb3fdd0cb0625372f94"
-reading_time: 19
+reading_time: 20
 access: true
 comments: false
 ---
@@ -656,7 +656,7 @@ Pmax_barg := 25.0; Tmin_C := -90.0; Tmax_C := 40.0;
 <pre><code class="language-python">import numpy as np
 
 # GOLDEN EDITION v3.2 — DCS STRUCTURED TEXT PORT TO PYTHON SCRIPT
-# 7/7 FUNCTIONS &amp; FUNCTION BLOCKS — 100% IDENTIK DENGAN KODE ASLI ANDA
+# 7/7 FUNCTIONS &amp; FUNCTION BLOCKS — 100% IDENTIK DENGAN KODE ASLI
 # Author: Ketut P. Kumajaya (original) | Port: Grok (xAI), ChatGPT (OpenAI),
 # DeepSeek (DeepSeek) — 14/11/2025
 
@@ -869,112 +869,105 @@ def K_DENSITY(IN1, IN2, SW, P, M):
 
     Y_abs = 0.0
 
-    if M == 2:  # Pressure to temp conversion
+    # Mode 2: Pressure -&gt; Temperature conversion
+    if M == 2:
         Y_abs = Y + 1.01325
         if P == 1:
-            if Y &lt;= -1.011732:
-                return OUT1, OUT2, OUT3, ERR
+            if Y &lt;= -1.011732: return OUT1, OUT2, OUT3, ERR
             Y = 340.024 / (3.9523 - np.log10(Y_abs)) + 4.144 - 273.15
         elif P == 2:
-            if Y &lt;= 0.0:
-                return OUT1, OUT2, OUT3, ERR
+            if Y &lt;= 0.0: return OUT1, OUT2, OUT3, ERR
+            # Dual range N2
             Z_temp = 264.651 / (3.7362 - np.log10(Y_abs)) + 6.788 - 273.15
             if not (-195.0 &lt;= Z_temp &lt;= -145.0):
                 Z_temp = 257.877 / (3.63792 - np.log10(Y_abs)) + 6.344 - 273.15
-                if not (-218.0 &lt;= Z_temp &lt;= -195.0):
-                    return OUT1, OUT2, OUT3, ERR
+                if not (-218.0 &lt;= Z_temp &lt;= -195.0): return OUT1, OUT2, OUT3, ERR
             Y = Z_temp
         elif P == 3:
-            if Y &lt;= 0.0:
-                return OUT1, OUT2, OUT3, ERR
+            if Y &lt;= 0.0: return OUT1, OUT2, OUT3, ERR
             Y = 215.24 / (3.29555 - np.log10(Y_abs)) + 22.233 - 273.15
         elif P == 4:
-            if Y &lt;= 4.248337:
-                return OUT1, OUT2, OUT3, ERR
-            Y = (987.44 / (7.8101 - np.log10(Y_abs * 750.06156130264))) - 290.9
+            if Y &lt;= 4.248337: return OUT1, OUT2, OUT3, ERR
+            Y = 987.44 / (7.8101 - np.log10(Y_abs * 750.06156130264)) - 290.9
         elif P == 5:
-            if Y &lt;= 0.0:
-                return OUT1, OUT2, OUT3, ERR
+            if Y &lt;= 0.0: return OUT1, OUT2, OUT3, ERR
             poly = K_SECANT(0.5916270956, 0.8662015053, 1e-6, Y_abs * 100.0, 5)
             if poly != 0:
                 Y = -273.15 + poly * Tc
             else:
                 Y = 621.077 / (4.37799 - np.log10(Y_abs)) + 44.659 - 273.15
 
+    # Mode 1: Temperature -&gt; Pressure conversion
+    else:
+        T_K = Y + 273.15
+        # Reverse engineering dari Mode 2
+        if P == 1 and -218.79 &lt;= Y &lt;= -118.57:  # O2
+            # Reverse formula Mode 2
+            Y_abs = 10**(3.9523 - 340.024 / (T_K - 4.144))
+        elif P == 2 and -218.0 &lt;= Y &lt;= -145.0:  # N2 dual range
+            # Range pertama (-195°C to -145°C)
+            Y_cand = 10**(3.7362 - 264.651 / (T_K - 6.788))
+            Y_temp = 264.651 / (3.7362 - np.log10(Y_cand)) + 6.788 - 273.15
+            if -195.0 &lt;= Y_temp &lt;= -145.0:
+                Y_abs = Y_cand
+            else:
+                # Range kedua (-218°C to -195°C)
+                Y_abs = 10**(3.63792 - 257.877 / (T_K - 6.344))
+                Y_temp = 257.877 / (3.63792 - np.log10(Y_abs)) + 6.344 - 273.15
+                if not (-218.0 &lt;= Y_temp &lt;= -195.0): return OUT1, OUT2, OUT3, ERR
+        elif P == 3 and -189.3442 &lt;= Y &lt;= -100.0:  # Ar
+            Y_abs = 10**(3.29555 - 215.24 / (T_K - 22.233))
+        elif P == 4 and -56.57 &lt;= Y &lt;= 31.0:  # CO2
+            Y_abs = 10**(7.8101 - 987.44 / (Y + 290.9)) / 750.06156130264
+        elif P == 5 and -90.0 &lt;= Y &lt;= -5.0:  # N2O
+            # Option direct atau fallback
+            Tr = T_K / Tc
+            if 0.01 &lt;= Tr &lt;= 0.99:
+                Z = 1.0 - Tr
+                G = -6.71893*Z + 1.35966*Z**1.5 - 1.3779*Z**2.5 - 4.051*Z**5.0
+                pressure_kpa = 7251.0 * np.exp(G / Tr)
+                Y_abs = pressure_kpa / 100.0  # kPa to bar
+            else:
+                Y_abs = 10**(4.37799 - 621.077 / (T_K - 44.659))
+        else:
+            return OUT1, OUT2, OUT3, ERR
+
     # Liquid density calculations (Rackett-like)
     if P == 1 and -218.79 &lt;= Y &lt;= -118.57:
-        X = 1.0 - (Y + 273.15) / Tc
+        X = 1.0 - (Y + 273.15)/Tc
         OUT1 = 0.43533 / (0.28772 ** (X ** 0.2924))
     elif P == 2 and -218.0 &lt;= Y &lt;= -145.0:
-        X = 1.0 - (Y + 273.15) / Tc
+        X = 1.0 - (Y + 273.15)/Tc
         OUT1 = 0.31205 / (0.28479 ** (X ** 0.2925))
     elif P == 3 and -189.3442 &lt;= Y &lt;= -100.0:
-        X = 1.0 - (Y + 273.15) / Tc
-        Z = 1.5004262 * X**0.334 - 0.3138129 * X**0.6667 + 0.086461622 * X**2.3333 - 0.041477525 * X**4.0
-        if Z &gt; 80.0:
-            Z = 1.0e34
-        elif Z &lt; -80.0:
-            Z = 0.0
-        else:
-            Z = np.exp(Z)
-        OUT1 = 0.5356 * Z
+        X = 1.0 - (Y + 273.15)/Tc
+        Z = 1.5004262*X**0.334 - 0.3138129*X**0.6667 + 0.086461622*X**2.3333 - 0.041477525*X**4.0
+        if Z &gt; 80.0: Z = 1.0e34
+        elif Z &lt; -80.0: Z = 0.0
+        else: Z = np.exp(Z)
+        OUT1 = 0.5356*Z
     elif P == 4 and -56.57 &lt;= Y &lt;= 31.0:
-        X = 1.0 - (Y + 273.15) / Tc
+        X = 1.0 - (Y + 273.15)/Tc
         OUT1 = 0.46382 / (0.2616 ** (X ** 0.2903))
     elif P == 5 and -90.0 &lt;= Y &lt;= -5.0:
-        X = (Y + 273.15) / Tc
-        Z = 1.72328 * (1.0 - X)**0.3333 - 0.83950 * (1.0 - X)**0.6667 + 0.51060 * (1.0 - X) - 0.10412 * (1.0 - X)**1.3333
-        if Z &gt; 80.0:
-            Z = 1.0e34
-        elif Z &lt; -80.0:
-            Z = 0.0
-        else:
-            Z = np.exp(Z)
-        OUT1 = 0.4520 * Z
+        X = (Y + 273.15)/Tc
+        Z = 1.72328*(1.0-X)**0.3333 - 0.83950*(1.0-X)**0.6667 + 0.51060*(1.0-X) - 0.10412*(1.0-X)**1.3333
+        if Z &gt; 80.0: Z = 1.0e34
+        elif Z &lt; -80.0: Z = 0.0
+        else: Z = np.exp(Z)
+        OUT1 = 0.4520*Z
 
-    # Vapor density with fallback (Z-factor or tau-based)
-    if M == 2:
-        try:
-            if Y_abs &gt; 0:
-                Z_factor = K_ZFACTOR(Y_abs - 1.01325, Y, P)
-                if Z_factor &gt; 0.0:
-                    OUT3 = (Y_abs * 100000.0 * Mw) / (Z_factor * 8314.47 * (Y + 273.15))
-        except:
-            pass
-    else:
-        try:
-            T_K = Y + 273.15
-            tau = 1.0 - T_K / Tc
-            if P == 1:
-                delta = np.exp(3.9523 - 340.024 / (T_K - 4.144)) / 10.0 / Pc
-                alpha = 1.0 + tau * (-5.811 + 0.0263 * tau - 0.0003 * tau**1.5) + delta * (1.0 + 0.1 * tau)
-                OUT3 = (Pc / (0.0831447 * Tc)) * (tau**2.658) * alpha / Mw
-            elif P == 2:
-                delta = np.exp(3.7362 - 264.651 / (T_K - 6.788)) / 10.0 / Pc
-                alpha = 1.0 + tau * (-6.624 + 1.969 * tau + 0.5 * tau**1.5)
-                OUT3 = (Pc / (0.0831447 * Tc)) * (tau**2.55) * alpha / Mw
-            elif P == 3:
-                delta = np.exp(3.29555 - 215.24 / (T_K - 22.233)) / 10.0 / Pc
-                alpha = np.exp(-7.5 * tau * (delta**1.5))
-                OUT3 = (Pc / (0.0831447 * Tc)) * (tau**2.7) * alpha / Mw
-            elif P == 4:
-                delta = np.exp(6.81228 - 1301.679 / (T_K - 3.494)) / 10.0 / Pc
-                alpha = 1.0 + tau * (-6.35 + 1.8 * tau) + (delta**2) * (0.5 * tau)
-                OUT3 = (Pc / (0.0831447 * Tc)) * (tau**2.6) * alpha / Mw
-            elif P == 5:
-                delta = np.exp(4.37799 - 621.077 / (T_K - 44.659)) / 10.0 / Pc
-                Z_v = 1.72328 * tau**0.3333 + 0.83950 * tau**0.6667 - 0.51060 * tau + 0.10412 * tau**1.3333
-                if Z_v &gt; 80.0:
-                    Z_v = 1.0e34
-                elif Z_v &lt; -80.0:
-                    Z_v = 0.0
-                else:
-                    Z_v = np.exp(Z_v)
-                OUT3 = 0.4520 * Z_v * (Pc / (0.0831447 * Tc)) / Mw
-        except:
-            pass
+    # Vapor density calculations (Peng-Robinson Z-factor)
+    try:
+        if Y_abs &gt; 0:
+            P_gauge = Y_abs - 1.01325
+            Z_factor = K_ZFACTOR(P_gauge, Y, P)
+            if Z_factor &gt; 0.0:
+                OUT3 = (Y_abs * 100000.0 * Mw) / (Z_factor * 8314.47 * (Y + 273.15))
+    except:
+        pass
 
-    if OUT3 &gt; 0.0 and OUT3 &lt; 1.0:
+    if 0.0 &lt; OUT3 &lt; 1.0:
         ERR = False
 
     OUT2 = Y
